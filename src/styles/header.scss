@@ -1,0 +1,39 @@
+header{
+    
+    flex-direction: column;
+    justify-content: center;
+
+    > div {
+        display: flex;
+        width: 70%;
+        margin: 0 auto;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    #headerLogo {
+        justify-content: start;
+        img {
+            width: 20vh;
+        }
+    }
+
+    #headerInfo {
+        justify-content: end;
+        
+        a {
+            margin: 0 8px;
+
+        }
+    }
+
+    #navInfo {
+        justify-content: end;
+
+        a {
+            font-size: 20px;
+            font-weight: bolder;
+            margin: 0 8px;
+        }
+    }
+}

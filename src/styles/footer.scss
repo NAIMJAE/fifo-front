@@ -1,0 +1,20 @@
+footer{
+
+    > div {
+        display: flex;
+        width: 70%;
+        margin: 0 auto;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    #footerInfo {
+        justify-content: start;
+        
+    }
+
+    #footerTerms {
+        justify-content: end;
+    }
+
+}
