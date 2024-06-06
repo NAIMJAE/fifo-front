@@ -16,7 +16,7 @@ const Header = () => {
 
         <div>
             <Link id='headerLogo'>
-                <img src="../../../../images/sample/sample8.png" alt="" />
+                <img src="../../../../images/ppoppi_in_my_house.png" alt="" />
             </Link>
             
             <div id='navInfo'>
