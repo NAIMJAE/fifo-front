@@ -18,13 +18,17 @@ const MainPage = () => {
       }
     }
     apiTest();
+    if (test !== "") {
+      alert("서버 연결 성공" + "\n" + "아이디 : " + test.uid + "\n" + "이름 : " + test.name )
+    }else {
+      alert("서버 연결 실패");
+    }
   },[])
 
   return (
     <MainLayout>
         <div className='cntRow adBox'>
           광고 박스
-          {(test > 0) ? ("서버 연결 성공"):("서버 연결 실패")}
         </div>
 
         <div className='cntColumn'>
