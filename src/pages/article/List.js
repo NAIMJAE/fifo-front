@@ -1,6 +1,11 @@
 import React from 'react'
 import MainLayout from '../../layout/MainLayout'
 import '../../styles/article.scss'
+import { Link } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCommentDots, faEye, faHeart, faThumbsUp } from '@fortawesome/free-regular-svg-icons'
+import ArticleBoxComponent from '../../components/article/ArticleBoxComponent'
+import PageingComponent from '../../components/common/paging/PageingComponent'
 
 const List = () => {
   return (
@@ -24,15 +29,25 @@ const List = () => {
                     <option value="">제목</option>
                     <option value="">내용</option>
                     <option value="">작성자</option>
+                    <option value="">태그</option>
                 </select>
                 <input type="text" placeholder='검색어를 입력하세요'/>
                 <button>검색</button>
             </label>
         </div>
 
-        <div className='cntColumn'>
-
+        <div className='cntColumn articleList'>
+            <ArticleBoxComponent/>
+            <ArticleBoxComponent/>
+            <ArticleBoxComponent/>
+            <ArticleBoxComponent/>
+            <ArticleBoxComponent/>
+            <ArticleBoxComponent/>
+            <ArticleBoxComponent/>
+            <ArticleBoxComponent/>
         </div>
+
+        <PageingComponent/>
 
     </MainLayout>
   )

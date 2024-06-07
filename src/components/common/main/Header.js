@@ -15,14 +15,15 @@ const Header = () => {
         </div>
 
         <div>
-            <Link id='headerLogo'>
+            <Link to="/" id='headerLogo'>
                 <img src="../../../../images/ppoppi_in_my_house.png" alt="" />
             </Link>
             
             <div id='navInfo'>
+                <Link to="/develop">개발참조</Link>
                 <Link to="/">내모임</Link>
                 <Link to="/">모임찾기</Link>
-                <Link to="/">게시판</Link>
+                <Link to="/article/list">게시판</Link>
                 <Link to="/">등급평가</Link>
             </div>
         </div>
