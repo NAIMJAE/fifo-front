@@ -2,6 +2,7 @@ import React from 'react'
 import MainLayout from '../layout/MainLayout'
 import '../styles/develop.scss'
 import PageingComponent from '../components/common/paging/PageingComponent'
+import SkillIcon from '../SkillIcon'
 
 const Develop = () => {
   return (
@@ -85,6 +86,13 @@ const Develop = () => {
                 페이징 컴포넌트 : PageingComponent
             </div>
             <PageingComponent/>
+            <hr/>
+            <div>
+                <h3>언어 아이콘들</h3>
+                <SkillIcon skill={"CPP"} />
+                <SkillIcon skill={"Java"} />
+                <SkillIcon skill={"JavaScript"} />
+            </div>
         </div>
     </MainLayout>
   )
