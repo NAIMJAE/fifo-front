@@ -1,0 +1,111 @@
+// 검색 카테고리 
+.searchSkillMenu {
+    margin-bottom: 10px;
+  
+    .dropdown {
+      display: inline-block;
+      position: relative;
+
+      .skillTabBtn {
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+        padding-left: 18px;
+        padding-right: 10px;
+        width: 140px;
+        height: 38px;
+        border: 1px solid rgb(227, 227, 227);
+        color: rgb(100, 100, 100);
+        font-weight: 500;
+        font-size: 16px;
+        letter-spacing: 0.03em;
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        border-radius: 36px;
+        margin-bottom: 8px;
+        background-color: #fff;
+        cursor: pointer;
+      }
+    }
+  
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+  
+      &.show {
+        display: block;
+      }
+  
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+  
+        .catetgory_type1 {
+          padding: 5px 10px;
+          cursor: pointer;
+  
+          &.catetgory_selectedType1 {
+            font-weight: bold;
+            background-color: #f1f1f1;
+          }
+  
+          &:hover {
+            background-color: #f1f1f1;
+          }
+        }
+      }
+    }
+  }
+  
+  // 기술 아이콘들
+  .tech-stack {
+    display: none;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 10px;
+  
+    &.show {
+      display: block;
+    }
+  
+    .languages {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+  
+      .languageIcon {
+        display: flex;
+        align-items: center;
+        margin: 5px;
+        padding: 5px 10px;
+        border: 1px solid #ccc;
+        border-radius: 20px;
+        background-color: #f9f9f9;
+
+        &.selectedLanguage {
+            background-color: #e1f5fe;
+            border-color: #4169e1;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+          }
+  
+        .logo {
+          width: 20px;
+          height: 20px;
+          margin-right: 5px;
+        }
+  
+        .languageName {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+  
