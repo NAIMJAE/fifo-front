@@ -18,8 +18,6 @@ const Write = () => {
     /** 게시글 내용 저장 */
     const editorRef = useRef();
     
-
-
     /** 첨부파일 이름 보여주기 */
     const [fileList, setFileList] = useState([]);
 
