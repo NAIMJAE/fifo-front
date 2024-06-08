@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import MainPage from "../pages/MainPage";
 import List from "../pages/article/List";
 import Develop from "../pages/Develop";
+import Write from "../pages/article/Write";
 
 const root = createBrowserRouter([
 
@@ -11,6 +12,7 @@ const root = createBrowserRouter([
 
     /** 게시판 */
     { path: '/article/list', element: <List /> },
+    { path: '/article/write', element: <Write /> },
 
 ]);
 export default root;

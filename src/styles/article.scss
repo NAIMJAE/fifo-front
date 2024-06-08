@@ -142,3 +142,103 @@
         }
     }
 }
+
+/* article - write */
+.articleTitle {
+    margin: 20px 30px;
+    justify-content: space-between;
+    input {
+        width: 920px;
+        height: 40px;
+        padding: 0 20px;
+        border: 1px solid #9f9f9f;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+    select {
+        width: 200px;
+        padding: 0 10px;
+        border: 1px solid #9f9f9f;
+        border-radius: 4px;
+        font-size: 16px;
+        option {
+            font-size: 16px;
+        }
+    }
+}
+.articleWrite {
+    margin: 10px 30px;
+    .toastui-editor-defaultUI {
+        width: 1138px;
+        border: 1px solid #9f9f9f;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+}
+
+.articleTag {
+    margin: 10px 30px;
+    input[type="text"] {
+        height: 40px;
+        padding: 0 10px;
+        border: 1px solid #9f9f9f;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+    > div {
+        padding: 10px 0;
+        margin-top: 10px;
+        span {
+            border: 1px solid #9f9f9f;
+            border-radius: 4px;
+            font-size: 16px;
+            padding: 4px 10px;
+            margin-right: 10px;
+            margin-bottom: 6px;
+            color: #4169e1;
+        }
+    }
+}
+.articleFile {
+    height: 40px;
+    margin: 10px 30px;
+    border: 1px solid #9f9f9f;
+    border-radius: 4px;
+    align-items: center;
+
+    input[type="file"] {
+        width: 240px;
+        padding: 0 10px;
+        font-size: 16px;
+        cursor: pointer;
+        border-right: 1px solid #9f9f9f;
+    }
+    .selected {
+        display: flex;
+        padding: 0 10px;
+        margin-left: 10px;
+        span {
+            margin-right: 20px;
+        }
+    }
+}
+.writeBtn {
+    justify-content: end;
+    margin: 20px 30px;
+    button {
+        display: flex;
+        background-color: transparent;
+        border: 1px solid #9f9f9f;
+        border-radius: 4px;
+        font-size: 16px;
+        font-weight: bolder;
+        padding: 8px 16px;
+        margin-left: 10px;
+        cursor: pointer;
+    }
+    .blue {
+        border: 1px solid #4169e1;
+        background-color: #4169e1;
+        color: white;
+    }
+}

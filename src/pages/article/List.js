@@ -1,9 +1,6 @@
 import React from 'react'
 import MainLayout from '../../layout/MainLayout'
 import '../../styles/article.scss'
-import { Link } from 'react-router-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCommentDots, faEye, faHeart, faThumbsUp } from '@fortawesome/free-regular-svg-icons'
 import ArticleBoxComponent from '../../components/article/ArticleBoxComponent'
 import PageingComponent from '../../components/common/paging/PageingComponent'
 

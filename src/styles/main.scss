@@ -14,6 +14,7 @@ a {
 }
 input,textarea {
     outline: none;
+    box-sizing: border-box;
 }
 div {
     box-sizing: border-box;
