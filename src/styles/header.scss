@@ -2,6 +2,7 @@ header{
     
     flex-direction: column;
     justify-content: center;
+    z-index: 30;
 
     > div {
         display: flex;
