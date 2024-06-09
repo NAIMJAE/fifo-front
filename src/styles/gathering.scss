@@ -1,111 +1,149 @@
-// 검색 카테고리 
+// 검색 카테고리
 .searchSkillMenu {
-    margin-bottom: 10px;
-  
-    .dropdown {
-      display: inline-block;
-      position: relative;
+  margin-bottom: 10px;
 
-      .skillTabBtn {
-        -webkit-box-pack: justify;
-        justify-content: space-between;
-        padding-left: 18px;
-        padding-right: 10px;
-        width: 140px;
-        height: 38px;
-        border: 1px solid rgb(227, 227, 227);
-        color: rgb(100, 100, 100);
-        font-weight: 500;
-        font-size: 16px;
-        letter-spacing: 0.03em;
-        display: flex;
-        -webkit-box-align: center;
-        align-items: center;
-        border-radius: 36px;
-        margin-bottom: 8px;
-        background-color: #fff;
-        cursor: pointer;
-      }
-    }
-  
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: #f9f9f9;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-      z-index: 1;
-      padding: 10px;
-      border: 1px solid #ccc;
-  
-      &.show {
-        display: block;
-      }
-  
-      ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-  
-        .catetgory_type1 {
-          padding: 5px 10px;
-          cursor: pointer;
-  
-          &.catetgory_selectedType1 {
-            font-weight: bold;
-            background-color: #f1f1f1;
-          }
-  
-          &:hover {
-            background-color: #f1f1f1;
-          }
-        }
-      }
+  .dropdown {
+    display: inline-block;
+    position: relative;
+
+    .skillTabBtn {
+      justify-content: space-between;
+      padding-left: 18px;
+      padding-right: 10px;
+      width: 140px;
+      height: 38px;
+      border: 1px solid rgb(227, 227, 227);
+      color: rgb(100, 100, 100);
+      font-weight: 500;
+      font-size: 16px;
+      letter-spacing: 0.03em;
+      display: flex;
+      align-items: center;
+      border-radius: 36px;
+      margin-bottom: 8px;
+      background-color: #fff;
+      cursor: pointer;
     }
   }
-  
-  // 기술 아이콘들
-  .tech-stack {
+
+  .dropdown-content {
+    width: 800px;
     display: none;
-    border: 1px solid #ccc;
+    position: absolute;
+    background-color: #f9f9f9;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
     padding: 10px;
-    margin-top: 10px;
-  
+    border: 1px solid #ccc;
+    border-radius: 10px; 
     &.show {
       display: block;
     }
-  
-    .languages {
+
+    .categoryTab {
+      padding: 10px;
+      margin-bottom: 30px;
+    }
+
+    ul {
       list-style: none;
       padding: 0;
-      margin: 0;
-      display: flex;
-      flex-wrap: wrap;
-  
-      .languageIcon {
-        display: flex;
-        align-items: center;
-        margin: 5px;
-        padding: 5px 10px;
-        border: 1px solid #ccc;
-        border-radius: 20px;
-        background-color: #f9f9f9;
+      margin-bottom: 25px;
+      border-bottom: 3px solid #f2f2f2; // 이거 이상해요 왜지? HELP
 
-        &.selectedLanguage {
-            background-color: #e1f5fe;
-            border-color: #4169e1;
-            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+      .catetgory_type1 {
+        float: left;
+        padding: 5px 20px;
+        cursor: pointer;
+        display: flex;
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 126.5%;
+        color: #848484;
+        position: relative;
+
+        &.catetgory_selectedType1 {
+          font-weight: bold;
+          color: #333;
+          border-radius: 10px;
+
+          &::after {
+            content: "";
+            position: absolute;
+            height: 3px;
+            width: calc(100% + 2px);
+            background: #4169e1;
+            left: 0px;
+            bottom: -8px;
+            border-radius: 2px;
           }
-  
-        .logo {
-          width: 20px;
-          height: 20px;
-          margin-right: 5px;
         }
-  
-        .languageName {
-          font-size: 14px;
+
+        &:hover {
+          
+          border-radius: 10px;
+
+          &::after {
+            content: "";
+            position: absolute;
+            height: 3px;
+            width: calc(100% + 2px);
+            background: #4169e1;
+            left: 0px;
+            bottom: -8px;
+            border-radius: 2px;
+          }
         }
       }
     }
   }
-  
+}
+
+// 기술 아이콘들
+.tech-stack {
+  display: none;
+  padding: 10px;
+  margin-top: 10px;
+
+  &.show {
+    display: block;
+  }
+
+  .languages {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+
+    .languageIcon {
+      display: flex;
+      align-items: center;
+      margin: 5px;
+      padding: 5px 10px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      background-color: #f9f9f9;
+
+      &.selectedLanguage {
+        background-color: #e1f5fe;
+        border-color: #4169e1;
+        box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+        border-radius: 20px;  // 선택된 아이콘의 모서리를 둥글게 설정
+      }
+
+      .logo {
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+      }
+
+      .languageName {
+        font-size: 15px;
+        font-weight: 550;
+        color: #333;
+        padding: 5px 8px;
+      }
+    }
+  }
+}

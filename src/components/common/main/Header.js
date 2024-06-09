@@ -22,7 +22,7 @@ const Header = () => {
             <div id='navInfo'>
                 <Link to="/develop">개발참조</Link>
                 <Link to="/">내모임</Link>
-                <Link to="/">모임찾기</Link>
+                <Link to="/gathering/list">모임찾기</Link>
                 <Link to="/article/list">게시판</Link>
                 <Link to="/">등급평가</Link>
             </div>
