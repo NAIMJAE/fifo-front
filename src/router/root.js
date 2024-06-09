@@ -18,7 +18,7 @@ const root = createBrowserRouter([
 
 
     /** 모임 */
-    { path: '/mooim/list', element: <ListPage />}
+    { path: '/gathering/list', element: <ListPage />}
 
 ]);
 export default root;
