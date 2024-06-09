@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import MainLayout from '../../layout/MainLayout'
+import '../../styles/article.scss'
 import {Viewer} from '@toast-ui/react-editor';
 import Breadcrumb from '../../components/common/main/Breadcrumb';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
