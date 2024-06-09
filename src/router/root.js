@@ -1,8 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainPage from "../pages/MainPage";
-import List from "../pages/article/List";
 import Develop from "../pages/Develop";
-import Write from "../pages/article/Write";
+
+import ArticleListPage from "../pages/article/ListPage";
+import ArticleWritePage from "../pages/article/WritePage";
+import ArticleViewPage from "../pages/article/ViewPage";
+
 import ListPage from "../pages/gathering/ListPage";
 
 const root = createBrowserRouter([
@@ -12,9 +15,9 @@ const root = createBrowserRouter([
     { path: '/develop', element: <Develop /> },
 
     /** 게시판 */
-    { path: '/article/list', element: <List /> },
-    { path: '/article/write', element: <Write /> },
-
+    { path: '/article/list', element: <ArticleListPage /> },
+    { path: '/article/write', element: <ArticleWritePage /> },
+    { path: '/article/view', element: <ArticleViewPage /> },
 
 
     /** 모임 */

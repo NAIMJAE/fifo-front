@@ -3,10 +3,13 @@ import MainLayout from '../../layout/MainLayout'
 import '../../styles/article.scss'
 import ArticleBoxComponent from '../../components/article/ArticleBoxComponent'
 import PageingComponent from '../../components/common/paging/PageingComponent'
+import Breadcrumb from '../../components/common/main/Breadcrumb'
 
 const List = () => {
   return (
     <MainLayout>
+
+        <Breadcrumb crumb={"게시판 / 글목록"}/>
 
         <div className='cntRow articleCate'>
             <p className='cateOn'>전체</p>
@@ -44,7 +47,10 @@ const List = () => {
             <ArticleBoxComponent/>
         </div>
 
-        <PageingComponent/>
+        <div className='pageAndBtn'>
+            <PageingComponent/>
+            <button>글쓰기</button>
+        </div>
 
     </MainLayout>
   )
