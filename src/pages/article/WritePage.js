@@ -1,13 +1,9 @@
 import React, { useRef, useState } from 'react'
 import MainLayout from '../../layout/MainLayout'
-import { Editor } from '@toast-ui/react-editor';
-import '@toast-ui/editor/dist/toastui-editor.css';
-import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
-import 'tui-color-picker/dist/tui-color-picker.css';
-import '@toast-ui/editor/dist/i18n/ko-kr';
 import { articleWriteApi } from '../../api/articleApi';
-import { v4 as uuidv4 } from 'uuid';
 import { RootUrl } from '../../api/RootUrl';
+import { changeImages } from '../../components/common/toast/ImageProcessing';
+import EditorComponent from '../../components/common/toast/EditorComponent';
 
 /** 입력한 태그 이전 상태 저장 (태그 개수 제한) */
 let prevValue = "";
@@ -32,7 +28,6 @@ const Write = () => {
 
     const createFile = (event) => {
         const files = event.target.files;
-        console.log(typeof files)
         setFileList(files);
         const fileNames = Array.from(files).map(file => file.name);
         setFileNameList(fileNames);
@@ -59,9 +54,10 @@ const Write = () => {
         // 게시글 내용 꺼내오기
         let contents = editorRef.current.getInstance().getHTML();
         
-        // 게시글 내용 속 이미지 변환
+        // 게시글 내용 속 이미지 변환 (changeImages 컴포넌트화 시킴)
         const resultData = await changeImages(contents);
         if (resultData !== null) {
+            // null 체크 안하면 에러
             resultData.imageList.forEach((image, i) => {
                 const imageURL = `${RootUrl()}/uploads/post/images/${image.name}`;
                 contents = contents.replace(resultData.srcPull[i].slice(5, -1), imageURL);
@@ -93,48 +89,6 @@ const Write = () => {
         }
     }
 
-/** 게시글에서 base64 추출 */
-    const changeImages = async (contents) => {
-        const matchSrc = /src="([^"]*)"/g;
-        const srcPull = contents.match(matchSrc);
-        console.log(srcPull);
-
-        let imageList = [];
-        if (srcPull !== null) {
-            for (let i = 0; i < srcPull.length; i++) {
-                const base64 = srcPull[i].slice(5, -1);  // base64 코드
-                const imgData = base64.match(/data:(.*?);/)[1];  // 이미지 data
-                const extension = imgData.split('/')[1];  // 확장자
-                const fileName = `${uuidv4()}.${extension}`;  // 랜덤 이름 생성
-                
-                const file = base64ToFile(base64, fileName);  // 게시글 이미지 변환 (base64 -> file)
-                imageList.push(file);
-            }
-        }else {
-            return null;
-        }
-        const resultData = {
-            imageList : imageList,
-            srcPull : srcPull
-        }
-        console.log(resultData);
-        return resultData;
-    }
-
-/** 게시글 이미지 변환 (base64 -> file) */
-    const base64ToFile = (base64, fileName) => {
-        const arr = base64.split(',');
-        const mime = arr[0].match(/:(.*?);/)[1];
-        const bstr = atob(arr[1]);
-        let n = bstr.length;
-        const u8arr = new Uint8Array(n);
-        while (n--) {
-            u8arr[n] = bstr.charCodeAt(n);
-        }
-        return new File([u8arr], fileName, { type: mime });
-    };
-
-
 
   return (
     <MainLayout>
@@ -149,16 +103,7 @@ const Write = () => {
         </div>
 
         <div className='cntRow articleWrite'>
-            <Editor
-                initialValue="내용"
-                previewStyle="vertical"
-                height="600px"
-                initialEditType="wysiwyg"
-                useCommandShortcut={false}
-                plugins={[colorSyntax]}
-                language="ko-KR"
-                ref={editorRef}
-            />
+            <EditorComponent editorRef={editorRef}/>
         </div>
 
         <div className='cntRow articleFile'>
