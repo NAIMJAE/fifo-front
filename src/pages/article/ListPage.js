@@ -4,6 +4,7 @@ import '../../styles/article.scss'
 import ArticleBoxComponent from '../../components/article/ArticleBoxComponent'
 import PageingComponent from '../../components/common/paging/PageingComponent'
 import Breadcrumb from '../../components/common/main/Breadcrumb'
+import { Link } from 'react-router-dom'
 
 const List = () => {
   return (
@@ -49,7 +50,7 @@ const List = () => {
 
         <div className='pageAndBtn'>
             <PageingComponent/>
-            <button>글쓰기</button>
+            <Link to="/article/write" className='hvMdBtn'>글쓰기</Link>
         </div>
 
     </MainLayout>

@@ -144,21 +144,12 @@
 }
 .pageAndBtn {
     display: flex;
-    margin: 20px 20px 0 130px;
+    margin: 20px 20px 0 120px;
     .paging {
-        width: 940px;
+        width: 960px;
     }
-    > button {
-        width: 100px;
-        height: 31px;
-        box-sizing: border-box;
-        background-color: transparent;
-        border: 1px solid #9f9f9f;
-        border-radius: 4px;
-        font-size: 16px;
-        font-weight: bolder;
-        padding: 4px 16px;
-        cursor: pointer;
+    .hvMdBtn {
+        margin-bottom: 20px;
     }
 }
 
