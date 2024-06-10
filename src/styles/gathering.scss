@@ -27,7 +27,7 @@
   }
 
   .dropdown-content {
-    width: 800px;
+    width: 550px;
     display: none;
     position: absolute;
     background-color: #f9f9f9;
@@ -42,7 +42,6 @@
 
     .categoryTab {
       padding: 10px;
-      margin-bottom: 30px;
     }
 
     ul {
@@ -57,7 +56,7 @@
         cursor: pointer;
         display: flex;
         font-weight: 700;
-        font-size: 20px;
+        font-size: 17px;
         line-height: 126.5%;
         color: #848484;
         position: relative;
@@ -98,7 +97,10 @@
     }
   }
 }
-
+// 검색 자동완성
+#tags-outlined {
+  width: 200px;
+}
 // 기술 아이콘들
 .tech-stack {
   display: none;
@@ -107,6 +109,7 @@
 
   &.show {
     display: block;
+
   }
 
   .languages {
@@ -147,3 +150,46 @@
     }
   }
 }
+// 레벨 버튼 스타일
+.levels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.levelButton {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+.levelButton.selectedLevel {
+  background-color: #e1f5fe;
+  border-color: #4169e1;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+}
+
+// 태그 표시 스타일
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+      padding: 5px;
+
+  .tag {
+    padding: 5px 10px;
+    background-color: #f1f1f1;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #333;
+  }
+
+}
+
+
+
+
