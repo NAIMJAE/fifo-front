@@ -93,6 +93,16 @@ const Develop = () => {
                 <SkillIcon skill={"Java"} />
                 <SkillIcon skill={"JavaScript"} />
             </div>
+
+            <div className='cntRow'>
+                <button className='smBtn maR10'>기본소</button>
+                <button className='mdBtn maR10'>기본중</button>
+                <button className='lgBtn maR10'>기본대</button>
+
+                <button className='hvSmBtn maR10'>호버소</button>
+                <button className='hvMdBtn maR10'>호버중</button>
+                <button className='hvLgBtn maR10'>호버대</button>
+            </div>
         </div>
     </MainLayout>
   )
