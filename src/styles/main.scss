@@ -101,6 +101,25 @@ footer {
         border-bottom: 2px solid #4169e1;
     }
 }
+/*** 빵가루 (Breadcrumb) ***/
+.Breadcrumb {
+    position: relative;
+    display: flex;
+    margin: 10px 20px 0 20px;
+    span {
+        display: flex;
+        width: 100%;
+        height: 10px;
+        border-bottom: 1px solid #9f9f9f;
+    }
+    p {
+        position: absolute;
+        right: 20px;
+        display: flex;
+        padding: 0 10px;
+        background-color: white;
+    }
+}
 
 /*** 메인 페이지 ***/
 .adBox {
