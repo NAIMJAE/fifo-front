@@ -19,6 +19,7 @@ const root = createBrowserRouter([
     { path: '/article/write', element: <ArticleWritePage /> },
     { path: '/article/view', element: <ArticleViewPage /> },
 
+    
 
     /** 모임 */
     { path: '/gathering/list', element: <ListPage />}
