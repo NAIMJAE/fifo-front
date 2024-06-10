@@ -8,20 +8,22 @@ import ArticleViewPage from "../pages/article/ViewPage";
 
 import ListPage from "../pages/gathering/ListPage";
 
+import LoginPage from "../pages/user/LoginPage";
+
 const root = createBrowserRouter([
+  /** 메인 페이지 */
+  { path: "/", element: <MainPage /> },
+  { path: "/develop", element: <Develop /> },
 
-    /** 메인 페이지 */
-    { path: '/', element: <MainPage /> },
-    { path: '/develop', element: <Develop /> },
+  /** 게시판 */
+  { path: "/article/list", element: <ArticleListPage /> },
+  { path: "/article/write", element: <ArticleWritePage /> },
+  { path: "/article/view", element: <ArticleViewPage /> },
 
-    /** 게시판 */
-    { path: '/article/list', element: <ArticleListPage /> },
-    { path: '/article/write', element: <ArticleWritePage /> },
-    { path: '/article/view', element: <ArticleViewPage /> },
+  /** 모임 */
+  { path: "/gathering/list", element: <ListPage /> },
 
-
-    /** 모임 */
-    { path: '/gathering/list', element: <ListPage />}
-
+  /** 회원 */
+  { path: "/user/login", element: <LoginPage /> },
 ]);
 export default root;
