@@ -11,3 +11,8 @@ export const articleWriteApi = async (formData) => {
     });
     return response.data;
 };
+
+export const articleListApi = async (data) => {
+    const response = await axios.post(`${rootURL}/post/list`, data);
+    return response.data;
+};

@@ -100,20 +100,18 @@ const Write = () => {
     return (
         <MainLayout>
 
-            <div className='cntRow articleTitle'>
-                <input type="text" placeholder='제목' onChange={(e) => { setTitle(e.target.value) }} />
-                <select name="" id="" onChange={(e) => { setCate(e.target.value) }}>
-                    <option value="1">자유게시판</option>
-                    <option value="2">업계소식</option>
-                    <option value="3">면접후기</option>
-                </select>
+            <div className='cntRow gatheringTitle'>
+                모임 생성?
             </div>
 
-            <div className='cntColumn gatheringCateGroup'>
+            <div className='cntRow gatheringCateGroup'>
                 <div className='selectGroup'>
                     <span>모임 유형</span>
                     <div className='groupType'>
-                        <button className={groupType === '프로젝트' ? 'active' : ''} onClick={() => setGroupType('프로젝트')}>프로젝트</button>
+                        <button className={groupType === '프로젝트' ? 'active' : ''} onClick={() => setGroupType('프로젝트')}>
+                            프로젝트
+                            <p>팀원을 모집해 <br/>사이트 프로젝트를<br/>진행해보세요.</p>
+                        </button>
                         <button className={groupType === '스터디' ? 'active' : ''} onClick={() => setGroupType('스터디')}>스터디</button>
                         <button className={groupType === '모임' ? 'active' : ''} onClick={() => setGroupType('모임')}>모임</button>
                     </div>
@@ -126,6 +124,57 @@ const Write = () => {
                         <button className={meetingMethod === '오프라인' ? 'active' : ''} onClick={() => setMeetingMethod('오프라인')}>오프라인</button>
                     </div>
                 </div>
+            </div>
+
+            <div className='cntRow gatheringData'>
+                <div className='cntColumn'>
+                    <span>모집 인원</span>
+                    <select name="" id="">
+                        <option value="2">2명</option>
+                        <option value="3">3명</option>
+                        <option value="4">4명</option>
+                    </select>
+                </div>
+                <div className='cntColumn'>
+                    <span>모집 기간</span>
+                    <div>
+                        <input type="date" />
+                        <b>~</b>
+                        <input type="date" />
+                    </div>
+                </div>
+            </div>
+
+            <div className='cntRow gatheringData'>
+                <div className='cntColumn'>
+                    <span>모집 포지션</span>
+                    <select name="" id="">
+                        <option value="">백앤드</option>
+                        <option value="">프론트앤드</option>
+                        <option value="">디자이너</option>
+                    </select>
+                </div>
+                <div className='cntColumn'>
+                    <span>진행 기간</span>
+                    <div>
+                        <input type="date" />
+                        <b>~</b>
+                        <input type="date" />
+                    </div>
+                </div>
+            </div>
+
+            <div className='cntRow detail'>
+                세부사항
+            </div>
+
+            <div className='cntRow articleTitle'>
+                <input type="text" placeholder='제목' onChange={(e) => { setTitle(e.target.value) }} />
+                <select name="" id="" onChange={(e) => { setCate(e.target.value) }}>
+                    <option value="1">자유게시판</option>
+                    <option value="2">업계소식</option>
+                    <option value="3">면접후기</option>
+                </select>
             </div>
 
             <div className='cntRow articleWrite'>
