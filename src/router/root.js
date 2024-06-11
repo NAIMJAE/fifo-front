@@ -6,9 +6,11 @@ import ArticleListPage from "../pages/article/ListPage";
 import ArticleWritePage from "../pages/article/WritePage";
 import ArticleViewPage from "../pages/article/ViewPage";
 
-import ListPage from "../pages/gathering/ListPage";
+import GatheringListPage from "../pages/gathering/ListPage";
+import GatheringWritePage from "../pages/gathering/WritePage";
 
 import LoginPage from "../pages/user/LoginPage";
+
 
 const root = createBrowserRouter([
   /** 메인 페이지 */
@@ -21,7 +23,8 @@ const root = createBrowserRouter([
   { path: "/article/view", element: <ArticleViewPage /> },
 
   /** 모임 */
-  { path: "/gathering/list", element: <ListPage /> },
+  { path: "/gathering/list", element: <GatheringListPage /> },
+  { path: "/gathering/write", element: <GatheringWritePage /> },
 
   /** 회원 */
   { path: "/user/login", element: <LoginPage /> },
