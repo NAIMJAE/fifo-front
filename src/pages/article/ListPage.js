@@ -1,12 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import MainLayout from '../../layout/MainLayout'
 import '../../styles/article.scss'
 import ArticleBoxComponent from '../../components/article/ArticleBoxComponent'
 import PageingComponent from '../../components/common/paging/PageingComponent'
 import Breadcrumb from '../../components/common/main/Breadcrumb'
 import { Link } from 'react-router-dom'
+import { articleListApi } from '../../api/articleApi'
 
 const List = () => {
+
+    useEffect(() => {
+        const selectArticleList = async () => {
+            try {
+                const response = await articleListApi();
+            }catch (err) {
+                console.log(err);
+            }
+        }
+    }, [])
+
   return (
     <MainLayout>
 
