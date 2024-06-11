@@ -15,7 +15,7 @@ import { v4 as uuidv4 } from 'uuid';
       '이미지를 저장할 주소 + 랜덤이름'으로 치환하면 서버에 넘길 contents 생성 완료
     - 마지막으로 contents를 formData에 추가
 
-    - 이해 안되면 ☎문의☎
+    - 이해 안되면 ☎문의 박임재☎
  */
 
 /** 게시글 이미지 변환 (base64 -> file) */
