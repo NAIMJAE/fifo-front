@@ -4,7 +4,7 @@ const rootURL = RootUrl();
 
 /** 게시글 작성 API */
 export const articleWriteApi = async (formData) => {
-    const response = await axios.post(`${rootURL}/post/write`, formData ,{
+    const response = await axios.post(`${rootURL}/post`, formData ,{
         headers: {
             'Content-Type': 'multipart/form-data',
         },

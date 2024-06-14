@@ -52,14 +52,14 @@ const List = () => {
         <Breadcrumb crumb={"게시판 / 글목록"}/>
 
         <div className='cntRow articleCate'>
-            <p className={`${pageable.cateNo === "1" ? 'cateOn' : ''}`}
-                onClick={(e) => {setPageable(prev => ({...prev, cateNo:"1"}))}}>자유게시판</p>
+            <p className={`${pageable.cateNo === 1 ? 'cateOn' : ''}`}
+                onClick={(e) => {setPageable(prev => ({...prev, cateNo: 1 }))}}>자유게시판</p>
 
-            <p className={`${pageable.cateNo === "2" ? 'cateOn' : ''}`}
-                onClick={(e) => {setPageable(prev => ({...prev, cateNo:"2"}))}}>업계소식</p>
+            <p className={`${pageable.cateNo === 2 ? 'cateOn' : ''}`}
+                onClick={(e) => {setPageable(prev => ({...prev, cateNo: 2 }))}}>업계소식</p>
 
-            <p className={`${pageable.cateNo === "3" ? 'cateOn' : ''}`}
-                onClick={(e) => {setPageable(prev => ({...prev, cateNo:"3"}))}}>면접후기</p>
+            <p className={`${pageable.cateNo === 3 ? 'cateOn' : ''}`}
+                onClick={(e) => {setPageable(prev => ({...prev, cateNo: 3 }))}}>면접후기</p>
         </div>
 
         <div className='cntRow articleSearch'>
