@@ -104,7 +104,7 @@ const Write = () => {
     return (
         <MainLayout>
             <div className='cntRow gatheringTitle'>
-                모임 생성?
+                모임 생성
             </div>
             <div className='cntRow gatheringCateGroup'>
                 <div className='selectGroup'>
@@ -165,7 +165,10 @@ const Write = () => {
                 </div>
             </div>
             <div className='cntRow gatheringData'>
+            <div className='cntColumn'>
+            <span>모집 언어</span>
                 <SkillTags onChange={handleLanguageChange} />
+            </div>
             </div>
             <div className='cntRow detail'>
                 세부사항
