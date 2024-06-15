@@ -8,14 +8,28 @@ import { faCommentDots, faEye, faHeart, faThumbsUp, faTrashCan } from '@fortawes
 import CommentListComponent from '../../components/article/CommentListComponent';
 import CommentWriteComponent from '../../components/article/CommentWriteComponent';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { useLocation } from 'react-router-dom';
+import { articleViewApi } from '../../api/articleApi';
 
 const ViewPage = () => {
+
+     // URL에서 파라미터값 추출
+     const location = useLocation();
+     const queryParams = new URLSearchParams(location.search);
+     let pno = queryParams.get('pno');
 
     const [articleView, setArticleView] = useState({ articleTitle: '', articleCnt: '' });
 
     useEffect (() => {
-        const response = {articleTitle : "우리집 뽀삐 보고 가세요." , articleCnt : "우리집 뽀삐 보고 가세요."}
-        setArticleView(response);
+        const selectArticle = async () => {
+            try {
+                const response = await articleViewApi(pno); 
+                setArticleView(response);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        selectArticle();
     }, []);
 
 
