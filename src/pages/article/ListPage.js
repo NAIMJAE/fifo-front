@@ -19,7 +19,7 @@ const List = () => {
     })
 
     /** 게시글 목록 useState */
-    const [post, setPost] = useState([]);
+    const [postList, setPostList] = useState("");
 
     /** 서버에서 게시글 목록 받아오는 useEffect */
     useEffect(() => {
@@ -28,6 +28,7 @@ const List = () => {
             try {
                 const response = await articleListApi(pageable);
                 console.log(response);
+                setPostList(response);
             }catch (err) {
                 console.log(err);
             }
@@ -45,6 +46,10 @@ const List = () => {
         setPageable(prev => ({...prev, keyword: searchKeyword}));
     }
 
+    // pg변경 함수 (페이징 버튼 클릭시)
+    const changePage = (newPg) => {
+        setPageable(prev => ({...prev, pg: newPg}));
+    }
 
   return (
     <MainLayout>
@@ -87,18 +92,11 @@ const List = () => {
         </div>
 
         <div className='cntColumn articleList'>
-            <ArticleBoxComponent post={post}/>
-            <ArticleBoxComponent/>
-            <ArticleBoxComponent/>
-            <ArticleBoxComponent/>
-            <ArticleBoxComponent/>
-            <ArticleBoxComponent/>
-            <ArticleBoxComponent/>
-            <ArticleBoxComponent/>
+            <ArticleBoxComponent postList={postList}/>
         </div>
 
         <div className='pageAndBtn'>
-            <PageingComponent pageable={pageable}/>
+            <PageingComponent cntList={postList} changePage={changePage}/>
             <Link to="/article/write" className='hvMdBtn'>글쓰기</Link>
         </div>
 
