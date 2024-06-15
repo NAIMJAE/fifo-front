@@ -8,12 +8,12 @@ import SkillTags from '../../components/gathering/SkillTags';
 
 const Write = () => {
 
-    /** 모임 Data */
+/** 모임 Data */
     const [gathering, setGathering] = useState({
         gathcate: "",  // 카테고리
         userno: 1,  // 임시 유저 정보
         gathtitle: "",  // 제목
-        gathdetail: "",  // 게시글 내용
+        gathdetail: "",  // 게시글 내용 (content)
         gathmode: "",  // 모임 방식
         gathnowmember: 0,  // 모집된 인원 (초기값 0)
         gathtotalmember: "",  // 모집 총 인원
@@ -27,19 +27,11 @@ const Write = () => {
         gathstate: ""  // 모집 상태
     });
 
+/** 선택한 포지션 문자열 저장 */
     const [selectedPositions, setSelectedPositions] = useState([]);
-    const editorRef = useRef(); // 게시글 내용 저장
 
-    /** 첨부파일 이름 보여주기 */
-    const [fileList, setFileList] = useState([]);
-    const [fileNameList, setFileNameList] = useState([]);
-
-    const createFile = (event) => {
-        const files = event.target.files;
-        setFileList(files);
-        const fileNames = Array.from(files).map(file => file.name);
-        setFileNameList(fileNames);
-    }
+/** 게시글 내용 저장 */
+    const editorRef = useRef();
 
     /** 게시글 정보 입력 */
     const handleInputChange = (e) => {
@@ -183,14 +175,6 @@ const Write = () => {
             </div>
             <div className='cntRow articleWrite'>
                 <EditorComponent editorRef={editorRef} />
-            </div>
-            <div className='cntRow articleFile'>
-                <input type="file" multiple onChange={createFile} />
-                <div className='selected'>
-                    {fileNameList ? fileNameList.map((file, index) => (
-                        <span key={index}>{file}</span>
-                    )) : (<></>)}
-                </div>
             </div>
             <div className='cntRow writeBtn'>
                 <button>취소</button>
