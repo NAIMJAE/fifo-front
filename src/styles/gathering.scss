@@ -1,4 +1,4 @@
-// 검색 카테고리
+/* 검색 카테고리 */
 .searchSkillMenu {
   margin-bottom: 10px;
 
@@ -27,22 +27,18 @@
   }
 
   .dropdown-content {
-    width: 800px;
-    display: none;
-    position: absolute;
+    width: 550px;
+    display: block; /* 초기부터 보이도록 수정 */
+    position: relative;
     background-color: #f9f9f9;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     z-index: 1;
     padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 10px; 
-    &.show {
-      display: block;
-    }
+    border-radius: 10px;
 
     .categoryTab {
       padding: 10px;
-      margin-bottom: 30px;
     }
 
     ul {
@@ -57,7 +53,7 @@
         cursor: pointer;
         display: flex;
         font-weight: 700;
-        font-size: 20px;
+        font-size: 17px;
         line-height: 126.5%;
         color: #848484;
         position: relative;
@@ -80,7 +76,6 @@
         }
 
         &:hover {
-          
           border-radius: 10px;
 
           &::after {
@@ -99,15 +94,53 @@
   }
 }
 
-// 기술 아이콘들
+/* 검색 자동완성 */
+#tags-outlined {
+  width: 200px;
+}
+
+
+/* 섹션 타이틀 스타일 */
+.sectionTitle {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* 버튼 스타일 추가 */
+.meetingType, .meetingMethod, .techStack, .levels {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 20px;
+
+  button {
+    flex: 1;
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #9f9f9f;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, border 0.3s;
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+
+    &.active {
+      background-color: #4169e1;
+      color: white;
+      border-color: #4169e1;
+    }
+  }
+}
+/* 기술 아이콘들 */
 .tech-stack {
-  display: none;
+  display: block; /* 초기부터 보이도록 수정 */
   padding: 10px;
   margin-top: 10px;
-
-  &.show {
-    display: block;
-  }
 
   .languages {
     list-style: none;
@@ -129,7 +162,7 @@
         background-color: #e1f5fe;
         border-color: #4169e1;
         box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
-        border-radius: 20px;  // 선택된 아이콘의 모서리를 둥글게 설정
+        border-radius: 20px;
       }
 
       .logo {
@@ -145,5 +178,268 @@
         padding: 5px 8px;
       }
     }
+  }
+}
+
+/* 레벨 버튼 스타일 */
+.levels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.levelButton {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+.levelButton.selectedLevel {
+  background-color: #e1f5fe;
+  border-color: #4169e1;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+}
+
+/* 태그 표시 스타일 */
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 5px;
+
+  .tag {
+    padding: 5px 10px;
+    background-color: #f1f1f1;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #333;
+  }
+}
+
+/* 글 작성 관련 스타일 */
+.articleTitle {
+  margin: 20px 30px;
+  justify-content: space-between;
+  input {
+    width: 920px;
+    height: 40px;
+    padding: 0 20px;
+    border: 1px solid #9f9f9f;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  select {
+    width: 200px;
+    padding: 0 10px;
+    border: 1px solid #9f9f9f;
+    border-radius: 4px;
+    font-size: 16px;
+    option {
+      font-size: 16px;
+    }
+  }
+}
+
+.gatheringTitle {
+  margin: 20px 30px;
+  font-size: 30px;
+}
+
+.gatheringCateGroup {
+  margin: 10px 20px;
+  display: flex;
+  .selectGroup {
+    display: flex;
+    flex-direction: column;
+    margin: 0px 10px;
+    width: 50%;
+    span {
+      margin: 0 10px 10px 0;
+      font-size: 17px;
+      font-weight: 600;
+      color: #333;
+    }
+    .groupType, .meetingMethod {
+      display: flex;
+      justify-content: space-between;
+      button {
+        width: 170px;
+        height: 110px;
+        padding: 10px;
+        border: 1px solid #9f9f9f;
+        border-radius: 4px;
+        font-size: 18px;
+        cursor: pointer;
+        background-color: white;
+
+        p {
+          color: #7b7b7b;
+          margin-top: 10px;
+        }
+      }
+      .active {
+        background-color: rgba(8, 0, 255, 0.5);
+        color: white;
+        border: 1px solid #4169e1;
+        p {
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+.gatheringData {
+  margin: 10px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  > div {
+    margin: 0px 10px;
+    width: 45%;
+    span {
+      margin: 0 10px 10px 0;
+      font-size: 17px;
+      font-weight: 600;
+      color: #333;
+    }
+    select {
+      display: flex;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #9f9f9f;
+      border-radius: 4px;
+      option {
+        display: flex;
+        padding: 10px;
+        font-size: 16px;
+      }
+    }
+    b {
+      margin: 0 18px;
+      font-size: 20px;
+    }
+    input[type="date"] {
+      width: 45%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #9f9f9f;
+      border-radius: 4px;
+    }
+  }
+  select {
+    display: flex;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #9f9f9f;
+    border-radius: 4px;
+    margin: 0 5px;
+    option {
+      display: flex;
+      padding: 10px;
+      font-size: 16px;
+    }
+  }
+  .MuiChip-label {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0px;
+    color: #f4efef;
+  }
+}
+
+.detail {
+  margin: 30px 30px 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: #333;
+}
+
+.articleWrite {
+  margin: 10px 30px;
+  span {
+    margin: 0 10px 10px 0;
+    font-size: 17px;
+    font-weight: 600;
+    color: #333;
+  }
+  .toastui-editor-defaultUI {
+    width: 1138px;
+    border: 1px solid #9f9f9f;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+}
+
+.articleTag {
+  margin: 10px 30px;
+  input[type="text"] {
+    height: 40px;
+    padding: 0 10px;
+    border: 1px solid #9f9f9f;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  > div {
+    padding: 10px 0;
+    margin-top: 10px;
+    span {
+      border: 1px solid #9f9f9f;
+      border-radius: 4px;
+      font-size: 16px;
+      padding: 4px 10px;
+      margin-right: 10px;
+      margin-bottom: 6px;
+      color: #4169e1;
+    }
+  }
+}
+
+.articleFile {
+  height: 40px;
+  margin: 10px 30px;
+  border: 1px solid #9f9f9f;
+  border-radius: 4px;
+  align-items: center;
+
+  input[type="file"] {
+    width: 240px;
+    padding: 0 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border-right: 1px solid #9f9f9f;
+  }
+  .selected {
+    display: flex;
+    padding: 0 10px;
+    margin-left: 10px;
+    span {
+      margin-right: 20px;
+    }
+  }
+}
+
+.writeBtn {
+  display: flex;
+  justify-content: end;
+  margin: 20px 30px;
+  button {
+    display: flex;
+    background-color: transparent;
+    border: 1px solid #9f9f9f;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bolder;
+    padding: 8px 16px;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+  .blue {
+    border: 1px solid #4169e1;
+    background-color: #4169e1;
+    color: white;
   }
 }

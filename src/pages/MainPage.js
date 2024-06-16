@@ -19,7 +19,7 @@ const MainPage = () => {
     }
     apiTest();
     if (test !== "") {
-      alert("서버 연결 성공" + "\n" + "아이디 : " + test.uid + "\n" + "이름 : " + test.name )
+      alert("서버 연결 성공" + "\n" + "아이디 : " + test.uid + "\n" + "이름 : " + test.name );
     }else {
       alert("서버 연결 실패");
     }
@@ -51,10 +51,6 @@ const MainPage = () => {
 
           <div className='cntWrapRow gatherList'>
 
-            <GatherBoxComponent/>
-            <GatherBoxComponent/>
-            <GatherBoxComponent/>
-            <GatherBoxComponent/>
             <GatherBoxComponent/>
             <GatherBoxComponent/>
             <GatherBoxComponent/>
