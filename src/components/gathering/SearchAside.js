@@ -11,9 +11,10 @@ import {
   InputLabel,
   OutlinedInput
 } from '@mui/material';
-import SkillIcon from '../../SkillIcon';
+import SkillIcon from './SkillIcon';
 import '../../styles/gathering.scss';
 
+/** 스킬 리스트 */
 const languagesList = [
   { name: 'JavaScript' },
   { name: 'Java' },

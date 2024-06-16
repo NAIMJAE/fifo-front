@@ -56,10 +56,6 @@ const MainPage = () => {
             <GatherBoxComponent/>
             <GatherBoxComponent/>
             <GatherBoxComponent/>
-            <GatherBoxComponent/>
-            <GatherBoxComponent/>
-            <GatherBoxComponent/>
-            <GatherBoxComponent/>
 
           </div>
         </div>

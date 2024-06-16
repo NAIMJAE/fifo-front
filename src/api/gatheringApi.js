@@ -11,3 +11,13 @@ export const gatheringWriteApi = async (formData) => {
     });
     return response.data;
 };
+/** 모임글 목록 API */
+export const gatheringListApi = async (data) => {
+    const response = await axios.post(`${rootURL}/gatherings`, data);
+    return response.data;
+};
+/** 모임글 보기 API */
+export const gatheringViewApi = async (pno) => {
+    const response = await axios.get(`${rootURL}/gathering`, pno);
+    return response.data;
+};

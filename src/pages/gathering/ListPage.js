@@ -1,10 +1,46 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import GatherBoxComponent from '../../components/main/GatherBoxComponent';
 import MainLayout from '../../layout/MainLayout';
 import '../../styles/gathering.scss';
 import SearchAside from '../../components/gathering/SearchAside';
+import { gatheringListApi } from '../../api/gatheringApi';
+import PageingComponent from '../../components/common/paging/PageingComponent';
+import { Link } from 'react-router-dom';
 
 const ListPage = () => {
+
+  /** 검색을 위한 useState */
+  const [pageable, setPageable] = useState({
+    cateNo: 1,
+    sort: "gathno",
+    type: "",
+    keyword: "",
+    pg: "",
+  })
+
+  /** 모임글 목록 useState */
+  const [gathList, setGathList] = useState("");
+
+  /** 서버에서 모임글 목록 받아오는 useEffect */
+  useEffect(() => {
+    console.log(pageable);
+    const selectArticleList = async () => {
+      try {
+        const response = await gatheringListApi(pageable);
+        console.log(response);
+        setGathList(response);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    selectArticleList();
+  }, [pageable])
+
+  // pg변경 함수 (페이징 버튼 클릭시)
+  const changePage = (newPg) => {
+    setPageable(prev => ({ ...prev, pg: newPg }));
+  }
+
   return (
     <MainLayout>
       <div className="container">
@@ -15,19 +51,15 @@ const ListPage = () => {
           <div className='cntColumn'>
             {/** 모임 글 목록 */}
             <div className='cntWrapRow gatherList'>
-              <GatherBoxComponent />
-              <GatherBoxComponent />
-              <GatherBoxComponent />
-              <GatherBoxComponent />
-              <GatherBoxComponent />
-              <GatherBoxComponent />
-              <GatherBoxComponent />
-              <GatherBoxComponent />
-              <GatherBoxComponent />
+              <GatherBoxComponent gathList={gathList} />
             </div>
           </div>
         </div>
       </div>
+      <div className='pageAndBtn'>
+            <PageingComponent cntList={gathList} changePage={changePage}/>
+            <Link to="/gathering/write" className='hvMdBtn'>글쓰기</Link>
+        </div>
     </MainLayout>
   );
 };

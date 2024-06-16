@@ -2,7 +2,7 @@ import React from "react";
 import MainLayout from "../layout/MainLayout";
 import "../styles/develop.scss";
 import PageingComponent from "../components/common/paging/PageingComponent";
-import SkillIcon from "../SkillIcon";
+import SkillIcon from "../components/gathering/SkillIcon";
 
 const Develop = () => {
   return (

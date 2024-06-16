@@ -155,6 +155,7 @@ footer {
     }
 
 }
+
 .gatherList {
     width: 100%;
     height: auto;
@@ -211,6 +212,15 @@ footer {
             }
         }
 
+    }
+    .gathSkillList {
+        //height: 200px;
+        flex-wrap: wrap;
+
+        .MuiChip-label {
+            width: auto;
+            border: none;
+        }
     }
 }
 /** 기술 이미지 */

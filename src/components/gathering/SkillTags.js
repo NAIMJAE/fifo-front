@@ -3,6 +3,7 @@ import Chip from '@mui/material/Chip';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
+import { getSkillColor } from '../../utils/skillUtils'; 
 
 export default function SkillTags({ onChange }) {
   const [selectedSkills, setSelectedSkills] = React.useState([]);
@@ -14,28 +15,10 @@ export default function SkillTags({ onChange }) {
     onChange(selectedLanguages);
   };
 
-  /** 같은 종류의 언어는 선택할 수 없게 필터링 */ 
+  /** 같은 종류의 언어는 선택할 수 없게 필터링 */
   const isSkillSelected = (skill) => {
     const baseSkill = skill.split(' Lv')[0];
     return selectedSkills.some(selected => selected.name.includes(baseSkill));
-  };
-
-  /** 스킬에 따른 색상 매핑 */
-  const skillColors = {
-    'JavaScript': '#F7DF1E', 
-    'Java': '#007396', 
-    'React': '#61DAFB', 
-    'HTML': '#E34F26',
-    'PHP': '#4F5B93', 
-    'Spring': '#6DB33F', 
-    'Flutter': '#02569B', 
-    'JQuery': '#0769AD',
-    'CSS': '#1572B6', 
-  };
-
-  const getSkillColor = (skillName) => {
-    const baseSkill = skillName.split(' Lv')[0];
-    return skillColors[baseSkill] || '#4169e1';
   };
 
   return (
@@ -69,7 +52,6 @@ export default function SkillTags({ onChange }) {
   );
 }
 
-// 이승윤씨가 언어 뭐할 지 정하면 수정할 거임
 const baseSkills = [
   'JavaScript',
   'Java',

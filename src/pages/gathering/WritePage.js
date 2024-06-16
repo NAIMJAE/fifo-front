@@ -1,14 +1,17 @@
-import React, { useRef, useState } from 'react'
-import MainLayout from '../../layout/MainLayout'
+import React, { useRef, useState } from 'react';
+import MainLayout from '../../layout/MainLayout';
 import { RootUrl } from '../../api/RootUrl';
 import { changeImages } from '../../components/common/toast/ImageProcessing';
 import EditorComponent from '../../components/common/toast/EditorComponent';
 import { gatheringWriteApi } from '../../api/gatheringApi';
 import SkillTags from '../../components/gathering/SkillTags';
+import { Button } from '@mui/material';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import HiddenInputFile from '../../components/gathering/HiddenInputFile';
 
 const Write = () => {
 
-/** 모임 Data */
+    /** 모임 Data */
     const [gathering, setGathering] = useState({
         gathcate: "",  // 카테고리
         userno: 1,  // 임시 유저 정보
@@ -27,10 +30,16 @@ const Write = () => {
         gathstate: ""  // 모집 상태
     });
 
-/** 선택한 포지션 문자열 저장 */
+    /** 선택한 포지션 문자열 저장 */
     const [selectedPositions, setSelectedPositions] = useState([]);
 
-/** 게시글 내용 저장 */
+    /** 썸네일 이미지 저장 */
+    const [thumbnail, setThumbnail] = useState(null);
+
+    /** 썸네일 파일 이름 저장 */
+    const [thumbnailName, setThumbnailName] = useState("");
+
+    /** 게시글 내용 저장 */
     const editorRef = useRef();
 
     /** 게시글 정보 입력 */
@@ -41,6 +50,17 @@ const Write = () => {
             [name]: value
         });
     }
+
+    /** 썸네일 이미지 선택 */
+    const handleThumbnailChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            console.log("파일 올림");
+            setThumbnail(file);
+            setThumbnailName(file.name);
+        }
+    }
+
     /** 모집 포지션 정보 입력 (,로 구분) */
     const handlePositionSelect = (e) => {
         const position = e.target.value;
@@ -55,6 +75,7 @@ const Write = () => {
             setSelectedPositions([...selectedPositions, position]);
         }
     }
+
     /** 모집 언어 정보 입력 (SkillTags에서 가져옴) */
     const handleLanguageChange = (languages) => {
         setGathering({
@@ -86,6 +107,11 @@ const Write = () => {
             formData.append(key, gatheringData[key]);
         });
 
+        // 썸네일 이미지 추가
+        if (thumbnail) {
+            formData.append('thumbnail', thumbnail);
+        }
+        // 게시글 이미지 추가
         if (resultData !== null) {
             for (let i = 0; i < resultData.imageList.length; i++) {
                 formData.append('images', resultData.imageList[i]);
@@ -165,10 +191,22 @@ const Write = () => {
                 </div>
             </div>
             <div className='cntRow gatheringData'>
-            <div className='cntColumn'>
-            <span>모집 언어</span>
-                <SkillTags onChange={handleLanguageChange} />
+                <div className='cntColumn'>
+                    <span>모집 언어</span>
+                    <SkillTags onChange={handleLanguageChange} />
+                </div>
             </div>
+            <div className='cntRow gatheringData'>
+                <Button
+                    component="label"
+                    role={undefined}
+                    variant="contained"
+                    tabIndex={-1}
+                    startIcon={<CloudUploadIcon />}
+                >
+                    {thumbnailName || "thumbnail upload"}
+                    <HiddenInputFile accept="image/*" onChange={handleThumbnailChange} />
+                </Button>
             </div>
             <div className='cntRow detail'>
                 세부사항
@@ -179,6 +217,7 @@ const Write = () => {
             <div className='cntRow articleWrite'>
                 <EditorComponent editorRef={editorRef} />
             </div>
+
             <div className='cntRow writeBtn'>
                 <button>취소</button>
                 <button className='blue' onClick={handleSubmit}>작성</button>
