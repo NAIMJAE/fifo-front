@@ -10,28 +10,42 @@ import CommentWriteComponent from '../../components/article/CommentWriteComponen
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { useLocation } from 'react-router-dom';
 import { articleViewApi } from '../../api/articleApi';
+import { FrontUrl } from '../../api/RootUrl';
 
 const ViewPage = () => {
 
-     // URL에서 파라미터값 추출
-     const location = useLocation();
-     const queryParams = new URLSearchParams(location.search);
-     let pno = queryParams.get('pno');
+    // URL에서 파라미터값 추출
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    let pno = queryParams.get('pno');
+    const shareURL = FrontUrl() + location.pathname + location.search
+
+    console.log(location)
 
     const [articleView, setArticleView] = useState({ articleTitle: '', articleCnt: '' });
 
     useEffect (() => {
+        if (pno === '') {
+            alert("게시글을 찾을 수 없습니다.");
+            
+            return;
+        }
         const selectArticle = async () => {
             try {
                 const response = await articleViewApi(pno); 
                 setArticleView(response);
             } catch (error) {
                 console.log(error);
+                alert("게시글을 찾을 수 없습니다.");
             }
         }
         selectArticle();
     }, []);
 
+    /** 게시글 링크 복사하기 */
+    const copyUrl = () => {
+        navigator.clipboard.writeText(shareURL);
+    }
 
   return (
     <MainLayout>
@@ -40,10 +54,10 @@ const ViewPage = () => {
 
         <div className='cntColumn viewTitle'>
             <div>
-                <span>자유게시판 - 게시글 No.1267534</span>
+                <span>자유게시판 - 게시글 No.{pno}</span>
                 <div>
-                    <h4>http://localhost:3000/article/view</h4>
-                    <button>공유하기</button>
+                    <h4>{shareURL}</h4>
+                    <button onClick={copyUrl}>공유하기</button>
                 </div>
             </div>
             <div>
