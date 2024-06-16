@@ -11,7 +11,6 @@ import GatheringWritePage from "../pages/gathering/WritePage";
 
 import LoginPage from "../pages/user/LoginPage";
 
-
 const root = createBrowserRouter([
   /** 메인 페이지 */
   { path: "/", element: <MainPage /> },
@@ -27,6 +26,5 @@ const root = createBrowserRouter([
   { path: "/gathering/write", element: <GatheringWritePage /> },
 
   /** 회원 */
-  { path: "/user/login", element: <LoginPage /> },
 ]);
 export default root;
