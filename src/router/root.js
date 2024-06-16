@@ -8,8 +8,6 @@ import ArticleViewPage from "../pages/article/ViewPage";
 
 import ListPage from "../pages/gathering/ListPage";
 
-import LoginPage from "../pages/user/LoginPage";
-
 const root = createBrowserRouter([
   /** 메인 페이지 */
   { path: "/", element: <MainPage /> },
@@ -24,6 +22,5 @@ const root = createBrowserRouter([
   { path: "/gathering/list", element: <ListPage /> },
 
   /** 회원 */
-  { path: "/user/login", element: <LoginPage /> },
 ]);
 export default root;
