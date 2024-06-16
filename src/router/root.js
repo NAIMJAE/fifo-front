@@ -27,6 +27,5 @@ const root = createBrowserRouter([
   { path: "/gathering/write", element: <GatheringWritePage /> },
 
   /** 회원 */
-  { path: "/user/login", element: <LoginPage /> },
 ]);
 export default root;
