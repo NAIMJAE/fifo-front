@@ -3,6 +3,7 @@ footer{
     > div {
         display: flex;
         width: 1200px;
+        padding: 0 30px;
         margin: 0 auto;
         justify-content: space-between;
         align-items: center;
@@ -10,11 +11,28 @@ footer{
     
     #footerInfo {
         justify-content: start;
-        
+        ul > li {
+            font-size: 12px;
+            color: #1e1e1e;
+            font-weight: bolder;
+            margin-bottom: 4px;
+        }
     }
 
     #footerTerms {
         justify-content: end;
+        ul {
+            list-style-type: none;
+
+            li {
+                display: inline-block;
+                margin-left: 20px;
+                a {
+                    font-size: 14px;
+                    font-weight: bolder;
+                }
+            }
+        }
     }
 
 }

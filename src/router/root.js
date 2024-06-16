@@ -9,8 +9,6 @@ import ArticleViewPage from "../pages/article/ViewPage";
 import GatheringListPage from "../pages/gathering/ListPage";
 import GatheringWritePage from "../pages/gathering/WritePage";
 
-import LoginPage from "../pages/user/LoginPage";
-
 
 const root = createBrowserRouter([
   /** 메인 페이지 */
