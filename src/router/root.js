@@ -8,6 +8,9 @@ import ArticleViewPage from "../pages/article/ViewPage";
 
 import ListPage from "../pages/gathering/ListPage";
 
+import LanguageListPage from "../pages/grade/LanguageListPage"
+import QuestionListPage from "../pages/grade/QuestionListPage"
+
 const root = createBrowserRouter([
   /** 메인 페이지 */
   { path: "/", element: <MainPage /> },
@@ -22,5 +25,10 @@ const root = createBrowserRouter([
   { path: "/gathering/list", element: <ListPage /> },
 
   /** 회원 */
+
+  /** 등급 */
+  { path: "/grade/language", element: <LanguageListPage /> },
+  { path: "/grade/question/", element: <QuestionListPage /> },
+  
 ]);
 export default root;

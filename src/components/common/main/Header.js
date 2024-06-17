@@ -73,7 +73,7 @@ const Header = () => {
           <Link to="/">내모임</Link>
           <Link to="/gathering/list">모임찾기</Link>
           <Link to="/article/list">게시판</Link>
-          <Link to="/">등급평가</Link>
+          <Link to="/grade/language">등급평가</Link>
         </div>
       </div>
       <Modal className="loginModal" open={modalOpen} onClose={handleClose}>
