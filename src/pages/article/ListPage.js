@@ -15,11 +15,11 @@ const List = () => {
         sort : "new",
         type : "",
         keyword : "",
-        pg : "",
+        pg : 1,
     })
 
     /** 게시글 목록 useState */
-    const [postList, setPostList] = useState("");
+    const [postList, setPostList] = useState([]);
 
     /** 서버에서 게시글 목록 받아오는 useEffect */
     useEffect(() => {
@@ -75,7 +75,7 @@ const List = () => {
                 onClick={(e) => {setPageable(prev => ({...prev, sort:"hit"}))}}>조회순</p>
 
             <p className={`${pageable.sort === "good" ? 'tabOn' : ''}`}
-                onClick={(e) => {setPageable(prev => ({...prev, sort:"good"}))}}>추천순</p>
+                onClick={() => setPageable({...pageable, sort:"good"})}>추천순</p>
 
             <label htmlFor="search">
                 <select name="" id="search" onChange={(e) => setSearchType(e.target.value)}>
