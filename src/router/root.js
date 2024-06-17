@@ -10,6 +10,9 @@ import GatheringListPage from "../pages/gathering/ListPage";
 import GatheringWritePage from "../pages/gathering/WritePage";
 
 
+import LanguageListPage from "../pages/grade/LanguageListPage"
+import QuestionListPage from "../pages/grade/QuestionListPage"
+
 const root = createBrowserRouter([
   /** 메인 페이지 */
   { path: "/", element: <MainPage /> },
@@ -25,5 +28,10 @@ const root = createBrowserRouter([
   { path: "/gathering/write", element: <GatheringWritePage /> },
 
   /** 회원 */
+
+  /** 등급 */
+  { path: "/grade/language", element: <LanguageListPage /> },
+  { path: "/grade/question/", element: <QuestionListPage /> },
+  
 ]);
 export default root;
