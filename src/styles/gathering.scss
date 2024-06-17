@@ -293,6 +293,7 @@
   }
 }
 
+// 모임 글쓰기 카테고리
 .gatheringData {
   margin: 10px 20px;
   display: flex;
@@ -398,30 +399,7 @@
   }
 }
 
-.articleFile {
-  height: 40px;
-  margin: 10px 30px;
-  border: 1px solid #9f9f9f;
-  border-radius: 4px;
-  align-items: center;
-
-  input[type="file"] {
-    width: 240px;
-    padding: 0 10px;
-    font-size: 16px;
-    cursor: pointer;
-    border-right: 1px solid #9f9f9f;
-  }
-  .selected {
-    display: flex;
-    padding: 0 10px;
-    margin-left: 10px;
-    span {
-      margin-right: 20px;
-    }
-  }
-}
-
+// 글쓰기 버튼
 .writeBtn {
   display: flex;
   justify-content: end;
@@ -443,3 +421,115 @@
     color: white;
   }
 }
+// 햄버거 Open/ Close 아이콘
+.hamburger-trigger {
+  display: inline-block;
+  width: 30px;
+  height: 24px;
+  transition: all .4s;
+  box-sizing: border-box;
+  cursor: pointer; /* 클릭 가능한 커서 표시 */
+  position: fixed; /* 절대 위치 설정 */
+  right: 20px; /* 오른쪽에 위치 */
+  top: 20px; /* 상단에 위치 */
+  z-index: 250; /* 다른 요소 위에 표시되도록 z-index 조정 */
+
+  span {
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #4169e1;
+    border-radius: 3px;
+    transition: all .4s;
+    box-sizing: border-box;
+
+    &:nth-of-type(1) {
+      top: 0;
+    }
+
+    &:nth-of-type(2) {
+      top: 10px;
+    }
+
+    &:nth-of-type(3) {
+      bottom: 0;
+    }
+  }
+
+  // 화살표
+  &.active-8 {
+    span {
+      &:nth-of-type(1),
+      &:nth-of-type(3) {
+        width: 20px;
+      }
+
+      &:nth-of-type(1) {
+        -webkit-transform: translate(-1px, 7px) rotate(-45deg); /* 애니메이션 조정 */
+        transform: translate(-1px, 7px) rotate(-25deg); /* 애니메이션 조정 */
+      }
+
+      &:nth-of-type(3) {
+        -webkit-transform: translate(-1px, -7px) rotate(45deg); /* 애니메이션 조정 */
+        transform: translate(-1px, -7px) rotate(25deg);
+      }
+    }
+  }
+
+    // 메뉴 전체가 회전하면서 엑스자 버튼 만들기
+    &.active-4 {
+      -webkit-transform: rotateX(720deg);
+      transform: rotateX(720deg);
+      
+      span:nth-of-type(1) {
+        -webkit-transform: translateY(10px) rotate(-45deg);
+        transform: translateY(10px) rotate(-45deg);
+      }
+      span:nth-of-type(2) {
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+      }
+      span:nth-of-type(3) {
+        opacity: 0;
+      }
+    }
+
+}
+
+// 사이드바와 햄버거 래퍼
+.sidebar-wrapper {
+  display: flex;
+  align-items: flex-start;
+  position: fixed;
+  top: 0;
+  right: -300px; /* 초기에는 화면 밖에 위치 */
+  height: 100%;
+  z-index: 200;
+  transition: right 0.3s ease-in-out;
+
+  &.open {
+    right: 0; /* 열리면 화면 안으로 이동 */
+  }
+}
+
+.searchGathAside {
+  width: 300px; /* 너비를 지정하여 슬라이드 애니메이션을 적용 */
+  height: 100%;
+  background-color: white;
+  overflow-y: auto; /* 내용이 많을 경우 스크롤 가능 */
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1); /* 사이드바 그림자 추가 */
+  transition: right 0.3s ease-in-out;
+
+  &.open {
+    transform: translateX(0);
+  }
+}
+
+.searchGathAsideContent {
+  position: relative; /* 자식 요소의 절대 위치를 기준으로 함 */
+}
+
+
+
