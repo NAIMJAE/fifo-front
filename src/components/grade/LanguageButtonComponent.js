@@ -2,7 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { globalPath } from '../../globalPaths'
-import SkillIcon from '../../SkillIcon'
+import SkillIcon from '../gathering/SkillIcon'
 
 const LanguageButtonComponent = () => {
 

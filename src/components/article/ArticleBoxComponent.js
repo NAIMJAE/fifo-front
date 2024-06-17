@@ -6,9 +6,10 @@ import { RootUrl } from '../../api/RootUrl';
 import Moment from 'moment';
 
 const ArticleBoxComponent = ({ postList }) => {
+
   return (
     <>
-        {postList && postList.dtolist.length > 0 ? (postList.dtolist.map((post, index) => (
+        {postList.dtoList && postList.dtoList.length > 0 ? (postList.dtoList.map((post, index) => (
             <div className='articleBox' key={index}>
                 <div>
                     <img src={`${RootUrl()}/uploads/user/${post.thumb}`} alt="profile" />
