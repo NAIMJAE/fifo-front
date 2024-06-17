@@ -60,6 +60,7 @@ const Header = () => {
           </Link>
           <Link to="/">마이페이지</Link>
           <Link to="/">로그아웃</Link>
+          <Link to="/user/register">회원가입</Link>
         </div>
       </div>
 

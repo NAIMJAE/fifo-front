@@ -9,11 +9,15 @@ import ArticleViewPage from "../pages/article/ViewPage";
 import GatheringListPage from "../pages/gathering/ListPage";
 import GatheringWritePage from "../pages/gathering/WritePage";
 
+import RegisterPage from "../pages/user/RegisterPage";
 
 const root = createBrowserRouter([
   /** 메인 페이지 */
   { path: "/", element: <MainPage /> },
   { path: "/develop", element: <Develop /> },
+
+  /** 유저 */
+  { path: "user/register", element: <RegisterPage /> },
 
   /** 게시판 */
   { path: "/article/list", element: <ArticleListPage /> },
