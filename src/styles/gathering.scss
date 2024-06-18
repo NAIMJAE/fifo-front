@@ -432,10 +432,10 @@
   transition: all 0.4s;
   box-sizing: border-box;
   cursor: pointer; /* 클릭 가능한 커서 표시 */
-  position: fixed; /* 절대 위치 설정 */
-  right: 310px; /* 오른쪽에 위치 */
-  top: 20px; /* 상단에 위치 */
-  z-index: 250; /* 다른 요소 위에 표시되도록 z-index 조정 */
+  position: absolute; /* 절대 위치 설정 */
+  right: -40px; /* 오른쪽에 위치 */
+  top: 10px; /* 상단에 위치 */
+  z-index: 1; /* 다른 요소 위에 표시되도록 z-index 조정 */
 
   span {
     display: inline-block;
@@ -499,32 +499,42 @@
     }
   }
 }
-
+.sideHide {
+  position: relative;
+  height: 100%;
+}
+.sideHide2 {
+  position: relative;
+  z-index: 100;
+  background-color: white;
+}
 // 사이드바와 햄버거 래퍼
 .sidebar-wrapper {
-  position: relative;
   display: flex;
   align-items: flex-start;
-  position: fixed;
-  top: 0;
-  right: -300px; /* 초기에는 화면 밖에 위치 */
+  position: relative;
+  top: -498px;
+  right: 0;
   height: 100%;
-  z-index: 200;
   transition: right 0.3s ease-in-out;
-
+  z-index: 10;
   &.open {
-    right: 0; /* 열리면 화면 안으로 이동 */
+    right: -300px; /* 열리면 화면 안으로 이동 */
   }
 }
 
 .searchGathAside {
+  position: absolute;
   width: 300px; /* 너비를 지정하여 슬라이드 애니메이션을 적용 */
   height: 100%;
   background-color: white;
-  overflow-y: auto; /* 내용이 많을 경우 스크롤 가능 */
+  overflow: scroll;
+  scrollbar-width: none;
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1); /* 사이드바 그림자 추가 */
   transition: right 0.3s ease-in-out;
-
+  z-index: 20;
+  top: 0;
+  right: 0;
   &.open {
     transform: translateX(0);
   }
