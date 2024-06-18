@@ -98,6 +98,78 @@ const GatherBoxComponent = ({ gathList }) => {
               </div>
             </div>
           </Link>
+          <Link to="/">
+            <div>
+              <span>프로젝트</span>
+            </div>
+
+            <div className='imgBox'>
+              <img src="../../images/sample/ppoppi_angry.png" alt="" />
+            </div>
+
+            <div className='cntColumn'>
+              <h3>홍길동</h3>
+              <h4>사이드 프로젝트 팀원 모집</h4>
+              <h5>모집기간 : 24.06.02 ~ 24.06.16</h5>
+              <div className='gathSkillList'>
+                {mockSkills.map((skill, index) => (
+                  <Chip
+                    key={index}
+                    label={skill.name}
+                    sx={{ backgroundColor: getSkillColor(skill.name.split(' ')[0]), color: 'white', marginRight: '5px', marginBottom: '5px' }}
+                  />
+                ))}
+              </div>
+            </div>
+          </Link>
+          <Link to="/">
+            <div>
+              <span>프로젝트</span>
+            </div>
+
+            <div className='imgBox'>
+              <img src="../../images/sample/ppoppi_angry.png" alt="" />
+            </div>
+
+            <div className='cntColumn'>
+              <h3>홍길동</h3>
+              <h4>사이드 프로젝트 팀원 모집</h4>
+              <h5>모집기간 : 24.06.02 ~ 24.06.16</h5>
+              <div className='gathSkillList'>
+                {mockSkills.map((skill, index) => (
+                  <Chip
+                    key={index}
+                    label={skill.name}
+                    sx={{ backgroundColor: getSkillColor(skill.name.split(' ')[0]), color: 'white', marginRight: '5px', marginBottom: '5px' }}
+                  />
+                ))}
+              </div>
+            </div>
+          </Link>
+          <Link to="/">
+            <div>
+              <span>프로젝트</span>
+            </div>
+
+            <div className='imgBox'>
+              <img src="../../images/sample/ppoppi_angry.png" alt="" />
+            </div>
+
+            <div className='cntColumn'>
+              <h3>홍길동</h3>
+              <h4>사이드 프로젝트 팀원 모집</h4>
+              <h5>모집기간 : 24.06.02 ~ 24.06.16</h5>
+              <div className='gathSkillList'>
+                {mockSkills.map((skill, index) => (
+                  <Chip
+                    key={index}
+                    label={skill.name}
+                    sx={{ backgroundColor: getSkillColor(skill.name.split(' ')[0]), color: 'white', marginRight: '5px', marginBottom: '5px' }}
+                  />
+                ))}
+              </div>
+            </div>
+          </Link>
         </>
       )}
     </>
