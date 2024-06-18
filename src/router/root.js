@@ -9,11 +9,18 @@ import ArticleViewPage from "../pages/article/ViewPage";
 import GatheringListPage from "../pages/gathering/ListPage";
 import GatheringWritePage from "../pages/gathering/WritePage";
 
+import RegisterPage from "../pages/user/RegisterPage";
+
+import LanguageListPage from "../pages/grade/LanguageListPage"
+import QuestionListPage from "../pages/grade/QuestionListPage"
 
 const root = createBrowserRouter([
   /** 메인 페이지 */
   { path: "/", element: <MainPage /> },
   { path: "/develop", element: <Develop /> },
+
+  /** 유저 */
+  { path: "user/register", element: <RegisterPage /> },
 
   /** 게시판 */
   { path: "/article/list", element: <ArticleListPage /> },
@@ -25,5 +32,10 @@ const root = createBrowserRouter([
   { path: "/gathering/write", element: <GatheringWritePage /> },
 
   /** 회원 */
+
+  /** 등급 */
+  { path: "/grade/language", element: <LanguageListPage /> },
+  { path: "/grade/question/", element: <QuestionListPage /> },
+  
 ]);
 export default root;

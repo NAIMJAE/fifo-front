@@ -9,6 +9,10 @@ import { Link } from 'react-router-dom';
 
 const ListPage = () => {
 
+  /** 사이드바 열림 상태 관리 */
+  const [sideBar, setSideBar] = useState(false);
+  const toggleSideBar = () => setSideBar(!sideBar);
+
   /** 검색을 위한 useState */
   const [pageable, setPageable] = useState({
     cateNo: 1,
@@ -16,12 +20,12 @@ const ListPage = () => {
     type: "",
     keyword: "",
     pg: "",
-  })
+  });
 
-  /** 모임글 목록 useState */
+  // 모임글 목록 useState
   const [gathList, setGathList] = useState("");
 
-  /** 서버에서 모임글 목록 받아오는 useEffect */
+  // 서버에서 모임글 목록 받아오는 useEffect
   useEffect(() => {
     console.log(pageable);
     const selectArticleList = async () => {
@@ -34,9 +38,9 @@ const ListPage = () => {
       }
     }
     selectArticleList();
-  }, [pageable])
+  }, [pageable]);
 
-  // pg변경 함수 (페이징 버튼 클릭시)
+  /** pg 변경 함수 (페이징 버튼 클릭시) */
   const changePage = (newPg) => {
     setPageable(prev => ({ ...prev, pg: newPg }));
   }
@@ -44,8 +48,18 @@ const ListPage = () => {
   return (
     <MainLayout>
       <div className="container">
-        <div className="aside">
-          <SearchAside />
+        <div className={`sidebar-wrapper ${sideBar ? 'open' : ''}`}>
+          <div 
+            className={`hamburger-trigger ${sideBar ? 'active-4' : ''}`} 
+            onClick={toggleSideBar}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div className={`searchGathAside ${sideBar ? 'open' : ''}`}>
+            <SearchAside />
+          </div>
         </div>
         <div className="content">
           <div className='cntColumn'>
@@ -57,9 +71,9 @@ const ListPage = () => {
         </div>
       </div>
       <div className='pageAndBtn'>
-            <PageingComponent cntList={gathList} changePage={changePage}/>
-            <Link to="/gathering/write" className='hvMdBtn'>글쓰기</Link>
-        </div>
+        <PageingComponent cntList={gathList} changePage={changePage} />
+        <Link to="/gathering/write" className='hvMdBtn'>글쓰기</Link>
+      </div>
     </MainLayout>
   );
 };
