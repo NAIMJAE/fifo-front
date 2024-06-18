@@ -48,32 +48,36 @@ const ListPage = () => {
   return (
     <MainLayout>
       <div className="container">
-        <div className={`sidebar-wrapper ${sideBar ? 'open' : ''}`}>
-          <div 
-            className={`hamburger-trigger ${sideBar ? 'active-4' : ''}`} 
-            onClick={toggleSideBar}
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-          <div className={`searchGathAside ${sideBar ? 'open' : ''}`}>
-            <SearchAside />
-          </div>
-        </div>
-        <div className="content">
-          <div className='cntColumn'>
+        
+        <div className="content sideHide">
+          <div className='cntColumn sideHide2'>
             {/** 모임 글 목록 */}
             <div className='cntWrapRow gatherList'>
               <GatherBoxComponent gathList={gathList} />
             </div>
           </div>
+
+          <div className={`sidebar-wrapper ${sideBar ? 'open' : ''}`}>
+            <div 
+              className={`hamburger-trigger ${sideBar ? 'active-4' : ''}`} 
+              onClick={toggleSideBar}
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <div className={`searchGathAside ${sideBar ? 'open' : ''}`}>
+              <SearchAside />
+            </div>
+          </div>
+
+          <div className='pageAndBtn'>
+            <PageingComponent cntList={gathList} changePage={changePage} />
+            <Link to="/gathering/write" className='hvMdBtn'>글쓰기</Link>
+          </div>
         </div>
       </div>
-      <div className='pageAndBtn'>
-        <PageingComponent cntList={gathList} changePage={changePage} />
-        <Link to="/gathering/write" className='hvMdBtn'>글쓰기</Link>
-      </div>
+      
     </MainLayout>
   );
 };
