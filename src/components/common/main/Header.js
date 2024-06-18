@@ -34,7 +34,7 @@ const Header = () => {
     e.preventDefault();
     const url = globalPath.path;
     axios
-      .post(`${url}/user/login`, user)
+      .post(`${url}/user/login`, user, { withCredentials: true })
       .then((resp) => {
         console.log(resp.data);
         // 리덕스 액션 실행 : 로그인 성공 시 사용자 정보를 리덕스 상태에 저장
