@@ -99,7 +99,6 @@
   width: 200px;
 }
 
-
 /* 섹션 타이틀 스타일 */
 .sectionTitle {
   font-size: 16px;
@@ -108,7 +107,10 @@
 }
 
 /* 버튼 스타일 추가 */
-.meetingType, .meetingMethod, .techStack, .levels {
+.meetingType,
+.meetingMethod,
+.techStack,
+.levels {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -263,7 +265,8 @@
       font-weight: 600;
       color: #333;
     }
-    .groupType, .meetingMethod {
+    .groupType,
+    .meetingMethod {
       display: flex;
       justify-content: space-between;
       button {
@@ -426,11 +429,11 @@
   display: inline-block;
   width: 30px;
   height: 24px;
-  transition: all .4s;
+  transition: all 0.4s;
   box-sizing: border-box;
   cursor: pointer; /* 클릭 가능한 커서 표시 */
   position: fixed; /* 절대 위치 설정 */
-  right: 20px; /* 오른쪽에 위치 */
+  right: 310px; /* 오른쪽에 위치 */
   top: 20px; /* 상단에 위치 */
   z-index: 250; /* 다른 요소 위에 표시되도록 z-index 조정 */
 
@@ -442,7 +445,7 @@
     height: 3px;
     background-color: #4169e1;
     border-radius: 3px;
-    transition: all .4s;
+    transition: all 0.4s;
     box-sizing: border-box;
 
     &:nth-of-type(1) {
@@ -478,28 +481,28 @@
     }
   }
 
-    // 메뉴 전체가 회전하면서 엑스자 버튼 만들기
-    &.active-4 {
-      -webkit-transform: rotateX(720deg);
-      transform: rotateX(720deg);
-      
-      span:nth-of-type(1) {
-        -webkit-transform: translateY(10px) rotate(-45deg);
-        transform: translateY(10px) rotate(-45deg);
-      }
-      span:nth-of-type(2) {
-        -webkit-transform: rotate(45deg);
-        transform: rotate(45deg);
-      }
-      span:nth-of-type(3) {
-        opacity: 0;
-      }
-    }
+  // 메뉴 전체가 회전하면서 엑스자 버튼 만들기
+  &.active-4 {
+    -webkit-transform: rotateX(720deg);
+    transform: rotateX(720deg);
 
+    span:nth-of-type(1) {
+      -webkit-transform: translateY(10px) rotate(-45deg);
+      transform: translateY(10px) rotate(-45deg);
+    }
+    span:nth-of-type(2) {
+      -webkit-transform: rotate(45deg);
+      transform: rotate(45deg);
+    }
+    span:nth-of-type(3) {
+      opacity: 0;
+    }
+  }
 }
 
 // 사이드바와 햄버거 래퍼
 .sidebar-wrapper {
+  position: relative;
   display: flex;
   align-items: flex-start;
   position: fixed;
@@ -530,6 +533,3 @@
 .searchGathAsideContent {
   position: relative; /* 자식 요소의 절대 위치를 기준으로 함 */
 }
-
-
-
