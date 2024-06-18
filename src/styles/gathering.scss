@@ -512,8 +512,8 @@
 .sidebar-wrapper {
   display: flex;
   align-items: flex-start;
-  position: relative;
-  top: -498px;
+  position: absolute;
+  top: 0px;
   right: 0;
   height: 100%;
   transition: right 0.3s ease-in-out;

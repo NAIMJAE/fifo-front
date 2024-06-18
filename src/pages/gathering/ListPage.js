@@ -55,6 +55,10 @@ const ListPage = () => {
             <div className='cntWrapRow gatherList'>
               <GatherBoxComponent gathList={gathList} />
             </div>
+            <div className='pageAndBtn'>
+            <PageingComponent cntList={gathList} changePage={changePage} />
+            <Link to="/gathering/write" className='hvMdBtn'>글쓰기</Link>
+          </div>
           </div>
 
           <div className={`sidebar-wrapper ${sideBar ? 'open' : ''}`}>
@@ -71,10 +75,7 @@ const ListPage = () => {
             </div>
           </div>
 
-          <div className='pageAndBtn'>
-            <PageingComponent cntList={gathList} changePage={changePage} />
-            <Link to="/gathering/write" className='hvMdBtn'>글쓰기</Link>
-          </div>
+
         </div>
       </div>
       
