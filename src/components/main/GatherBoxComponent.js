@@ -14,7 +14,7 @@ const GatherBoxComponent = ({ gathList }) => {
 
   return (
     <>
-      {gathList && gathList.dtolist.length > 0 ? (
+      {gathList && gathList.dtolist && gathList.dtolist.length > 0 ? (
         gathList.dtolist.map((gathering, index) => (
           <Link to="/" key={index}>
             <div>

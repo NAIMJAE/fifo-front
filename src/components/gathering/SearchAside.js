@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   FormControl,
   FormLabel,
@@ -28,15 +28,22 @@ const languagesList = [
 
 const levels = ['Lv1', 'Lv2', 'Lv3', 'Lv4', 'Lv5'];
 
-export default function SearchAside() {
-  const [meetingType, setMeetingType] = useState('study');
-  const [meetingMethod, setMeetingMethod] = useState('online');
-  const [members, setMembers] = useState('');
-  const [position, setPosition] = useState('');
+export default function SearchAside({ setPageRequest }) {
+  const [meetingType, setMeetingType] = useState(null);
+  const [meetingMethod, setMeetingMethod] = useState(null);
+  const [members, setMembers] = useState(null);
+  const [position, setPosition] = useState(null);
   const [languages, setLanguages] = useState([]);
   const [selectedLanguage, setSelectedLanguage] = useState(null);
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [tagList, setTagList] = useState([]);
+
+  /*
+    함수도 객체이기 때문에 랜더링될 때마다 새로 생성된다.
+    이미 가지고 있던 함수를 사용하기 위해 메모이제이션 된 주소를 가지고 재사용하기위해 useCallback을 씀
+  */
+  /** 메모이제이션된 setPageRequest 함수의 주소 */
+  const memoizedSetPageRequest = useCallback(setPageRequest, [setPageRequest]);
 
   /** 검색 카테고리 선택할 때 마다 태그에 추가 */
   useEffect(() => {
@@ -48,6 +55,17 @@ export default function SearchAside() {
     languages.forEach(language => newTags.push(`모집 언어: ${language}`));
     if (selectedLanguage && selectedLevel) newTags.push(`기술 스택: ${selectedLanguage} ${selectedLevel}`);
     setTagList(newTags);
+
+    /** 값이 변경될때마다 서버 전송 */
+    const gatheringDTO = {
+      gathcate: meetingType,
+      gathmode: meetingMethod,
+      gathtotalmember: members,
+      gathrecruitfield: position,
+      gathlanguage: selectedLanguage && selectedLevel ? `${selectedLanguage} ${selectedLevel}` : null,
+    };
+
+    memoizedSetPageRequest(prev => ({ ...prev, gatheringDTO }));
   }, [meetingType, meetingMethod, members, position, languages, selectedLanguage, selectedLevel]);
 
   /** 언어 선택 */
@@ -60,7 +78,27 @@ export default function SearchAside() {
   const selectLevel = (level) => {
     setSelectedLevel(level);
   };
-
+  /** 검색 조건 초기화 */
+  const resetTags = () => {
+    setMeetingType(null);
+    setMeetingMethod(null);
+    setMembers(null);
+    setPosition(null);
+    setLanguages([]);
+    setSelectedLanguage(null);
+    setSelectedLevel(null);
+    setTagList([]);
+    setPageRequest(prev => ({
+      ...prev,
+      gatheringDTO: {
+        gathcate: '',
+        gathmode: '',
+        gathtotalmember: '',
+        gathrecruitfield: '',
+        gathlanguage: null,
+      }
+    }));
+  };
   return (
     <div className='searchGathAsideContent'>
       <Box sx={{ padding: 3 }}>
@@ -161,7 +199,7 @@ export default function SearchAside() {
         )}
 
         <Box sx={{ mt: 3 }}>
-          <Button variant="contained" fullWidth>적용</Button>
+          <Button variant="contained" fullWidth onClick={resetTags}>초기화</Button>
         </Box>
 
         <Box sx={{ mt: 3 }}>
