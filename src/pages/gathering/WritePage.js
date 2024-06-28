@@ -42,12 +42,12 @@ const Write = () => {
     /** 게시글 내용 저장 */
     const editorRef = useRef();
 
-    /** 게시글 정보 입력 */
+    /** 게시글 정보 입력 - 모집인원일 때 숫자로 */
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setGathering({
             ...gathering,
-            [name]: value
+            [name]: name === 'gathtotalmember' ? parseInt(value, 10) : value
         });
     }
 
@@ -118,6 +118,7 @@ const Write = () => {
             }
         }
 
+        console.log(formData)
         // 서버 전송
         try {
             const response = await gatheringWriteApi(formData);
