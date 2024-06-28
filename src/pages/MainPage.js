@@ -7,7 +7,7 @@ const MainPage = () => {
   const loginSlice = useSelector((state) => state.authSlice) || {};
 
   useEffect(() => {
-    console.log(loginSlice);
+    console.log("로그인정보 : ", loginSlice);
   }, []);
 
   return (

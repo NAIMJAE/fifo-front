@@ -1,32 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../../styles/header.scss";
 import "../../../styles/user/login.scss";
-import { Link, Navigate } from "react-router-dom";
-import { Box, Modal } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { globalPath } from "../../../globalPaths";
-import { useDispatch } from "react-redux";
-import { login } from "../../../slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { login, logout } from "../../../slices/authSlice";
+import LoginModal from "../../user/LoginModal";
+import { removeCookie } from "../../../utils/cookieUtil";
 
 const Header = () => {
   /**모달 창 상태 관리 */
   const [modalOpen, setModalOpen] = useState(false);
-  const handleOpen = () => setModalOpen(true);
+  const [loginState, setLoginState] = useState("");
   const handleClose = () => setModalOpen(false);
 
+  const handleOpen = () => setModalOpen(true);
+
+  const authSlice = useSelector((state) => state.authSlice);
+
+  useEffect(() => {
+    setLoginState(authSlice.email);
+    console.log(loginState);
+  }, [authSlice.email]);
+
   /**로그인 관리 */
-  const dispatch = useDispatch;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [user, setUser] = useState({
     email: "",
     pass: "",
   });
+
   const [err, setError] = useState("");
 
   /** 로그인값 입력  */
   const changeHandler = (e) => {
     e.preventDefault();
     setUser({ ...user, [e.target.name]: e.target.value });
-    console.log(user);
   };
 
   /**로그인 버튼 클릭 */
@@ -37,11 +48,11 @@ const Header = () => {
       .post(`${url}/user/login`, user, { withCredentials: true })
       .then((resp) => {
         console.log(resp.data);
+
         // 리덕스 액션 실행 : 로그인 성공 시 사용자 정보를 리덕스 상태에 저장
         dispatch(login(resp.data));
-        // 모달 창 끄기
-        //setModalOpen(false)
-        Navigate("/");
+
+        setModalOpen(false);
         alert("로그인에 성공하셨습니다");
       })
       .catch((err) => {
@@ -50,17 +61,40 @@ const Header = () => {
       });
   };
 
+  /**로그아웃 버튼 클릭 */
+  const handlerLogout = (e) => {
+    e.preventDefault();
+
+    dispatch(logout());
+
+    removeCookie("auth", { path: "/" });
+
+    navigate("/");
+
+    alert("로그아웃 되었습니다.");
+  };
+
   return (
     <header>
       <div>
         <div></div>
         <div id="headerInfo">
-          <Link to="#" onClick={handleOpen}>
-            로그인
-          </Link>
-          <Link to="/">마이페이지</Link>
-          <Link to="/">로그아웃</Link>
-          <Link to="/user/register">회원가입</Link>
+          {loginState === "" && null ? (
+            <>
+              {" "}
+              <Link to="#" onClick={handleOpen}>
+                로그인
+              </Link>
+              <Link to="/user/register">회원가입</Link>{" "}
+            </>
+          ) : (
+            <>
+              <Link to="/">마이페이지</Link>
+              <Link to="/" onClick={handlerLogout}>
+                로그아웃
+              </Link>
+            </>
+          )}
         </div>
       </div>
 
@@ -77,34 +111,14 @@ const Header = () => {
           <Link to="/grade/language">등급평가</Link>
         </div>
       </div>
-      <Modal className="loginModal" open={modalOpen} onClose={handleClose}>
-        <Box className="modalBox">
-          <span className="close-btn" onClick={handleClose}>
-            <p>&times;</p>
-          </span>
-          <img src="../../../../images/ppoppi_in_my_house.png" alt="" />
-          <h1>FIFO에 오신것을 환영합니다!</h1>
-          <h3>FIFO에서 모임을 만들어 프로젝트에 참여해보세요 </h3>
-          <span>아이디</span>
-          <input
-            type="text"
-            placeholder="이메일을 입력하세요."
-            name="email"
-            value={user.email}
-            onChange={changeHandler}
-          ></input>{" "}
-          <br />
-          <span>비밀번호</span>
-          <input
-            type="pass"
-            name="pass"
-            value={user.pass}
-            placeholder="비밀번호를 입력하세요."
-            onChange={changeHandler}
-          ></input>
-          <button onClick={handlerLogin}>로그인하기</button>
-        </Box>
-      </Modal>
+      <LoginModal
+        modalOpen={modalOpen}
+        handleClose={handleClose}
+        setModalOpen={setModalOpen}
+        user={user}
+        changeHandler={changeHandler}
+        handlerLogin={handlerLogin}
+      />
     </header>
   );
 };

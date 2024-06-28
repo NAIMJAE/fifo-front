@@ -13,6 +13,7 @@ export const gatheringWriteApi = async (formData) => {
 };
 /** 모임글 목록 API */
 export const gatheringListApi = async (data) => {
+    console.log("글 조회 전송!")
     const response = await axios.post(`${rootURL}/gatherings`, data);
     return response.data;
 };
