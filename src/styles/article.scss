@@ -282,15 +282,18 @@
             display: flex;
             margin-left: auto;
             justify-content: space-between;
-            h3 {
+            > h3 {
                 font-size: 16px;
                 color: #FF0000;
-                margin: 0 10px 0 4px;
+                margin: 0 8px 0 4px;
             }
-            h2 {
+            > h2 {
                 font-size: 16px;
                 color: #1e1e1e;
-                margin: 0 10px 0 4px;
+                margin: 0 8px 0 4px;
+            }
+            > .svg-inline--fa {
+                align-self: center;
             }
         }
     }
