@@ -8,9 +8,10 @@ import SkillTags from '../../components/gathering/SkillTags';
 import { Button } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import HiddenInputFile from '../../components/gathering/HiddenInputFile';
+import { useNavigate } from 'react-router-dom';
 
 const Write = () => {
-
+    const navigate = useNavigate();
     /** 모임 Data */
     const [gathering, setGathering] = useState({
         gathcate: "",  // 카테고리
@@ -122,7 +123,8 @@ const Write = () => {
         // 서버 전송
         try {
             const response = await gatheringWriteApi(formData);
-            console.log(response);
+            // 전송이 완료되면 지정된 경로로 이동
+            navigate('/gathering/list');
         } catch (err) {
             console.log(err);
         }
