@@ -23,16 +23,15 @@ const ListPage = () => {
 
   // 모임글 목록 useState
   const [gathList, setGathList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // 서버에서 모임글 목록 받아오는 useEffect
   useEffect(() => {
-    console.log("뭐지요");
-    console.log(pageRequest);
     const selectArticleList = async () => {
       try {
         const response = await gatheringListApi(pageRequest);
-        console.log(response);
         setGathList(response);
+        setLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -49,15 +48,21 @@ const ListPage = () => {
     <MainLayout>
       <div className="container">
         <div className="content sideHide">
-          <div className='cntColumn sideHide2'>
-            {/** 모임 글 목록 */}
-            <div className='cntWrapRow gatherList'>
-              <GatherBoxComponent gathList={gathList} />
-            </div>
-            <div className='pageAndBtn'>
-              <PageingComponent cntList={gathList} changePage={changePage} />
-              <Link to="/gathering/write" className='hvMdBtn'>글쓰기</Link>
-            </div>
+          <div className="cntColumn sideHide2">
+            {loading ? (
+              <div>로딩 중...</div>
+            ) : (
+              <>
+                {/** 모임 글 목록 */}
+                <div className="cntWrapRow gatherList">
+                  <GatherBoxComponent gathList={gathList} />
+                </div>
+                <div className="pageAndBtn">
+                  <PageingComponent cntList={gathList} changePage={changePage} />
+                  <Link to="/gathering/write" className="hvMdBtn">글쓰기</Link>
+                </div>
+              </>
+            )}
           </div>
           {/** 햄버거 사이드 */}
           <div className={`sidebar-wrapper ${sideBar ? 'open' : ''}`}>
@@ -78,5 +83,6 @@ const ListPage = () => {
     </MainLayout>
   );
 };
+
 
 export default ListPage;
