@@ -17,7 +17,7 @@ const ArticleBoxComponent = ({ postList }) => {
                     <p>{Moment(postList.createDate).format('YY-MM-DD HH:mm')}</p>
                 </div>
                 <div>
-                    <Link to={`/article/view?pg=${post.pno}`}>{post.title}</Link>
+                    <Link to={`/article/view?pno=${post.pno}`}>{post.title}</Link>
                 </div>
                 <div>
                     <div className='tagBox'>    

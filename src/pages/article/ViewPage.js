@@ -9,8 +9,10 @@ import CommentListComponent from '../../components/article/CommentListComponent'
 import CommentWriteComponent from '../../components/article/CommentWriteComponent';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { useLocation } from 'react-router-dom';
-import { articleViewApi } from '../../api/articleApi';
-import { FrontUrl } from '../../api/RootUrl';
+import { articleViewApi, commentInsertApi } from '../../api/articleApi';
+import { FrontUrl, RootUrl } from '../../api/RootUrl';
+import Moment from 'moment';
+import { useSelector } from 'react-redux';
 
 const ViewPage = () => {
 
@@ -20,7 +22,8 @@ const ViewPage = () => {
     let pno = queryParams.get('pno');
     const shareURL = FrontUrl() + location.pathname + location.search
 
-    console.log(location)
+    const loginSlice = useSelector((state) => state.authSlice) || {};
+
 
     const [articleView, setArticleView] = useState({ articleTitle: '', articleCnt: '' });
 
@@ -31,8 +34,10 @@ const ViewPage = () => {
             return;
         }
         const selectArticle = async () => {
+            console.log("pno",pno)
             try {
                 const response = await articleViewApi(pno); 
+                console.log("response : ", response)
                 setArticleView(response);
             } catch (error) {
                 console.log(error);
@@ -47,6 +52,20 @@ const ViewPage = () => {
         navigator.clipboard.writeText(shareURL);
     }
 
+
+
+    /** 댓글 작성 */
+    const insertComment = async (comment) => {
+        console.log("comment : ", comment);
+        try {
+            const response = await commentInsertApi(comment);
+            console.log("댓글 response : ", response);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
   return (
     <MainLayout>
 
@@ -54,41 +73,52 @@ const ViewPage = () => {
 
         <div className='cntColumn viewTitle'>
             <div>
-                <span>자유게시판 - 게시글 No.{pno}</span>
+                <span>{articleView.cateName} - 게시글 No.{pno}</span>
                 <div>
                     <h4>{shareURL}</h4>
                     <button onClick={copyUrl}>공유하기</button>
                 </div>
             </div>
             <div>
-                <h1>우리집 뽀삐 보고 가세요.</h1>
-                <p>2024.06.22 12:14</p>
+                <h1>{articleView.title}</h1>
+                <p>{Moment(articleView.createDate).format('YY-MM-DD HH:mm:ss')}</p>
+                
             </div>
             <div>
-                <img src="../../images/ppoppi.png" alt="profile" />
-                <p>우리집뽀삐</p>
+                <img src={`${RootUrl()}/uploads/user/${articleView.thumb}`} alt="profile" />
+                <p>{articleView.nick}</p>
                 <div className='hitBox'>
                     <FontAwesomeIcon icon={faHeart} color='#FF0000' size='lg'/>
-                    <h3>123</h3>
+                    <h3>{articleView.heartNum}</h3>
                     <FontAwesomeIcon icon={faEye} color='#1e1e1e' size='lg'/>
-                    <h2>243</h2>
+                    <h2>{articleView.hit}</h2>
                     <FontAwesomeIcon icon={faCommentDots} color='#1e1e1e' size='lg'/>
-                    <h2>243</h2>
+                    <h2>{articleView.comNum}</h2>
                     <FontAwesomeIcon icon={faThumbsUp} color='#1e1e1e' size='lg'/>
-                <h2>243</h2>
-            </div>
+                    <h2>{articleView.good}</h2>
+                </div>
             </div>
         </div>
 
         <div className='cntRow viewContents'>
-            {articleView.articleCnt ? <Viewer initialValue={articleView.articleCnt} /> : <p>Loading...</p>}
+            {articleView.content ? <Viewer initialValue={articleView.content} /> : <p>Loading...</p>}
         </div>
 
         <div className='cntWrapRow viewFile'>
             <p>첨부파일</p>
-            <span>뽀삐밥먹는사진.jpg</span>
-            <span>뽀삐잠자는사진.jpg</span>
+            {articleView.fileName && articleView.fileName.map((file, index) => (
+                <span key={index}>{file}</span>
+            ))}
         </div>
+
+        <div className='cntColumn articleTag'>
+            <div className='cntWrapRow' style={{marginTop:"0"}}>
+                {articleView.tagName ? articleView.tagName.map((tag, index) => (
+                    <span key={index} className='tag'>{tag}</span>
+                )) : (<></>)}
+            </div>
+        </div>
+        
 
         <div className='cntRow viewHeart'>
             <button>
@@ -113,7 +143,7 @@ const ViewPage = () => {
         </div>
 
         <div className='cntColumn writeComment'>
-            <CommentWriteComponent/>
+            <CommentWriteComponent commentNum={articleView.comNum} insertComment={insertComment} loginSlice={loginSlice}/>
         </div>
 
         <div className='cntColumn viewComment'>
