@@ -165,7 +165,7 @@ const ViewPage = () => {
         </div>
 
         <div className='cntColumn viewComment'>
-            {articleView.pno > 0 && <CommentListComponent pno={articleView.pno} comState={comState}/>}
+            {articleView.pno > 0 && <CommentListComponent pno={articleView.pno} comState={comState} loginSlice={loginSlice}/>}
         </div>
 
     </MainLayout>
