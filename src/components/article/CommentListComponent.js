@@ -3,11 +3,12 @@ import { faPen, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { commentModifyApi, selectCommentApi } from '../../api/articleApi'
+import PageingComponent from '../../components/common/paging/PageingComponent'
 import { RootUrl } from '../../api/RootUrl'
 import Moment from 'moment';
 import 'moment/locale/ko'; // 한글 번역 파일을 추가
 
-const CommentListComponent = ({ pno, comState }) => {
+const CommentListComponent = ({ pno, comState, loginSlice }) => {
 
     Moment.locale('ko');
 
@@ -132,26 +133,34 @@ const CommentListComponent = ({ pno, comState }) => {
                         <span>123</span>
                     </button>
 
-                    {commentStates.find(state => state.id === comment.cno && state.isEditing) ? (
-                        <button onClick={(e) => saveComment(e, comment.cno)}>
-                            <FontAwesomeIcon icon={faFloppyDisk} color='#1e1e1e' size='lg' />
-                        </button>
-                    ) : (
-                        <button onClick={(e) => modifyComment(e, comment.cno)}>
-                            <FontAwesomeIcon icon={faPen} color='#1e1e1e' size='lg' />
-                        </button>
-                    )}
+                    {(loginSlice.userno === comment.userNo) &&
+                    <>
+                        {commentStates.find(state => state.id === comment.cno && state.isEditing) ? (
+                            <button onClick={(e) => saveComment(e, comment.cno)}>
+                                <FontAwesomeIcon icon={faFloppyDisk} color='#1e1e1e' size='lg' />
+                            </button>
+                        ) : (
+                            <button onClick={(e) => modifyComment(e, comment.cno)}>
+                                <FontAwesomeIcon icon={faPen} color='#1e1e1e' size='lg' />
+                            </button>
+                        )}
+                    </>
+                    }
 
+                    {(loginSlice.userno === comment.userNo) &&
+                    <>
+                        {commentStates.find(state => state.id === comment.cno && state.isEditing) ? (
+                            <button onClick={(e) => cancelComment(e, comment.cno)}>
+                                <FontAwesomeIcon icon={faXmark} color='#1e1e1e' size='lg' />
+                            </button>
+                        ) : (
+                            <button>
+                                <FontAwesomeIcon icon={faTrashCan} color='#1e1e1e' size='lg'/>
+                            </button>
+                        )}
+                    </>
+                    }
                     
-                    {commentStates.find(state => state.id === comment.cno && state.isEditing) ? (
-                        <button onClick={(e) => cancelComment(e, comment.cno)}>
-                            <FontAwesomeIcon icon={faXmark} color='#1e1e1e' size='lg' />
-                        </button>
-                    ) : (
-                        <button>
-                            <FontAwesomeIcon icon={faTrashCan} color='#1e1e1e' size='lg'/>
-                        </button>
-                    )}
                 </div>
             </div>
             <textarea ref={autoResizeTextarea} readOnly>{comment.content}</textarea>
@@ -159,6 +168,9 @@ const CommentListComponent = ({ pno, comState }) => {
     )) : (
         <div>댓글이 없습니다.</div>
     )}
+    <div>
+        <PageingComponent/>
+    </div>
     </>
   )
 }
