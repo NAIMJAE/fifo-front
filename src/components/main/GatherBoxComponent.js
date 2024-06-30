@@ -17,7 +17,7 @@ const GatherBoxComponent = ({ gathList }) => {
     <>
       {gathList && gathList.length > 0 ? (
         gathList.map((gathering, index) => (
-          <Link to="/" key={index}>
+          <Link to={`/gathering/view?gathno=${gathering.gathno}`} key={index}>
             <div>
               <span>{gathering.gathcate}</span>
             </div>

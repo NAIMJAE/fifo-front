@@ -18,7 +18,18 @@ export const gatheringListApi = async (data) => {
     return response.data;
 };
 /** 모임글 보기 API */
-export const gatheringViewApi = async (pno) => {
-    const response = await axios.get(`${rootURL}/gathering`, pno);
+export const gatheringViewApi = async (gathno) => {
+    const response = await axios.get(`${rootURL}/gathering/${gathno}`);
+    return response.data;
+};
+/** 댓글 작성 API */
+export const gathCommentInsertApi = async (comment) => {
+    const response = await axios.post(`${rootURL}/gathcomment`, comment);
+    return response.data;
+};
+
+/** 댓글 불러오기 API */
+export const gathCommentsSelectApi = async (gathno) => {
+    const response = await axios.get(`${rootURL}/gathcomment/${gathno}`);
     return response.data;
 };

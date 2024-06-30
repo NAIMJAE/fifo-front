@@ -8,6 +8,7 @@ import ArticleViewPage from "../pages/article/ViewPage";
 
 import GatheringListPage from "../pages/gathering/ListPage";
 import GatheringWritePage from "../pages/gathering/WritePage";
+import GatheringViewPage from "../pages/gathering/ViewPage";
 
 import RegisterPage from "../pages/user/RegisterPage";
 
@@ -30,6 +31,7 @@ const root = createBrowserRouter([
   /** 모임 */
   { path: "/gathering/list", element: <GatheringListPage /> },
   { path: "/gathering/write", element: <GatheringWritePage /> },
+  { path: "/gathering/view", element: <GatheringViewPage /> },
 
   /** 회원 */
 
