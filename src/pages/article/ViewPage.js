@@ -9,7 +9,7 @@ import CommentListComponent from '../../components/article/CommentListComponent'
 import CommentWriteComponent from '../../components/article/CommentWriteComponent';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { useLocation } from 'react-router-dom';
-import { articleViewApi, commentInsertApi, increaseHeartApi } from '../../api/articleApi';
+import { articleViewApi, commentInsertApi, increaseHeartApi, replyInsertApi } from '../../api/articleApi';
 import { FrontUrl, RootUrl } from '../../api/RootUrl';
 import Moment from 'moment';
 import { useSelector } from 'react-redux';
@@ -93,6 +93,22 @@ const ViewPage = () => {
         }
     }
 
+    /** 대댓글 작성 */
+    const saveReply = async (cno, content) => {
+        const data = {
+            content: content,
+            userNo: loginSlice.userno,
+            pno: articleView.pno,
+            parentCno: cno,
+        }
+        try {
+            const response = await replyInsertApi(data);
+            console.log("답글 response : ", response);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     // 게시글 조회수 카운팅, 게시글 수정, 삭제, 첨부파일 다운로드 남음
 
   return (
@@ -165,7 +181,7 @@ const ViewPage = () => {
         </div>
 
         <div className='cntColumn viewComment'>
-            {articleView.pno > 0 && <CommentListComponent pno={articleView.pno} comState={comState} loginSlice={loginSlice}/>}
+            {articleView.pno > 0 && <CommentListComponent pno={articleView.pno} comState={comState} saveReply={saveReply} loginSlice={loginSlice}/>}
         </div>
 
     </MainLayout>

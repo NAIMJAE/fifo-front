@@ -450,11 +450,18 @@
         margin-bottom: 20px;
         > div {
             display: flex;
-            img {
+            align-items: center;
+            > span {
+                border: 1px solid #111;
+                padding: 2px 6px;
+                margin-right: 6px;
+                border-radius: 4px;
+            }
+            > img {
                 width: 26px;
                 margin: 2px 10px 2px 0;
             }
-            p {
+            > p {
                 font-size: 16px;
                 color: #1e1e1e;
                 margin-right: 10px;
@@ -463,13 +470,13 @@
                     color: #7b7b7b;
                 }
             }
-            p:nth-child(2) {
+            > p:nth-child(2) {
                 font-weight: bolder;
             }
-            div:nth-last-child(1) {
+            > div:nth-last-child(1) {
                 margin-left: auto;
             }
-            button {
+            div > button {
                 justify-content: center;
                 align-items: center;
                 margin-left: 4px;
@@ -484,9 +491,12 @@
                     padding-left: 4px;
                     color: #FF0000;
                 }
+                b {
+                    margin-left: 4px;
+                }
             }
         }
-        textarea {
+        > textarea {
             width: 100%;
             min-height: 70px;
             resize: none;
@@ -496,6 +506,105 @@
             overflow: hidden;
             border-radius: 4px;
             margin-top: 4px;
+        }
+        > .wrtieReplyBox {
+            display: flex;
+            flex-direction: column;
+            > section {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                padding-bottom: 10px;
+                > svg {
+                    width: auto;
+                    padding: 0 20px;
+                }
+                > textarea {
+                    width: 100%;
+                    min-height: 70px;
+                    resize: none;
+                    box-sizing: border-box;
+                    padding: 10px;
+                    overflow: hidden;
+                    border-radius: 4px;
+                    margin-top: 4px;
+                }
+                > button {
+                    border: 1px solid #7b7b7b;
+                }
+            }
+            > section:nth-child(2){
+                justify-content: end;
+            }
+        }
+        > .viewReplyBox {
+            margin: 0px 0 20px 50px;
+            flex-direction: column;
+            > div {
+                width: 100%;
+                border-top: 1px solid #7b7b7b;
+                padding-top: 10px;
+                margin-left: 0px!important;
+                > div {
+                    display: flex;
+                    align-items: center;
+                    > span {
+                        border: 1px solid #111;
+                        padding: 2px 6px;
+                        margin-right: 6px;
+                        border-radius: 4px;
+                    }
+                    > img {
+                        width: 26px;
+                        margin: 2px 10px 2px 10px;
+                    }
+                    > p {
+                        font-size: 16px;
+                        color: #1e1e1e;
+                        margin-right: 10px;
+                        > span {
+                            margin-left: 6px;
+                            color: #7b7b7b;
+                        }
+                    }
+                    > p:nth-child(2) {
+                        font-weight: bolder;
+                    }
+                    > div:nth-last-child(1) {
+                        margin-left: auto;
+                    }
+                    div > button {
+                        justify-content: center;
+                        align-items: center;
+                        margin-left: 4px;
+                        padding: 2px 6px;
+                        font-size: 14px;
+                        background-color: transparent;
+                        border: 0;
+                        border-radius: 4px;
+                        box-sizing: border-box;
+                        cursor: pointer;
+                        span {
+                            padding-left: 4px;
+                            color: #FF0000;
+                        }
+                        b {
+                            margin-left: 4px;
+                        }
+                    }
+                }
+                > textarea {
+                    width: 100%;
+                    min-height: 70px;
+                    resize: none;
+                    border: 0;
+                    box-sizing: border-box;
+                    padding: 10px;
+                    overflow: hidden;
+                    border-radius: 4px;
+                    margin-top: 4px;
+                }
+            }
         }
     }
 }

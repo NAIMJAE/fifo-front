@@ -14,7 +14,7 @@ const ArticleBoxComponent = ({ postList }) => {
                 <div>
                     <img src={`${RootUrl()}/uploads/user/${post.thumb}`} alt="profile" />
                     <p>{post.nick}</p>
-                    <p>{Moment(postList.createDate).format('YY-MM-DD HH:mm')}</p>
+                    <p>{Moment(post.createDate).format('YY.MM.DD HH:mm')}</p>
                 </div>
                 <div>
                     <Link to={`/article/view?pno=${post.pno}`}>{post.title}</Link>
