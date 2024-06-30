@@ -9,8 +9,10 @@ import CommentListComponent from '../../components/article/CommentListComponent'
 import CommentWriteComponent from '../../components/article/CommentWriteComponent';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { useLocation } from 'react-router-dom';
-import { articleViewApi } from '../../api/articleApi';
-import { FrontUrl } from '../../api/RootUrl';
+import { articleViewApi, commentInsertApi, increaseHeartApi } from '../../api/articleApi';
+import { FrontUrl, RootUrl } from '../../api/RootUrl';
+import Moment from 'moment';
+import { useSelector } from 'react-redux';
 
 const ViewPage = () => {
 
@@ -20,9 +22,14 @@ const ViewPage = () => {
     let pno = queryParams.get('pno');
     const shareURL = FrontUrl() + location.pathname + location.search
 
-    console.log(location)
+    const loginSlice = useSelector((state) => state.authSlice) || {};
 
-    const [articleView, setArticleView] = useState({ articleTitle: '', articleCnt: '' });
+    /** 게시글 useState */
+    const [articleView, setArticleView] = useState({});
+    /** 댓글 상태 관리 useState */
+    const [comState, setComState] = useState(false);
+    /** 댓글 개수 관리 */
+    const [comNum, setComNum] = useState("");
 
     useEffect (() => {
         if (pno === '') {
@@ -31,9 +38,12 @@ const ViewPage = () => {
             return;
         }
         const selectArticle = async () => {
+            console.log("pno",pno)
             try {
                 const response = await articleViewApi(pno); 
+                console.log("response : ", response)
                 setArticleView(response);
+                setComNum(response.comNum);
             } catch (error) {
                 console.log(error);
                 alert("게시글을 찾을 수 없습니다.");
@@ -47,6 +57,44 @@ const ViewPage = () => {
         navigator.clipboard.writeText(shareURL);
     }
 
+
+
+    /** 게시글 좋아요 */
+    const increaseHeart = async () => {
+        const data = {
+            userNo: 1,
+            pno: articleView.pno,
+        }
+        try {
+            const response = await increaseHeartApi(data);
+            console.log("좋아요 response : ", response);
+            setArticleView(prevState => ({
+                ...prevState,
+                heartNum: response > 0 ? prevState.heartNum + 1 : prevState.heartNum - 1
+            }));
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    /** 댓글 작성 */
+    const insertComment = async (comment) => {
+        comment.pno = articleView.pno;
+        console.log("comment : ", comment);
+
+        try {
+            const response = await commentInsertApi(comment);
+            if (response > 0) {
+                setComState(!comState);
+                alert("댓글이 작성되었습니다.");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    // 게시글 조회수 카운팅, 게시글 수정, 삭제, 첨부파일 다운로드 남음
+
   return (
     <MainLayout>
 
@@ -54,52 +102,52 @@ const ViewPage = () => {
 
         <div className='cntColumn viewTitle'>
             <div>
-                <span>자유게시판 - 게시글 No.{pno}</span>
-                <div>
+                <span>{articleView.cateName} - 게시글 No.{pno} | {Moment(articleView.createDate).format('YY.MM.DD HH:mm:ss')}</span>
+                <div className='dateBox'>
                     <h4>{shareURL}</h4>
                     <button onClick={copyUrl}>공유하기</button>
                 </div>
             </div>
             <div>
-                <h1>우리집 뽀삐 보고 가세요.</h1>
-                <p>2024.06.22 12:14</p>
+                <h1>{articleView.title}</h1>
+                <div className='dateBox'>
+                    <h2>조회수 : {articleView.hit}</h2>
+                </div>
             </div>
             <div>
-                <img src="../../images/ppoppi.png" alt="profile" />
-                <p>우리집뽀삐</p>
+                <img src={`${RootUrl()}/uploads/user/${articleView.thumb}`} alt="profile" />
+                <p>{articleView.nick}</p>
                 <div className='hitBox'>
-                    <FontAwesomeIcon icon={faHeart} color='#FF0000' size='lg'/>
-                    <h3>123</h3>
-                    <FontAwesomeIcon icon={faEye} color='#1e1e1e' size='lg'/>
-                    <h2>243</h2>
-                    <FontAwesomeIcon icon={faCommentDots} color='#1e1e1e' size='lg'/>
-                    <h2>243</h2>
-                    <FontAwesomeIcon icon={faThumbsUp} color='#1e1e1e' size='lg'/>
-                <h2>243</h2>
-            </div>
+                    <span onClick={increaseHeart}>
+                        <FontAwesomeIcon icon={faHeart} color='#FF0000' size='lg'/>
+                        <h3>{articleView.heartNum}</h3>
+                    </span>
+                    <span>
+                        <h2>신고</h2>
+                    </span>
+                </div>
             </div>
         </div>
 
         <div className='cntRow viewContents'>
-            {articleView.articleCnt ? <Viewer initialValue={articleView.articleCnt} /> : <p>Loading...</p>}
+            {articleView.content ? <Viewer initialValue={articleView.content} /> : <p>Loading...</p>}
         </div>
 
         <div className='cntWrapRow viewFile'>
             <p>첨부파일</p>
-            <span>뽀삐밥먹는사진.jpg</span>
-            <span>뽀삐잠자는사진.jpg</span>
+            {articleView.fileName && articleView.fileName.map((file, index) => (
+                <span key={index}>{file}</span>
+            ))}
         </div>
 
-        <div className='cntRow viewHeart'>
-            <button>
-                <FontAwesomeIcon icon={faHeart} color='#FFFFFF' size='lg'/>
-                좋아요
-            </button>
-            <button>
-                <FontAwesomeIcon icon={faThumbsUp} color='#FFFFFF' size='lg'/>
-                추천
-            </button>
+        <div className='cntColumn articleTag'>
+            <div className='cntWrapRow' style={{marginTop:"0"}}>
+                {articleView.tagName ? articleView.tagName.map((tag, index) => (
+                    <span key={index} className='tag'>{tag}</span>
+                )) : (<></>)}
+            </div>
         </div>
+        
 
         <div className='cntRow viewModify'>
             <button>
@@ -113,13 +161,11 @@ const ViewPage = () => {
         </div>
 
         <div className='cntColumn writeComment'>
-            <CommentWriteComponent/>
+            {articleView.pno > 0 && <CommentWriteComponent comNum={comNum} insertComment={insertComment} loginSlice={loginSlice}/>}
         </div>
 
         <div className='cntColumn viewComment'>
-            <CommentListComponent/>
-            <CommentListComponent/>
-            <CommentListComponent/>
+            {articleView.pno > 0 && <CommentListComponent pno={articleView.pno} comState={comState}/>}
         </div>
 
     </MainLayout>
