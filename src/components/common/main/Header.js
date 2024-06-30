@@ -69,7 +69,7 @@ const Header = () => {
 
     removeCookie("auth", { path: "/" });
 
-    navigate("/");
+    window.location.reload();
 
     alert("로그아웃 되었습니다.");
   };
@@ -79,7 +79,7 @@ const Header = () => {
       <div>
         <div></div>
         <div id="headerInfo">
-          {loginState === "" && null ? (
+          {loginState === undefined || "" ? (
             <>
               {" "}
               <Link to="#" onClick={handleOpen}>
@@ -89,8 +89,8 @@ const Header = () => {
             </>
           ) : (
             <>
-              <Link to="/">마이페이지</Link>
-              <Link to="/" onClick={handlerLogout}>
+              <Link to="#">마이페이지</Link>
+              <Link to="#" onClick={handlerLogout}>
                 로그아웃
               </Link>
             </>
