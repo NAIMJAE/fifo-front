@@ -14,7 +14,7 @@ const Write = () => {
     const navigate = useNavigate();
     /** 모임 Data */
     const [gathering, setGathering] = useState({
-        gathcate: "",  // 카테고리
+        gathcate: 0,  // 카테고리
         userno: 1,  // 임시 유저 정보
         gathtitle: "",  // 제목
         gathdetail: "",  // 게시글 내용 (content)
@@ -139,12 +139,12 @@ const Write = () => {
                 <div className='selectGroup'>
                     <span>모임 유형</span>
                     <div className='groupType'>
-                        <button className={gathering.gathcate === '프로젝트' ? 'active' : ''} onClick={() => setGathering({ ...gathering, gathcate: '프로젝트' })}>
+                        <button className={gathering.gathcate === 1 ? 'active' : ''} onClick={() => setGathering({ ...gathering, gathcate: 1 })}>
                             프로젝트
                             <p>팀원을 모집해 <br />사이트 프로젝트를<br />진행해보세요.</p>
                         </button>
-                        <button className={gathering.gathcate === '스터디' ? 'active' : ''} onClick={() => setGathering({ ...gathering, gathcate: '스터디' })}>스터디</button>
-                        <button className={gathering.gathcate === '모임' ? 'active' : ''} onClick={() => setGathering({ ...gathering, gathcate: '모임' })}>모임</button>
+                        <button className={gathering.gathcate === 2 ? 'active' : ''} onClick={() => setGathering({ ...gathering, gathcate: 2 })}>스터디</button>
+                        <button className={gathering.gathcate === 3 ? 'active' : ''} onClick={() => setGathering({ ...gathering, gathcate: 3 })}>모임</button>
                     </div>
                 </div>
                 <div className='selectGroup'>
