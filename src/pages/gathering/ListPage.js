@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import GatherBoxComponent from '../../components/main/GatherBoxComponent';
+import GatherBoxComponent from '../../components/gathering/GatherBoxComponent';
 import MainLayout from '../../layout/MainLayout';
 import '../../styles/gathering.scss';
 import SearchAside from '../../components/gathering/SearchAside';

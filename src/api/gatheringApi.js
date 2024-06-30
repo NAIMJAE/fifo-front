@@ -13,13 +13,17 @@ export const gatheringWriteApi = async (formData) => {
 };
 /** 모임글 목록 API */
 export const gatheringListApi = async (data) => {
-    console.log("글 조회 전송!")
     const response = await axios.post(`${rootURL}/gatherings`, data);
     return response.data;
 };
 /** 모임글 보기 API */
 export const gatheringViewApi = async (gathno) => {
     const response = await axios.get(`${rootURL}/gathering/${gathno}`);
+    return response.data;
+};
+/** 나의 모임글 목록 API */
+export const myGatheringListApi = async (data) => {
+    const response = await axios.post(`${rootURL}/my/gatherings`, data);
     return response.data;
 };
 /** 댓글 작성 API */

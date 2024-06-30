@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import MainLayout from '../../layout/MainLayout'
-import '../../styles/article.scss'
+import '../../styles/gathering.scss'
 import { Viewer } from '@toast-ui/react-editor';
 import Breadcrumb from '../../components/common/main/Breadcrumb';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCommentDots, faEye, faHeart, faThumbsUp, faTrashCan } from '@fortawesome/free-regular-svg-icons';
+import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import CommentListComponent from '../../components/article/CommentListComponent';
 import CommentWriteComponent from '../../components/article/CommentWriteComponent';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
@@ -13,6 +13,7 @@ import { FrontUrl, RootUrl } from '../../api/RootUrl';
 import Moment from 'moment';
 import { useSelector } from 'react-redux';
 import { gathCommentInsertApi, gatheringViewApi } from '../../api/gatheringApi';
+import { Alert } from '@mui/material';
 
 const ViewPage = () => {
 
@@ -101,7 +102,51 @@ const ViewPage = () => {
                     </div>
                 </div>
             </div>
-
+            <div className='cntColumn gathCateContent'>
+                <div className='cntRow gathCategory'>
+                    <div className='cntRow'>
+                        <span className='gathCate'>모임 유형</span>
+                        <span className='gathCateValue'>프로젝트</span>
+                    </div>
+                    <div className='cntRow'>
+                        <span className='gathCate'>모임 방식</span>
+                        <span className='gathCateValue'>온라인</span>
+                    </div>
+                </div>
+                <div className='cntRow gathCategory'>
+                    <div className='cntRow'>
+                        <span className='gathCate'>모집 인원</span>
+                        <span className='gathCateValue'>1 / 5</span>
+                    </div>
+                    <div className='cntRow'>
+                        <span className='gathCate'>모집 기간</span>
+                        <span className='gathCateValue'>7월 26일까지</span>
+                    </div>
+                </div>
+                <div className='cntRow gathCategory'>
+                    <div className='cntRow'>
+                        <span className='gathCate'>모집 분야</span>
+                        <span className='gathCateValue'>프론트, 백엔드</span>
+                    </div>
+                    <div className='cntRow'>
+                        <span className='gathCate'>진행 기간</span>
+                        <span className='gathCateValue'>7월 27일 ~ 8월 30일</span>
+                    </div>
+                </div>
+                <div className='cntRow gathCategory'>
+                    <div className='cntRow'>
+                        <span className='gathCate'>모집 언어</span>
+                        <span className='gathCateValue'>Java Javascript</span>
+                    </div>
+                    <div className='cntRow'>
+                        <button className="hvMdBtn maR10">참여신청</button>
+                    </div>
+                    
+                </div>
+                <div className='alertBox'>
+                    <Alert  className='alert' severity="info">참여를 신청하면, 내 언어 레벨과 매너 온도 등의 정보가 모임 호스트에게 전달됩니다.</Alert>
+                </div>
+            </div>
             <div className='cntRow viewContents'>
                 {gatheringView.gathdetail ? <Viewer initialValue={gatheringView.gathdetail} /> : <p>Loading...</p>}
             </div>
