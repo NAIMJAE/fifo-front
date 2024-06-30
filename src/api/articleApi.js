@@ -37,13 +37,24 @@ export const commentInsertApi = async (comment) => {
 };
 
 /** 댓글 불러오기 API */
-export const selectCommentApi = async (pno) => {
-    const response = await axios.get(`${rootURL}/comment/${pno}`);
+export const selectCommentApi = async (data) => {
+    const response = await axios.get(`${rootURL}/comment`, {
+        params :{
+            pg: data.pg,
+            pno: data.pno,
+        }
+    });
     return response.data;
 };
 
 /** 댓글 수정 API */
 export const commentModifyApi = async (data) => {
     const response = await axios.patch(`${rootURL}/comment`, data);
+    return response.data;
+};
+
+/** 답글 작성 API */
+export const replyInsertApi = async (comment) => {
+    const response = await axios.post(`${rootURL}/reply`, comment);
     return response.data;
 };
