@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { globalPath } from "../../globalPaths";
 import "../../styles/user/register.scss";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import axios from "axios";
 
 const url = globalPath.path;
@@ -13,6 +15,7 @@ const Register = () => {
     name: "",
     nick: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   /**회원가입 입력 정보 저장 */
   const handlerRegister = (e) => {
@@ -55,6 +58,10 @@ const Register = () => {
     }
   };
 
+  /**비밀번호 보여지기 */
+  const handlerPasswordVisble = () => {
+    setShowPassword(!showPassword);
+  };
   return (
     <div className="register">
       <Link to="/">
@@ -82,16 +89,27 @@ const Register = () => {
             type="text"
             placeholder="예시) example@fifo.com"
           ></input>
-
           <label className="textLabel">비밀번호</label>
-          <input
-            name="pass"
-            value={register.pass}
-            onChange={handlerRegister}
-            className="inputElement"
-            type="password"
-          ></input>
-
+          <div className="passContainer">
+            <input
+              name="pass"
+              value={register.pass}
+              onChange={handlerRegister}
+              className="inputElement"
+              type={showPassword ? "text" : "password"}
+            ></input>
+            {showPassword ? (
+              <RemoveRedEyeIcon
+                className="eyeIcon"
+                onClick={handlerPasswordVisble}
+              />
+            ) : (
+              <VisibilityOffIcon
+                className="eyeIcon"
+                onClick={handlerPasswordVisble}
+              />
+            )}
+          </div>
           <label className="textLabel">이름</label>
           <input
             name="name"
@@ -101,7 +119,6 @@ const Register = () => {
             type="text"
             placeholder="김뽀삐"
           ></input>
-
           <label className="textLabel">닉네임</label>
           <input
             name="nick"
@@ -111,11 +128,7 @@ const Register = () => {
             type="text"
             placeholder="별명을 알파벳, 한글, 숫자를 10자 이하로 입력해주세요"
           ></input>
-
-          <label className="textLabel">관심태그</label>
-
           <div className="terms-agree">약관동의</div>
-
           <div className="terms-all-div">
             <label className="agreeAll-label">
               <input type="checkbox" />
