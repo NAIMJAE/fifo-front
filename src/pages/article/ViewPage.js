@@ -26,8 +26,10 @@ const ViewPage = () => {
 
     /** 게시글 useState */
     const [articleView, setArticleView] = useState({});
+
     /** 댓글 상태 관리 useState */
     const [comState, setComState] = useState(false);
+
     /** 댓글 개수 관리 */
     const [comNum, setComNum] = useState("");
 
@@ -67,7 +69,6 @@ const ViewPage = () => {
         }
         try {
             const response = await increaseHeartApi(data);
-            console.log("좋아요 response : ", response);
             setArticleView(prevState => ({
                 ...prevState,
                 heartNum: response > 0 ? prevState.heartNum + 1 : prevState.heartNum - 1
@@ -93,7 +94,7 @@ const ViewPage = () => {
         }
     }
 
-    /** 대댓글 작성 */
+    /** 답글 작성 */
     const saveReply = async (cno, content) => {
         const data = {
             content: content,
@@ -103,7 +104,10 @@ const ViewPage = () => {
         }
         try {
             const response = await replyInsertApi(data);
-            console.log("답글 response : ", response);
+            if (response > 0) {
+                setComState(!comState);
+                alert("답글이 작성되었습니다.");
+            }
         } catch (error) {
             console.log(error);
         }
@@ -181,7 +185,7 @@ const ViewPage = () => {
         </div>
 
         <div className='cntColumn viewComment'>
-            {articleView.pno > 0 && <CommentListComponent pno={articleView.pno} comState={comState} saveReply={saveReply} loginSlice={loginSlice}/>}
+            {articleView.pno > 0 && <CommentListComponent pno={articleView.pno} comState={comState} setComState={setComState} saveReply={saveReply} loginSlice={loginSlice}/>}
         </div>
 
     </MainLayout>

@@ -2,13 +2,13 @@ import { faFloppyDisk, faHeart, faMessage, faTrashCan } from '@fortawesome/free-
 import { faAnglesRight, faPen, faReply, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { commentModifyApi, selectCommentApi } from '../../api/articleApi'
+import { commentHeartApi, commentModifyApi, deleteCommentApi, heartCheckApi, selectCommentApi } from '../../api/articleApi'
 import PageingComponent from '../../components/common/paging/PageingComponent'
 import { RootUrl } from '../../api/RootUrl'
 import Moment from 'moment';
 import 'moment/locale/ko'; // 한글 번역 파일을 추가
 
-const CommentListComponent = ({ pno, comState, saveReply, loginSlice }) => {
+const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlice }) => {
     /** Moment 라이브러리 한글 설정 */
     Moment.locale('ko');
 
@@ -23,6 +23,9 @@ const CommentListComponent = ({ pno, comState, saveReply, loginSlice }) => {
 
     /** 각 댓글의 답글 상태 관리 */
     const [replyStates, setReplyStates] = useState([]);
+
+    /** 각 답글의 수정 상태 관리 */
+    const [replyModiStates, setReplyModiStates] = useState([]);
 
     /** 댓글 불러오기 */
     useEffect(()=>{
@@ -44,6 +47,16 @@ const CommentListComponent = ({ pno, comState, saveReply, loginSlice }) => {
                         content: "",
                         isEditing: false, 
                     })));
+                    setReplyModiStates(
+                        response.dtoList
+                            .filter(comment => comment.replyList)
+                            .flatMap(comment => comment.replyList)
+                            .map(reply => ({
+                                id: reply.cno,
+                                content: reply.content,
+                                isEditing: false,
+                            }))
+                    );
                 }
             } catch (error) {
                 console.log(error);
@@ -52,10 +65,12 @@ const CommentListComponent = ({ pno, comState, saveReply, loginSlice }) => {
         selectComment();
     },[comState, comPageable])
 
+    /** 페이징 처리 */
     const changePage = (newPg) => {
         setComPageable(prev => ({...prev, pg: newPg}));
     }
 
+//**** 댓글 관련 함수들 ****//
     /** 댓글 수정 */
     const modifyComment = (e, cno) => {
         const commentDiv = e.target.closest(`div[id='${cno}']`);
@@ -78,6 +93,7 @@ const CommentListComponent = ({ pno, comState, saveReply, loginSlice }) => {
 
         textarea.readOnly = true;
         textarea.style.border = "0"
+        textarea.value = commentStates.find(comment => comment.id === cno).content;
 
         setCommentStates(prevStates =>
             prevStates.map(comment =>
@@ -98,7 +114,6 @@ const CommentListComponent = ({ pno, comState, saveReply, loginSlice }) => {
 
         try {
             const response = await commentModifyApi(data);
-            console.log("댓글 수정 response : ", response);
             if (response > 0) {
                 alert("댓글이 수정되었습니다.");
             }
@@ -116,6 +131,41 @@ const CommentListComponent = ({ pno, comState, saveReply, loginSlice }) => {
         );
     }
 
+    /** 댓글 삭제 */
+    const deleteComment = async (e, cno) => {
+        let result = window.confirm("댓글을 삭제하시겠습니까?");
+
+        if (result) {
+            try {
+                const response = await deleteCommentApi(cno);
+                if (response > 0) {
+                    alert("댓글이 삭제되었습니다.")
+                    setComState(!comState)
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
+
+    /** 댓글 좋아요 */
+    const heartComment = async (e, cno) => {
+        console.log("aa",loginSlice.userno)
+        console.log("aa",cno)
+        const data = {
+            userNo: loginSlice.userno,
+            cno: cno,
+        }
+
+        try {
+            const response = await commentHeartApi(data);
+            setComState(!comState)
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
     /** 댓글 수정 시간 계산 */
     const formatRelativeTime = (dateTime) => {
         return Moment(dateTime).fromNow();
@@ -130,7 +180,7 @@ const CommentListComponent = ({ pno, comState, saveReply, loginSlice }) => {
     }, []);
 
 
-    
+//**** 답글 관련 함수들 ****//
     /** 답글 작성 UI 생성 */
     const viewReply = (cno) => {
         setReplyStates(prevStates =>
@@ -167,73 +217,153 @@ const CommentListComponent = ({ pno, comState, saveReply, loginSlice }) => {
         }
     };
 
-    // 댓글 삭제, 좋아요, 대댓 디자인 , 대댓 수정 삭제
+    /** 답글 수정 */
+    const modifyReply = (e, cno) => {
+        const commentDiv = e.target.closest(`div[id='${cno}']`);
+        const textarea = commentDiv.querySelector('textarea');
+
+        textarea.readOnly = false;
+        textarea.style.border = "1px solid #9f9f9f"
+
+        setReplyModiStates(prevStates =>
+            prevStates.map(comment =>
+                comment.id === cno ? { ...comment, isEditing: !comment.isEditing } : comment
+            )
+        );
+    }
+
+    /** 답글 수정 취소 */
+    const cancelModiReply = (e, cno) => {
+        const commentDiv = e.target.closest(`div[id='${cno}']`);
+        const textarea = commentDiv.querySelector('textarea');
+
+        textarea.readOnly = true;
+        textarea.style.border = "0";
+        textarea.value = replyModiStates.find(comment => comment.id === cno).content;
+
+        setReplyModiStates(prevStates =>
+            prevStates.map(comment =>
+                comment.id === cno ? { ...comment, isEditing: !comment.isEditing } : comment
+            )
+        );
+    }
+
+    /** 답글 수정 저장 */
+    const saveModiReply = async (e, cno) => {
+        const commentDiv = e.target.closest(`div[id='${cno}']`);
+        const textarea = commentDiv.querySelector('textarea');
+
+        const data = {
+            cno: cno,
+            content: textarea.value,
+        }
+
+        try {
+            const response = await commentModifyApi(data);
+            if (response > 0) {
+                alert("댓글이 수정되었습니다.");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+        textarea.readOnly = true;
+        textarea.style.border = "0"
+
+        setReplyModiStates(prevStates =>
+            prevStates.map(comment =>
+                comment.id === cno ? { ...comment, isEditing: !comment.isEditing } : comment
+            )
+        );
+    }
+
+    // 대댓 디자인 
 
   return (
     <>
     {commentList.dtoList ? commentList.dtoList.map((comment, index) => (
         <div id={comment.cno} key={comment.cno}>
-
-            {/** 댓글 목록 */}
+{/******** 댓글 목록 ********/}
             <div>
-                <img src={`${RootUrl()}/uploads/user/${comment.thumb}`} alt="profile" />
-                <p>{comment.nick}</p>
-                {(loginSlice.userno === comment.userNo) && <span>내댓글</span>}
-                <p>
+                {comment.state > 0 ? (
+                    <>
+                        <img src="../../images/article/deleteUserIcon.svg" alt="profile" />
+                        <p>******</p>
+                    </>
+                ) : (
+                    <>
+                    <img src={`${RootUrl()}/uploads/user/${comment.thumb}`} alt="profile" />
+                    <p>{comment.nick}</p>
+                    {(loginSlice.userno === comment.userNo) && <span>내댓글</span>}
+                    </>
+                )}
+                
+                <h3>
                     {Moment(comment.createDate).format('YY.MM.DD HH:mm')}
                     {comment.updateDate && (<span> {formatRelativeTime(comment.updateDate)} 수정</span>)}
-                </p>
+                </h3>
                 <div>
-                    <button className='heart'>
-                        <FontAwesomeIcon icon={faHeart} color='#FF0000' size='lg'/>
-                        <span>123</span>
-                    </button>
+                    {comment.state > 0 ? (
+                        null
+                    ) : (
+                        <button className='heart' onClick={(e) => heartComment(e, comment.cno)}>
+                            <FontAwesomeIcon icon={faHeart} color='#FF0000' size='lg'/>
+                            <span>{comment.heart}</span>
+                        </button>
+                    )}
 
                     <button onClick={() => viewReply(comment.cno)}>
                         <FontAwesomeIcon icon={faMessage} />
                         <b>답글</b>
                     </button>
 
-                    {(loginSlice.userno === comment.userNo) &&
-                    <>
-                        {commentStates.find(state => state.id === comment.cno && state.isEditing) ? (
-                            <button onClick={(e) => saveComment(e, comment.cno)}>
-                                <FontAwesomeIcon icon={faFloppyDisk} color='#1e1e1e' size='lg' />
-                                <b>저장</b>
-                            </button>
-                        ) : (
-                            <button onClick={(e) => modifyComment(e, comment.cno)}>
-                                <FontAwesomeIcon icon={faPen} color='#1e1e1e' size='lg' />
-                                <b>수정</b>
-                            </button>
-                        )}
-                    </>
-                    }
+                    {comment.state > 0 ? (
+                        null
+                    ) : (
+                        <>
+                        {(loginSlice.userno === comment.userNo) &&
+                        <>
+                            {commentStates.find(state => state.id === comment.cno && state.isEditing) ? (
+                                <button onClick={(e) => saveComment(e, comment.cno)}>
+                                    <FontAwesomeIcon icon={faFloppyDisk} color='#1e1e1e' size='lg' />
+                                    <b>저장</b>
+                                </button>
+                            ) : (
+                                <button onClick={(e) => modifyComment(e, comment.cno)}>
+                                    <FontAwesomeIcon icon={faPen} color='#1e1e1e' size='lg' />
+                                    <b>수정</b>
+                                </button>
+                            )}
+                        </>
+                        }
 
-                    {(loginSlice.userno === comment.userNo) &&
-                    <>
-                        {commentStates.find(state => state.id === comment.cno && state.isEditing) ? (
-                            <button onClick={(e) => cancelComment(e, comment.cno)}>
-                                <FontAwesomeIcon icon={faXmark} color='#1e1e1e' size='lg' />
-                                <b>취소</b>
-                            </button>
-                        ) : (
-                            <button>
-                                <FontAwesomeIcon icon={faTrashCan} color='#1e1e1e' size='lg'/>
-                                <b>삭제</b>
-                            </button>
-                        )}
-                    </>
-                    }
+                        {(loginSlice.userno === comment.userNo) &&
+                        <>
+                            {commentStates.find(state => state.id === comment.cno && state.isEditing) ? (
+                                <button onClick={(e) => cancelComment(e, comment.cno)}>
+                                    <FontAwesomeIcon icon={faXmark} color='#1e1e1e' size='lg' />
+                                    <b>취소</b>
+                                </button>
+                            ) : (
+                                <button onClick={(e) => deleteComment(e, comment.cno)}>
+                                    <FontAwesomeIcon icon={faTrashCan} color='#1e1e1e' size='lg'/>
+                                    <b>삭제</b>
+                                </button>
+                            )}
+                        </>
+                        }
+                        </>
+                    )}
+                    
                 </div>
             </div>
             <textarea ref={autoResizeTextarea} readOnly>{comment.content}</textarea>
 
-            {/** 답글 작성 */}
+{/******** 답글 작성 ********/}
             {replyStates.find(state => state.id === comment.cno && state.isEditing) && 
                 <div className='wrtieReplyBox'>
                     <section>
-                        <FontAwesomeIcon icon={faReply} flip="both" size='2xl'/>
+                        <FontAwesomeIcon icon={faReply} flip="both" size='2xl' color='#7b7b7b'/>
                         <textarea onChange={(e) => writeReply(e, comment.cno)}></textarea>
                     </section>
                     <section>
@@ -243,63 +373,79 @@ const CommentListComponent = ({ pno, comState, saveReply, loginSlice }) => {
                 </div>
             }
 
+{/******** 답글 목록 ********/}
             {comment.replyList && comment.replyList.map((reply, index) => (
                 <div className='viewReplyBox'>
-                    <div>
+                    <div id={reply.cno} key={reply.cno}>
                         <div>
-                            <FontAwesomeIcon icon={faReply} flip="both" size='2x' color='#4169e1'/>
-                            <img src={`${RootUrl()}/uploads/user/${reply.thumb}`} alt="profile" />
-                            <p>{reply.nick}</p>
-                            {(loginSlice.userno === reply.userNo) && <span>내댓글</span>}
-                            <p>
+                            <FontAwesomeIcon icon={faReply} flip="both" size='2x' color='#7b7b7b'/>
+
+                            {reply.state > 0 ? (
+                                <>
+                                    <img src="../../images/article/deleteUserIcon.svg" alt="profile" />
+                                    <p>******</p>
+                                </>
+                            ) : (
+                                <>
+                                <img src={`${RootUrl()}/uploads/user/${reply.thumb}`} alt="profile" />
+                                <p>{reply.nick}</p>
+                                {(loginSlice.userno === reply.userNo) && <span>내댓글</span>}
+                                </>
+                            )}
+                            <h3>
                                 {Moment(reply.createDate).format('YY.MM.DD HH:mm')}
                                 {reply.updateDate && (<span> {formatRelativeTime(reply.updateDate)} 수정</span>)}
-                            </p>
+                            </h3>
                             <div>
-                                <button className='heart'>
-                                    <FontAwesomeIcon icon={faHeart} color='#FF0000' size='lg'/>
-                                    <span>123</span>
-                                </button>
+                                {reply.state > 0 ? (
+                                    null
+                                ) : (
+                                    <>
+                                        <button className='heart' onClick={(e) => heartComment(e, reply.cno)}>
+                                            <FontAwesomeIcon icon={faHeart} color='#FF0000' size='lg'/>
+                                            <span>{reply.heart}</span>
+                                        </button>
 
-                                {(loginSlice.userno === reply.userNo) &&
-                                <>
-                                    {commentStates.find(state => state.id === comment.cno && state.isEditing) ? (
-                                        <button onClick={(e) => saveComment(e, reply.cno)}>
-                                            <FontAwesomeIcon icon={faFloppyDisk} color='#1e1e1e' size='lg' />
-                                            <b>저장</b>
-                                        </button>
-                                    ) : (
-                                        <button onClick={(e) => modifyComment(e, reply.cno)}>
-                                            <FontAwesomeIcon icon={faPen} color='#1e1e1e' size='lg' />
-                                            <b>수정</b>
-                                        </button>
-                                    )}
-                                </>
-                                }
+                                        {(loginSlice.userno === reply.userNo) &&
+                                        <>
+                                            {replyModiStates.find(state => state.id === reply.cno && state.isEditing) ? (
+                                                <button onClick={(e) => saveModiReply(e, reply.cno)}>
+                                                    <FontAwesomeIcon icon={faFloppyDisk} color='#1e1e1e' size='lg' />
+                                                    <b>저장</b>
+                                                </button>
+                                            ) : (
+                                                <button onClick={(e) => modifyReply(e, reply.cno)}>
+                                                    <FontAwesomeIcon icon={faPen} color='#1e1e1e' size='lg' />
+                                                    <b>수정</b>
+                                                </button>
+                                            )}
+                                        </>
+                                        }
 
-                                {(loginSlice.userno === reply.userNo) &&
-                                <>
-                                    {commentStates.find(state => state.id === reply.cno && state.isEditing) ? (
-                                        <button onClick={(e) => cancelComment(e, reply.cno)}>
-                                            <FontAwesomeIcon icon={faXmark} color='#1e1e1e' size='lg' />
-                                            <b>취소</b>
-                                        </button>
-                                    ) : (
-                                        <button>
-                                            <FontAwesomeIcon icon={faTrashCan} color='#1e1e1e' size='lg'/>
-                                            <b>삭제</b>
-                                        </button>
-                                    )}
-                                </>
-                                }
+                                        {(loginSlice.userno === reply.userNo) &&
+                                        <>
+                                            {replyModiStates.find(state => state.id === reply.cno && state.isEditing) ? (
+                                                <button onClick={(e) => cancelModiReply(e, reply.cno)}>
+                                                    <FontAwesomeIcon icon={faXmark} color='#1e1e1e' size='lg' />
+                                                    <b>취소</b>
+                                                </button>
+                                            ) : (
+                                                <button onClick={(e) => deleteComment(e, reply.cno)}>
+                                                    <FontAwesomeIcon icon={faTrashCan} color='#1e1e1e' size='lg'/>
+                                                    <b>삭제</b>
+                                                </button>
+                                            )}
+                                        </>
+                                        }
+                                    </>
+                                )}
+                                
                             </div>
                         </div>
                         <textarea ref={autoResizeTextarea} readOnly>{reply.content}</textarea>
                     </div>
                 </div>
             ))}
-
-
 
         </div>
     )) : (
