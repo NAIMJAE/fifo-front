@@ -53,6 +53,19 @@ export const commentModifyApi = async (data) => {
     return response.data;
 };
 
+/** 댓글 삭제 API */
+export const deleteCommentApi = async (cno) => {
+    const response = await axios.delete(`${rootURL}/comment/${cno}`);
+    return response.data;
+};
+
+/** 댓글 좋아요 */
+export const commentHeartApi = async (data) => {
+    console.log("ads",data)
+    const response = await axios.post(`${rootURL}/comment/heart`, data);
+    return response.data;
+};
+
 /** 답글 작성 API */
 export const replyInsertApi = async (comment) => {
     const response = await axios.post(`${rootURL}/reply`, comment);
