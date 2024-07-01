@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../../../styles/header.scss";
 import "../../../styles/user/login.scss";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { globalPath } from "../../../globalPaths";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,7 +26,7 @@ const Header = () => {
 
   /**로그인 관리 */
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+
   const [user, setUser] = useState({
     email: "",
     pass: "",
@@ -89,7 +89,7 @@ const Header = () => {
             </>
           ) : (
             <>
-              <Link to="#">마이페이지</Link>
+              <Link to="/user/myPage">마이페이지</Link>
               <Link to="#" onClick={handlerLogout}>
                 로그아웃
               </Link>
