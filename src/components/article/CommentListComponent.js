@@ -77,7 +77,7 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
         const textarea = commentDiv.querySelector('textarea');
 
         textarea.readOnly = false;
-        textarea.style.border = "1px solid #9f9f9f"
+        textarea.style.border = "1px solid #7b7b7b"
 
         setCommentStates(prevStates =>
             prevStates.map(comment =>
@@ -92,7 +92,8 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
         const textarea = commentDiv.querySelector('textarea');
 
         textarea.readOnly = true;
-        textarea.style.border = "0"
+        textarea.style.border = "none";
+        textarea.style.borderBottom = "1px solid #7b7b7b";
         textarea.value = commentStates.find(comment => comment.id === cno).content;
 
         setCommentStates(prevStates =>
@@ -122,7 +123,8 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
         }
 
         textarea.readOnly = true;
-        textarea.style.border = "0"
+        textarea.style.border = "none";
+        textarea.style.borderBottom = "1px solid #7b7b7b";
 
         setCommentStates(prevStates =>
             prevStates.map(comment =>
@@ -223,7 +225,7 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
         const textarea = commentDiv.querySelector('textarea');
 
         textarea.readOnly = false;
-        textarea.style.border = "1px solid #9f9f9f"
+        textarea.style.border = "1px solid #7b7b7b"
 
         setReplyModiStates(prevStates =>
             prevStates.map(comment =>
@@ -238,7 +240,8 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
         const textarea = commentDiv.querySelector('textarea');
 
         textarea.readOnly = true;
-        textarea.style.border = "0";
+        textarea.style.border = "none";
+        textarea.style.borderBottom = "1px solid #7b7b7b";
         textarea.value = replyModiStates.find(comment => comment.id === cno).content;
 
         setReplyModiStates(prevStates =>
@@ -268,7 +271,8 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
         }
 
         textarea.readOnly = true;
-        textarea.style.border = "0"
+        textarea.style.border = "none";
+        textarea.style.borderBottom = "1px solid #7b7b7b";
 
         setReplyModiStates(prevStates =>
             prevStates.map(comment =>
@@ -294,7 +298,6 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
                     <>
                     <img src={`${RootUrl()}/uploads/user/${comment.thumb}`} alt="profile" />
                     <p>{comment.nick}</p>
-                    {(loginSlice.userno === comment.userNo) && <span>내댓글</span>}
                     </>
                 )}
                 
@@ -302,6 +305,7 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
                     {Moment(comment.createDate).format('YY.MM.DD HH:mm')}
                     {comment.updateDate && (<span> {formatRelativeTime(comment.updateDate)} 수정</span>)}
                 </h3>
+
                 <div>
                     {comment.state > 0 ? (
                         null
@@ -363,6 +367,10 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
             {replyStates.find(state => state.id === comment.cno && state.isEditing) && 
                 <div className='wrtieReplyBox'>
                     <section>
+                        <img src={`${RootUrl()}/uploads/user/${loginSlice.thumb}`} alt="profile" />
+                        <p>{loginSlice.nick}</p>
+                    </section>
+                    <section>
                         <FontAwesomeIcon icon={faReply} flip="both" size='2xl' color='#7b7b7b'/>
                         <textarea onChange={(e) => writeReply(e, comment.cno)}></textarea>
                     </section>
@@ -378,7 +386,7 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
                 <div className='viewReplyBox'>
                     <div id={reply.cno} key={reply.cno}>
                         <div>
-                            <FontAwesomeIcon icon={faReply} flip="both" size='2x' color='#7b7b7b'/>
+                            <FontAwesomeIcon icon={faReply} flip="both" size='lg' color='#7b7b7b'/>
 
                             {reply.state > 0 ? (
                                 <>
@@ -389,7 +397,6 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
                                 <>
                                 <img src={`${RootUrl()}/uploads/user/${reply.thumb}`} alt="profile" />
                                 <p>{reply.nick}</p>
-                                {(loginSlice.userno === reply.userNo) && <span>내댓글</span>}
                                 </>
                             )}
                             <h3>
