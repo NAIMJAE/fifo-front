@@ -8,7 +8,7 @@ import { faCommentDots, faEye, faHeart, faThumbsUp, faTrashCan } from '@fortawes
 import CommentListComponent from '../../components/article/CommentListComponent';
 import CommentWriteComponent from '../../components/article/CommentWriteComponent';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { articleViewApi, commentInsertApi, increaseHeartApi, replyInsertApi } from '../../api/articleApi';
 import { FrontUrl, RootUrl } from '../../api/RootUrl';
 import Moment from 'moment';
@@ -23,6 +23,7 @@ const ViewPage = () => {
     const shareURL = FrontUrl() + location.pathname + location.search
 
     const loginSlice = useSelector((state) => state.authSlice) || {};
+    const navigate = useNavigate();
 
     /** 게시글 useState */
     const [articleView, setArticleView] = useState({});
@@ -36,7 +37,6 @@ const ViewPage = () => {
     useEffect (() => {
         if (pno === '') {
             alert("게시글을 찾을 수 없습니다.");
-            
             return;
         }
         const selectArticle = async () => {
@@ -59,7 +59,13 @@ const ViewPage = () => {
         navigator.clipboard.writeText(shareURL);
     }
 
-
+    /** 게시글 수정 */
+    const modifyPost = () => {
+        let result = window.confirm("게시글을 수정하시겠습니까?");
+        if (result) {
+            navigate(`/article/modify?pno=${pno}`)
+        }
+    }
 
     /** 게시글 좋아요 */
     const increaseHeart = async () => {
@@ -168,17 +174,19 @@ const ViewPage = () => {
             </div>
         </div>
         
-
-        <div className='cntRow viewModify'>
-            <button>
-                <FontAwesomeIcon icon={faPen} color='#1e1e1e' size='lg'/>
-                수정
-            </button>
-            <button>
-                <FontAwesomeIcon icon={faTrashCan} color='#1e1e1e' size='lg'/>
-                삭제
-            </button>
-        </div>
+        {loginSlice.userno === articleView.userNo && 
+            <div className='cntRow viewModify'>
+                <button onClick={() => modifyPost(articleView.pno)}>
+                    <FontAwesomeIcon icon={faPen} color='#1e1e1e' size='lg'/>
+                    수정
+                </button>
+                <button>
+                    <FontAwesomeIcon icon={faTrashCan} color='#1e1e1e' size='lg'/>
+                    삭제
+                </button>
+            </div>
+        }
+        
 
         <div className='cntColumn writeComment'>
             {articleView.pno > 0 && <CommentWriteComponent comNum={comNum} insertComment={insertComment} loginSlice={loginSlice}/>}

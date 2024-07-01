@@ -389,7 +389,6 @@
 
 .writeComment {
     margin: 50px 30px 20px;
-    padding-bottom: 20px;
     border-top: 1px solid #7b7b7b;
     border-bottom: 1px solid #7b7b7b;
 
@@ -406,7 +405,8 @@
     }
     > div {
         align-items: center;
-        padding: 0 10px;
+        padding: 0 10px 10px 10px;
+        background-color: #eeeeee;
         img {
             width: 26px;
             margin: 2px 10px 2px 0;
@@ -425,7 +425,8 @@
             border-radius: 4px;
             box-sizing: border-box;
             padding: 10px;
-            overflow: hidden;
+            overflow: scroll;
+            scrollbar-width: none;
         }
         button {
             width: 70px;
@@ -438,25 +439,23 @@
             border: 1px solid #7b7b7b;
             border-radius: 4px;
             box-sizing: border-box;
+            background-color: white;
             cursor: pointer;
         }
     }
 }
 .viewComment {
     margin: 0px 30px 20px;
-    padding: 0 10px;
     > div {
+        display: flex;
+        flex-direction: column;
+        padding-top: 10px;
+        margin-bottom: -1px;
         border-bottom: 1px solid #7b7b7b;
-        margin-bottom: 20px;
+        border-top: 1px solid #7b7b7b;
         > div {
             display: flex;
             align-items: center;
-            > span {
-                border: 1px solid #111;
-                padding: 2px 6px;
-                margin-right: 10px;
-                border-radius: 4px;
-            }
             > img {
                 width: 26px;
                 height: 26px;
@@ -509,17 +508,29 @@
             box-sizing: border-box;
             padding: 10px;
             overflow: hidden;
-            border-radius: 4px;
-            margin-top: 4px;
+            margin: 4px 0 -1px;
+            border-bottom: 1px solid #7b7b7b;
+
         }
         > .wrtieReplyBox {
             display: flex;
             flex-direction: column;
+            padding: 10px 0;
             > section {
                 width: 100%;
                 display: flex;
                 align-items: center;
-                padding-bottom: 10px;
+                padding-top: 4px;
+                > img {
+                    width: 26px;
+                    margin: 2px 10px 2px 70px;
+                }
+                > p {
+                    font-size: 16px;
+                    font-weight: bolder;
+                    color: #1e1e1e;
+                    margin-right: 10px;
+                }
                 > svg {
                     width: auto;
                     padding: 0 20px;
@@ -535,30 +546,38 @@
                     margin-top: 4px;
                 }
                 > button {
+                    justify-content: center;
+                    align-items: center;
+                    margin-left: 6px;
+                    padding: 2px 6px;
+                    font-size: 14px;
+                    background-color: transparent;
+                    border: 0;
+                    border-radius: 4px;
+                    box-sizing: border-box;
+                    cursor: pointer;
                     border: 1px solid #7b7b7b;
                 }
             }
-            > section:nth-child(2){
+            > section:nth-child(3){
                 justify-content: end;
             }
         }
         > .viewReplyBox {
-            margin: 0px 0 20px 50px;
+            margin-left: 50px;
             flex-direction: column;
             > div {
+                display: flex;
+                flex-direction: column;
                 width: 100%;
-                border-top: 1px solid #7b7b7b;
                 padding-top: 10px;
+                margin-bottom: -1px;
+                border-bottom: 1px solid #7b7b7b;
+                border-top: 1px solid #7b7b7b;
                 margin-left: 0px!important;
                 > div {
                     display: flex;
                     align-items: center;
-                    > span {
-                        border: 1px solid #111;
-                        padding: 2px 6px;
-                        margin-right: 10px;
-                        border-radius: 4px;
-                    }
                     > img {
                         width: 26px;
                         height: 26px;
@@ -611,10 +630,40 @@
                     box-sizing: border-box;
                     padding: 10px;
                     overflow: hidden;
-                    border-radius: 4px;
-                    margin-top: 4px;
+                    margin: 4px 0 -1px;
                 }
             }
         }
+    }
+}
+
+/*** article - modify ***/
+.modifyFile {
+    padding: 10px 0;
+    align-items: center;
+    display: flex;
+    p {
+        padding: 0 10px;
+        font-weight: bolder;
+    }
+    span {
+        color: #1e1e1e;
+        display: flex;
+        margin: 0 10px;
+        padding: 4px 8px;
+        border: 1px solid #7b7b7b;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    span:after {
+        display: flex;
+        content: '';
+        width: 16px;
+        height: 16px;
+        background-image: url(../../public/images/article/closeBtn.svg);
+        background-size: contain;
+        background-repeat: no-repeat;
+        margin-left: 10px;
+        align-self: center;
     }
 }
