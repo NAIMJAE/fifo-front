@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { globalPath } from "../../globalPaths";
 import "../../styles/user/register.scss";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import Backdrop from "../common/backdrop/backdrop.js";
 import axios from "axios";
 
 const url = globalPath.path;
@@ -16,6 +17,12 @@ const Register = () => {
     nick: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+
+  const [open, setOpen] = useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   /**회원가입 입력 정보 저장 */
   const handlerRegister = (e) => {
@@ -45,16 +52,26 @@ const Register = () => {
       alert("닉네임을 입력해주세요");
       return;
     } else {
-      axios
-        .post(`${url}/user/register`, register)
-        .then((response) => {
-          console.log(response.data);
-          alert("회원가입이 완료되었습니다.");
-        })
-        .catch((err) => {
-          console.log(err);
-          alert("회원가입에 실패했습니다.");
-        });
+      setOpen(true);
+      setTimeout(() => {
+        axios
+          .post(`${url}/user/register`, register)
+          .then((response) => {
+            console.log(response.data);
+
+            alert("회원가입이 완료되었습니다.");
+            alert("회원 정보 입력을 위해 마이페이지로 이동합니다.");
+
+            navigate(`/user/myPage`);
+          })
+          .catch((err) => {
+            console.log(err);
+            alert("회원가입에 실패했습니다.");
+          })
+          .finally(() => {
+            setOpen(false);
+          });
+      }, 1000);
     }
   };
 
@@ -128,6 +145,7 @@ const Register = () => {
             type="text"
             placeholder="별명을 알파벳, 한글, 숫자를 10자 이하로 입력해주세요"
           ></input>
+
           <div className="terms-agree">약관동의</div>
           <div className="terms-all-div">
             <label className="agreeAll-label">
@@ -152,6 +170,7 @@ const Register = () => {
           onClick={handlerSubmitClick}
         />
       </form>
+      <Backdrop handleClose={handleClose} open={open} />
     </div>
   );
 };
