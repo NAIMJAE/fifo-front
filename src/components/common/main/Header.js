@@ -20,7 +20,7 @@ const Header = () => {
   const authSlice = useSelector((state) => state.authSlice);
 
   useEffect(() => {
-    setLoginState(authSlice.email);
+    setLoginState(authSlice.userno);
     console.log(loginState);
   }, [authSlice.email]);
 
