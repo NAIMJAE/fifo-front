@@ -11,7 +11,7 @@ const SkillIcon = ({ skill, classType }) => {
       />
     ) : (
       <img 
-        className='itungyun_skillImg'
+        className='bigSkillImg'
         src={`../images/skillIcon/${skill}.svg`} 
         alt={skill} 
       />
