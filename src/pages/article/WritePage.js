@@ -6,6 +6,7 @@ import { changeImages } from '../../components/common/toast/ImageProcessing';
 import EditorComponent from '../../components/common/toast/EditorComponent';
 import { useSelector } from 'react-redux';
 import Breadcrumb from '../../components/common/main/Breadcrumb';
+import { useNavigate } from 'react-router-dom';
 
 /** 입력한 태그 이전 상태 저장 (태그 개수 제한) */
 let prevValue = "";
@@ -13,6 +14,7 @@ let prevValue = "";
 const Write = () => {
 
     const loginSlice = useSelector((state) => state.authSlice) || {};
+    const navigate = useNavigate();
 
 /** 게시글 제목 저장 */
     const [title, setTitle] = useState("");
@@ -54,7 +56,8 @@ const Write = () => {
     const handleSubmit = async () => {
         // 게시글 내용 꺼내오기
         let contents = editorRef.current.getInstance().getHTML();
-        
+        console.log("contents : ", contents)
+
         // 게시글 내용 속 이미지 변환 (changeImages 컴포넌트화 시킴)
         const resultData = await changeImages(contents);
         if (resultData !== null) {
@@ -85,6 +88,9 @@ const Write = () => {
         try {
             const response = await articleWriteApi(formData);
             console.log(response);
+            if (response > 0) {
+                navigate(`/article/view?pno=${response}`);
+            }
         }catch (err) {
             console.log(err);
         }

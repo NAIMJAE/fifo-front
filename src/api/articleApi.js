@@ -30,6 +30,16 @@ export const increaseHeartApi = async (data) => {
     return response.data;
 };
 
+/** 게시글 수정 API */
+export const articleModifyApi = async (formData) => {
+    const response = await axios.put(`${rootURL}/post`, formData ,{
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+    return response.data;
+};
+
 /** 댓글 작성 API */
 export const commentInsertApi = async (comment) => {
     const response = await axios.post(`${rootURL}/comment`, comment);
