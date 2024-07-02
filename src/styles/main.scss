@@ -241,10 +241,18 @@ footer {
     }
 }
 
-/** 기술 이미지 */
+/** 모임 기술 이미지 */
 .skillImg {
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #d1d1d1;
+    border-radius: 10px;
+}
+
+/** 등급 기술 이미지 */
+.itungyun_skillImg {
+    width: 20px;
+    height: 20px;
     border: 1px solid #d1d1d1;
     border-radius: 10px;
 }

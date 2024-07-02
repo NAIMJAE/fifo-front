@@ -1,12 +1,22 @@
 import React from 'react';
 
-const SkillIcon = ({ skill }) => {
+const SkillIcon = ({ skill, classType }) => {
   return (
-    <img 
-      className='skillImg'
-      src={`../images/skillIcon/${skill}.svg`} 
-      alt={skill} 
-    />
+    <>
+    {classType==='skillImg' ? (
+      <img 
+        className='skillImg'
+        src={`../images/skillIcon/${skill}.svg`} 
+        alt={skill} 
+      />
+    ) : (
+      <img 
+        className='itungyun_skillImg'
+        src={`../images/skillIcon/${skill}.svg`} 
+        alt={skill} 
+      />
+    )}
+    </>
   );
 };
 

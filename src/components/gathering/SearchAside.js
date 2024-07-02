@@ -174,7 +174,7 @@ export default function SearchAside({ setPageRequest }) {
                 className={`languageIcon ${selectedLanguage === language.name ? 'selectedLanguage' : ''}`}
                 onClick={() => selectLanguage(language.name)}
               >
-                <SkillIcon skill={language.name} />
+                <SkillIcon skill={language.name} classType='skillImg'/>
                 <span className='languageName'>{language.name}</span>
               </li>
             ))}
