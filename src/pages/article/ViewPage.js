@@ -8,8 +8,8 @@ import { faCommentDots, faEye, faHeart, faThumbsUp, faTrashCan } from '@fortawes
 import CommentListComponent from '../../components/article/CommentListComponent';
 import CommentWriteComponent from '../../components/article/CommentWriteComponent';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
-import { useLocation } from 'react-router-dom';
-import { articleViewApi, commentInsertApi, increaseHeartApi } from '../../api/articleApi';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { articleViewApi, commentInsertApi, increaseHeartApi, replyInsertApi } from '../../api/articleApi';
 import { FrontUrl, RootUrl } from '../../api/RootUrl';
 import Moment from 'moment';
 import { useSelector } from 'react-redux';
@@ -23,18 +23,20 @@ const ViewPage = () => {
     const shareURL = FrontUrl() + location.pathname + location.search
 
     const loginSlice = useSelector((state) => state.authSlice) || {};
+    const navigate = useNavigate();
 
     /** 게시글 useState */
     const [articleView, setArticleView] = useState({});
+
     /** 댓글 상태 관리 useState */
     const [comState, setComState] = useState(false);
+
     /** 댓글 개수 관리 */
     const [comNum, setComNum] = useState("");
 
     useEffect (() => {
         if (pno === '') {
             alert("게시글을 찾을 수 없습니다.");
-            
             return;
         }
         const selectArticle = async () => {
@@ -57,7 +59,13 @@ const ViewPage = () => {
         navigator.clipboard.writeText(shareURL);
     }
 
-
+    /** 게시글 수정 */
+    const modifyPost = () => {
+        let result = window.confirm("게시글을 수정하시겠습니까?");
+        if (result) {
+            navigate(`/article/modify?pno=${pno}`)
+        }
+    }
 
     /** 게시글 좋아요 */
     const increaseHeart = async () => {
@@ -67,7 +75,6 @@ const ViewPage = () => {
         }
         try {
             const response = await increaseHeartApi(data);
-            console.log("좋아요 response : ", response);
             setArticleView(prevState => ({
                 ...prevState,
                 heartNum: response > 0 ? prevState.heartNum + 1 : prevState.heartNum - 1
@@ -87,6 +94,25 @@ const ViewPage = () => {
             if (response > 0) {
                 setComState(!comState);
                 alert("댓글이 작성되었습니다.");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    /** 답글 작성 */
+    const saveReply = async (cno, content) => {
+        const data = {
+            content: content,
+            userNo: loginSlice.userno,
+            pno: articleView.pno,
+            parentCno: cno,
+        }
+        try {
+            const response = await replyInsertApi(data);
+            if (response > 0) {
+                setComState(!comState);
+                alert("답글이 작성되었습니다.");
             }
         } catch (error) {
             console.log(error);
@@ -148,24 +174,26 @@ const ViewPage = () => {
             </div>
         </div>
         
-
-        <div className='cntRow viewModify'>
-            <button>
-                <FontAwesomeIcon icon={faPen} color='#1e1e1e' size='lg'/>
-                수정
-            </button>
-            <button>
-                <FontAwesomeIcon icon={faTrashCan} color='#1e1e1e' size='lg'/>
-                삭제
-            </button>
-        </div>
+        {loginSlice.userno === articleView.userNo && 
+            <div className='cntRow viewModify'>
+                <button onClick={() => modifyPost(articleView.pno)}>
+                    <FontAwesomeIcon icon={faPen} color='#1e1e1e' size='lg'/>
+                    수정
+                </button>
+                <button>
+                    <FontAwesomeIcon icon={faTrashCan} color='#1e1e1e' size='lg'/>
+                    삭제
+                </button>
+            </div>
+        }
+        
 
         <div className='cntColumn writeComment'>
             {articleView.pno > 0 && <CommentWriteComponent comNum={comNum} insertComment={insertComment} loginSlice={loginSlice}/>}
         </div>
 
         <div className='cntColumn viewComment'>
-            {articleView.pno > 0 && <CommentListComponent pno={articleView.pno} comState={comState}/>}
+            {articleView.pno > 0 && <CommentListComponent pno={articleView.pno} comState={comState} setComState={setComState} saveReply={saveReply} loginSlice={loginSlice}/>}
         </div>
 
     </MainLayout>

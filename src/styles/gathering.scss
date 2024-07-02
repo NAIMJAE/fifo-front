@@ -28,7 +28,8 @@
 
   .dropdown-content {
     width: 550px;
-    display: block; /* 초기부터 보이도록 수정 */
+    display: block;
+    /* 초기부터 보이도록 수정 */
     position: relative;
     background-color: #f9f9f9;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
@@ -138,9 +139,11 @@
     }
   }
 }
+
 /* 기술 아이콘들 */
 .tech-stack {
-  display: block; /* 초기부터 보이도록 수정 */
+  display: block;
+  /* 초기부터 보이도록 수정 */
   padding: 10px;
   margin-top: 10px;
 
@@ -226,6 +229,7 @@
 .articleTitle {
   margin: 20px 30px;
   justify-content: space-between;
+
   input {
     width: 920px;
     height: 40px;
@@ -234,12 +238,14 @@
     border-radius: 4px;
     font-size: 16px;
   }
+
   select {
     width: 200px;
     padding: 0 10px;
     border: 1px solid #9f9f9f;
     border-radius: 4px;
     font-size: 16px;
+
     option {
       font-size: 16px;
     }
@@ -254,21 +260,25 @@
 .gatheringCateGroup {
   margin: 10px 20px;
   display: flex;
+
   .selectGroup {
     display: flex;
     flex-direction: column;
     margin: 0px 10px;
     width: 50%;
+
     span {
       margin: 0 10px 10px 0;
       font-size: 17px;
       font-weight: 600;
       color: #333;
     }
+
     .groupType,
     .meetingMethod {
       display: flex;
       justify-content: space-between;
+
       button {
         width: 170px;
         height: 110px;
@@ -284,10 +294,12 @@
           margin-top: 10px;
         }
       }
+
       .active {
         background-color: rgba(8, 0, 255, 0.5);
         color: white;
         border: 1px solid #4169e1;
+
         p {
           color: white;
         }
@@ -301,31 +313,37 @@
   margin: 10px 20px;
   display: flex;
   flex-wrap: wrap;
-  > div {
+
+  >div {
     margin: 0px 10px;
     width: 45%;
+
     span {
       margin: 0 10px 10px 0;
       font-size: 17px;
       font-weight: 600;
       color: #333;
     }
+
     select {
       display: flex;
       padding: 10px;
       font-size: 16px;
       border: 1px solid #9f9f9f;
       border-radius: 4px;
+
       option {
         display: flex;
         padding: 10px;
         font-size: 16px;
       }
     }
+
     b {
       margin: 0 18px;
       font-size: 20px;
     }
+
     input[type="date"] {
       width: 45%;
       padding: 10px;
@@ -334,6 +352,7 @@
       border-radius: 4px;
     }
   }
+
   select {
     display: flex;
     padding: 10px;
@@ -341,12 +360,14 @@
     border: 1px solid #9f9f9f;
     border-radius: 4px;
     margin: 0 5px;
+
     option {
       display: flex;
       padding: 10px;
       font-size: 16px;
     }
   }
+
   .MuiChip-label {
     font-size: 15px;
     font-weight: 600;
@@ -364,12 +385,14 @@
 
 .articleWrite {
   margin: 10px 30px;
+
   span {
     margin: 0 10px 10px 0;
     font-size: 17px;
     font-weight: 600;
     color: #333;
   }
+
   .toastui-editor-defaultUI {
     width: 1138px;
     border: 1px solid #9f9f9f;
@@ -380,6 +403,7 @@
 
 .articleTag {
   margin: 10px 30px;
+
   input[type="text"] {
     height: 40px;
     padding: 0 10px;
@@ -387,9 +411,11 @@
     border-radius: 4px;
     font-size: 16px;
   }
-  > div {
+
+  >div {
     padding: 10px 0;
     margin-top: 10px;
+
     span {
       border: 1px solid #9f9f9f;
       border-radius: 4px;
@@ -407,6 +433,7 @@
   display: flex;
   justify-content: end;
   margin: 20px 30px;
+
   button {
     display: flex;
     background-color: transparent;
@@ -418,12 +445,14 @@
     margin-left: 10px;
     cursor: pointer;
   }
+
   .blue {
     border: 1px solid #4169e1;
     background-color: #4169e1;
     color: white;
   }
 }
+
 // 햄버거 Open/ Close 아이콘
 .hamburger-trigger {
   display: inline-block;
@@ -431,11 +460,16 @@
   height: 24px;
   transition: all 0.4s;
   box-sizing: border-box;
-  cursor: pointer; /* 클릭 가능한 커서 표시 */
-  position: absolute; /* 절대 위치 설정 */
-  right: -40px; /* 오른쪽에 위치 */
-  top: 10px; /* 상단에 위치 */
-  z-index: 1; /* 다른 요소 위에 표시되도록 z-index 조정 */
+  cursor: pointer;
+  /* 클릭 가능한 커서 표시 */
+  position: absolute;
+  /* 절대 위치 설정 */
+  right: -40px;
+  /* 오른쪽에 위치 */
+  top: 10px;
+  /* 상단에 위치 */
+  z-index: 1;
+  /* 다른 요소 위에 표시되도록 z-index 조정 */
 
   span {
     display: inline-block;
@@ -464,18 +498,22 @@
   // 화살표
   &.active-8 {
     span {
+
       &:nth-of-type(1),
       &:nth-of-type(3) {
         width: 20px;
       }
 
       &:nth-of-type(1) {
-        -webkit-transform: translate(-1px, 7px) rotate(-45deg); /* 애니메이션 조정 */
-        transform: translate(-1px, 7px) rotate(-25deg); /* 애니메이션 조정 */
+        -webkit-transform: translate(-1px, 7px) rotate(-45deg);
+        /* 애니메이션 조정 */
+        transform: translate(-1px, 7px) rotate(-25deg);
+        /* 애니메이션 조정 */
       }
 
       &:nth-of-type(3) {
-        -webkit-transform: translate(-1px, -7px) rotate(45deg); /* 애니메이션 조정 */
+        -webkit-transform: translate(-1px, -7px) rotate(45deg);
+        /* 애니메이션 조정 */
         transform: translate(-1px, -7px) rotate(25deg);
       }
     }
@@ -490,24 +528,29 @@
       -webkit-transform: translateY(10px) rotate(-45deg);
       transform: translateY(10px) rotate(-45deg);
     }
+
     span:nth-of-type(2) {
       -webkit-transform: rotate(45deg);
       transform: rotate(45deg);
     }
+
     span:nth-of-type(3) {
       opacity: 0;
     }
   }
 }
+
 .sideHide {
   position: relative;
   height: 100%;
 }
+
 .sideHide2 {
   position: relative;
   z-index: 100;
   background-color: white;
 }
+
 // 사이드바와 햄버거 래퍼
 .sidebar-wrapper {
   display: flex;
@@ -518,28 +561,146 @@
   height: 100%;
   transition: right 0.3s ease-in-out;
   z-index: 10;
+
   &.open {
-    right: -300px; /* 열리면 화면 안으로 이동 */
+    right: -300px;
+    /* 열리면 화면 안으로 이동 */
   }
 }
 
 .searchGathAside {
   position: absolute;
-  width: 300px; /* 너비를 지정하여 슬라이드 애니메이션을 적용 */
+  width: 300px;
+  /* 너비를 지정하여 슬라이드 애니메이션을 적용 */
   height: 100%;
   background-color: white;
   overflow: scroll;
   scrollbar-width: none;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1); /* 사이드바 그림자 추가 */
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  /* 사이드바 그림자 추가 */
   transition: right 0.3s ease-in-out;
   z-index: 20;
   top: 0;
   right: 0;
+
   &.open {
     transform: translateX(0);
   }
 }
 
 .searchGathAsideContent {
-  position: relative; /* 자식 요소의 절대 위치를 기준으로 함 */
+  position: relative;
+  /* 자식 요소의 절대 위치를 기준으로 함 */
+}
+
+.gatherList {
+  width: 100%;
+  height: auto;
+  border: 1px solid red;
+
+  >a {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    width: 270px;
+    margin: 15px 14.5px;
+    padding: 0 15px;
+    background-color: white;
+    border: 1px solid blue;
+    border-radius: 10px;
+    box-sizing: border-box;
+
+    >div>span {
+      font-size: 16px;
+      padding: 4px;
+      margin: 10px 0;
+      border: 1px solid red;
+      border-radius: 4px;
+    }
+
+    div {
+      display: flex;
+
+      h3 {
+        font-size: 16px;
+      }
+
+      h4 {
+        font-weight: bolder;
+        font-size: 16px;
+        padding: 4px 0;
+      }
+
+      h5 {
+        color: #7b7b7b;
+      }
+
+      >div {
+        padding: 10px 0;
+
+        span {
+          width: 25%;
+          border: 1px solid red;
+          border-radius: 4px;
+          margin-right: 8px;
+          text-align: center;
+        }
+      }
+    }
+
+    .imgBox {
+      img {
+        width: 100%;
+      }
+    }
+
+  }
+
+  .gathSkillList {
+    //height: 200px;
+    flex-wrap: wrap;
+
+    .MuiChip-label {
+      width: auto;
+      border: none;
+    }
+  }
+}
+
+// 모임 글보기
+.gathCateContent {
+  margin: 0 30px;
+  padding: 10px;
+  border-bottom: 3px solid #f6f5f5;
+}
+.gathCategory {
+  justify-content: center;
+  margin-bottom: 10px;
+
+  >div {
+    width: 35%;
+    padding: 15px;
+    display: flex;
+    justify-content: flex-start;
+    margin-right: 20px;
+
+    >span {
+      font-size: 17px;
+      font-weight: 600;
+      padding-right: 20px;
+    }
+
+    >.gathCate {
+      color: #666565;
+    }
+  }
+}
+
+.alertBox {
+  display: flex;
+  justify-content: center;
+
+  .alert {
+    width: 85%;
+  }
 }

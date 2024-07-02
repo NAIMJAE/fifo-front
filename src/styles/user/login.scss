@@ -17,10 +17,11 @@
     font-weight: bold;
     font-size: 20px;
     border-radius: 6px;
-    font-weight: bolder;
-    padding: 4px 10px;
+    padding: 3px 10px;
+    margin-bottom: 2px;
   }
 }
+
 .modalBox {
   position: absolute;
   top: 50%;
@@ -36,6 +37,40 @@
   img {
     margin-left: 70px;
     margin-top: 50px;
-    width: 20vh;
+    margin-bottom: 20px;
+    width: 25vh;
+  }
+
+  .loginForm {
+    margin: 10px 0px;
+    input {
+      width: 70%;
+      height: 30px;
+      border-radius: 5px;
+      border: 1px solid rgb(221, 221, 221);
+      color: rgb(51, 51, 51);
+
+      margin: 0px 0px 5px 0px;
+    }
+    .idSpan {
+      margin: 0px 20px 0px 0px;
+    }
+    .passSpan {
+      margin: 0px 6px 0px 0px;
+    }
+    .eyeIcon {
+      position: absolute;
+      bottom: 14%;
+      right: 18%;
+      transform: translateY(-57%);
+
+      cursor: pointer;
+    }
+  }
+  .btnFindId {
+    margin-right: 5px;
+  }
+  .btnLogin {
+    float: right;
   }
 }

@@ -11,15 +11,27 @@ const GatherBoxComponent = ({ gathList }) => {
     { name: 'JavaScript Lv1' },
     { name: 'React Lv4' }
   ];
+
+  const getCategoryName = (gathcate) => {
+    switch (gathcate) {
+      case 1:
+        return '프로젝트';
+      case 2:
+        return '스터디';
+      case 3:
+        return '모임';
+    }
+  };
+
   console.log("뭐야");
   console.log(gathList);
   return (
     <>
       {gathList && gathList.length > 0 ? (
         gathList.map((gathering, index) => (
-          <Link to="/" key={index}>
+          <Link to={`/gathering/view?gathno=${gathering.gathno}`} key={index}>
             <div>
-              <span>{gathering.gathcate}</span>
+            <span>{getCategoryName(gathering.gathcate)}</span>
             </div>
 
             <div className='imgBox'>
@@ -31,7 +43,7 @@ const GatherBoxComponent = ({ gathList }) => {
             </div>
 
             <div className='cntColumn'>
-              <h3>{gathering.nick}</h3>
+              <h3>{gathering.usernick}</h3>
               <h4>{gathering.gathtitle}</h4>
               <h5>모집기간 : {gathering.recruitstart} ~ {gathering.recruitend}</h5>
 

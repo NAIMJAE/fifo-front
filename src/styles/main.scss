@@ -155,16 +155,16 @@ footer {
 
 }
 
-.gatherList {
+.mainGatherList {
     width: 100%;
     height: auto;
     border: 1px solid red;
 
-    > a {
+     > .gathCard {
         display: flex;
         flex-direction: column;
         align-content: center;
-        width: 270px;
+        width: 365px;
         margin: 15px 14.5px;
         padding: 0 15px;
         background-color: white;
@@ -181,7 +181,6 @@ footer {
         }
 
         div {
-            display: flex;
             h3 {
                 font-size: 16px;
             }
@@ -205,23 +204,43 @@ footer {
             }
         }
 
-        .imgBox {
-            img {
-                width: 100%;
+        .gathCardContent {
+            display: flex;
+            align-items: center;
+
+            .imgBox {
+                margin: 10px 0;
+                width: 30%;
+                img {
+                    width: 100%;
+                }
             }
         }
 
     }
-    .gathSkillList {
-        //height: 200px;
-        flex-wrap: wrap;
+    .myGatherLink {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        padding: 10px 0;
 
-        .MuiChip-label {
-            width: auto;
-            border: none;
+        .gathLink {
+            width: 25%;
+            border: 1px solid blueviolet;
+            border-radius: 4px;
+            padding: 4px 8px;
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            transition: background-color 0.3s;
+
+            &:hover {
+                background-color: lightblue;
+            }
         }
     }
 }
+
 /** 기술 이미지 */
 .skillImg {
     width: 30px;

@@ -4,14 +4,15 @@ import { articleWriteApi } from '../../api/articleApi';
 import { RootUrl } from '../../api/RootUrl';
 import { changeImages } from '../../components/common/toast/ImageProcessing';
 import EditorComponent from '../../components/common/toast/EditorComponent';
+import { useSelector } from 'react-redux';
+import Breadcrumb from '../../components/common/main/Breadcrumb';
 
 /** 입력한 태그 이전 상태 저장 (태그 개수 제한) */
 let prevValue = "";
 
 const Write = () => {
 
-/** 임시 유저 정보 */
-    const [user, setUser] = useState(1);
+    const loginSlice = useSelector((state) => state.authSlice) || {};
 
 /** 게시글 제목 저장 */
     const [title, setTitle] = useState("");
@@ -69,7 +70,7 @@ const Write = () => {
         formData.append("title", title);
         formData.append("content", contents);
         formData.append("cateNo", cate);
-        formData.append("userNo", user);
+        formData.append("userNo", loginSlice.userno);
         formData.append("tag", inputTag);
         for (let i = 0; i < fileList.length; i++) {
             formData.append('files', fileList[i]);
@@ -92,6 +93,8 @@ const Write = () => {
 
   return (
     <MainLayout>
+
+        <Breadcrumb crumb={"게시판 / 글쓰기"}/>
 
         <div className='cntRow articleTitle'>
             <input type="text" placeholder='제목' onChange={(e)=>{setTitle(e.target.value)}}/>

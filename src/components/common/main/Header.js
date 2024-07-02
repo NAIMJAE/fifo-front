@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../../../styles/header.scss";
 import "../../../styles/user/login.scss";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { globalPath } from "../../../globalPaths";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,7 +26,7 @@ const Header = () => {
 
   /**로그인 관리 */
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+
   const [user, setUser] = useState({
     email: "",
     pass: "",
@@ -69,7 +69,7 @@ const Header = () => {
 
     removeCookie("auth", { path: "/" });
 
-    navigate("/");
+    window.location.reload();
 
     alert("로그아웃 되었습니다.");
   };
@@ -79,7 +79,7 @@ const Header = () => {
       <div>
         <div></div>
         <div id="headerInfo">
-          {loginState === "" && null ? (
+          {loginState === undefined || "" ? (
             <>
               {" "}
               <Link to="#" onClick={handleOpen}>
@@ -89,8 +89,8 @@ const Header = () => {
             </>
           ) : (
             <>
-              <Link to="/">마이페이지</Link>
-              <Link to="/" onClick={handlerLogout}>
+              <Link to="/user/myPage">마이페이지</Link>
+              <Link to="#" onClick={handlerLogout}>
                 로그아웃
               </Link>
             </>

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import GatherBoxComponent from '../../components/main/GatherBoxComponent';
+import GatherBoxComponent from '../../components/gathering/GatherBoxComponent';
 import MainLayout from '../../layout/MainLayout';
 import '../../styles/gathering.scss';
 import SearchAside from '../../components/gathering/SearchAside';
 import { gatheringListApi } from '../../api/gatheringApi';
 import PageingComponent from '../../components/common/paging/PageingComponent';
 import { Link } from 'react-router-dom';
+import Breadcrumb from '../../components/common/main/Breadcrumb';
 
 const ListPage = () => {
   /** 사이드바 열림 상태 관리 */
@@ -46,6 +47,7 @@ const ListPage = () => {
 
   return (
     <MainLayout>
+      <Breadcrumb crumb={"모임 / 글목록"} />
       <div className="container">
         <div className="content sideHide">
           <div className="cntColumn sideHide2">

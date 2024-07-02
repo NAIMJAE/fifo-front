@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { RootUrl } from '../../api/RootUrl';
 
 const CommentWriteComponent = ({ comNum, insertComment, loginSlice }) => {
-
-  const textareaRef = useRef(null);
 
   /** 작성할 댓글 정보 저장 */
   const [comment, setComment] = useState({
     content: "",
-    userNo: 1, 
+    userNo: loginSlice.userno, 
     pno: 0,
   });
 
@@ -31,23 +30,16 @@ const CommentWriteComponent = ({ comNum, insertComment, loginSlice }) => {
     }
   };
 
-  /** textarea 높이 자동 조절 */
-  useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-    }
-  }, [comment]);
 
   return (
     <>
         <p>댓글 {comNum} 개</p>
         <div>
-            <img src="../../images/ppoppi.png" alt="profile" />
-            <p>우리집뽀삐</p>
+            <img src={`${RootUrl()}/uploads/user/${loginSlice.thumb}`} alt="profile" />
+            <p>{loginSlice.nick}</p>
         </div>
         <div>
-            <textarea ref={textareaRef} value={comment.content} onChange={handleChange}></textarea>
+            <textarea value={comment.content} onChange={handleChange}></textarea>
             <button onClick={handleSubmit}>작성</button>
         </div>
     </>
