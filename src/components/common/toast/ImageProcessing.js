@@ -33,7 +33,7 @@ const base64ToFile = (base64, fileName) => {
 
 /** 게시글에서 base64 추출 */
 export const changeImages = async (contents) => {
-    const matchSrc = /src="([^"]*)"/g;
+    const matchSrc = /src="data:([^"]*)"/g;
     const srcPull = contents.match(matchSrc);
 
     let imageList = [];
@@ -47,12 +47,12 @@ export const changeImages = async (contents) => {
             const file = base64ToFile(base64, fileName);  // 게시글 이미지 변환 (base64 -> file)
             imageList.push(file);
         }
-    }else {
+    } else {
         return null;
     }
     const resultData = {
-        imageList : imageList,
-        srcPull : srcPull
+        imageList: imageList,
+        srcPull: srcPull
     }
     console.log(resultData);
     return resultData;
