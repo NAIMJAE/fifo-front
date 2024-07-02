@@ -4,7 +4,6 @@ import { getCookie, setCookie, removeCookie } from "../utils/cookieUtil";
 const loadStateFromCookie = () => {
   const auth = getCookie("auth");
 
-  const email = auth?.email;
   const userno = auth?.userno;
   const nick = auth?.nick;
   const thumb = auth?.thumb;
@@ -14,7 +13,6 @@ const loadStateFromCookie = () => {
 
   // 리턴에 값을 넣어줘야 초기화가 된 후에도 값이 유지가 됨 //
   return {
-    email,
     userno,
     nick,
     thumb,
@@ -25,7 +23,6 @@ const loadStateFromCookie = () => {
 };
 
 const initState = {
-  email: "",
   userno: "",
   nick: "",
   thumb: "",
@@ -44,7 +41,6 @@ const authSlice = createSlice({
       const data = action.payload;
 
       // 리덕스 저장소 상태 업데이터(Username과 accessToken)
-      state.email = data.email;
       state.userno = data.userno;
       state.nick = data.nick;
       state.thumb = data.thumb;
@@ -64,7 +60,6 @@ const authSlice = createSlice({
       // 프로필 정보 업데이트 액션
       const updateData = action.payload;
 
-      state.email = updateData.email;
       state.userno = updateData.userno;
       state.nick = updateData.nick;
       state.thumb = updateData.thumb;
