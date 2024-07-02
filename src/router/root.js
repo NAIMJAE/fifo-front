@@ -13,6 +13,7 @@ import RegisterPage from "../pages/user/RegisterPage";
 
 import LanguageListPage from "../pages/grade/LanguageListPage"
 import QuestionListPage from "../pages/grade/QuestionListPage"
+import QuestionViewPage from "../pages/grade/QuestionViewPage"
 
 const root = createBrowserRouter([
   /** 메인 페이지 */
@@ -35,7 +36,8 @@ const root = createBrowserRouter([
 
   /** 등급 */
   { path: "/grade/language", element: <LanguageListPage /> },
-  { path: "/grade/question/", element: <QuestionListPage /> },
+  { path: "/grade/question", element: <QuestionListPage /> },
+  { path: "/grade/question/view", element: <QuestionViewPage /> },
   
 ]);
 export default root;

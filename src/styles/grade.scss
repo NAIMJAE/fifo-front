@@ -60,3 +60,45 @@
         }
     }
 }
+
+#languageTitle{
+    width: 90%;
+    margin: 0 auto 10px auto;
+    font-size: xx-large;
+}
+
+#questionList{
+    display: flex;
+    flex-direction: column;
+
+    .questionContent{
+        display: flex;
+        width: 90%;
+        height: 150px;
+        border: 1px solid #4169e1;
+        margin: 0 auto 10px auto;
+        background-color: transparent;
+
+        .questionTag{
+            text-align: left;
+            width: 100%;
+            height: 50px;
+            padding: 5px;
+        }
+
+        .questionNo{
+            margin-left: 3%;
+            margin-right: auto;
+            font-size: 20px;
+        }
+
+        .questionTitle{
+            margin-left: auto;
+            margin-right: 5%;
+            text-align: end;
+            font-size: 20px;
+            padding-right: 10px;
+        }
+
+    }
+}
