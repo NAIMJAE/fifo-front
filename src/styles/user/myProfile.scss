@@ -239,6 +239,7 @@
       > img {
         width: 250px;
         height: 250px;
+        border: 1px solid #3a3b3b;
       }
       > label {
         position: absolute;
@@ -259,30 +260,97 @@
       flex-direction: column;
       box-sizing: border-box;
 
-      > h3 {
-        font-size: 26px;
-        font-weight: bolder;
-        margin-bottom: 10px;
-      }
-      > h4 {
-        font-size: 26px;
-        font-weight: bolder;
-        margin-bottom: 10px;
-      }
-
       > label {
         display: flex;
-        margin-bottom: 10px;
+        margin-top: 10px;
+        align-items: center;
+        > h2 {
+          font-size: 26px;
+          font-weight: bolder;
+          margin-bottom: 10px;
+        }
         > h3 {
           font-size: 20px;
-          margin-right: 20px;
+          font-weight: bolder;
+          margin-right: 10px;
         }
         > h4 {
+          font-size: 16px;
+          color: #7b7b7b;
+          margin-left: 10px;
+        }
+        > h5 {
+          color: #7b7b7b; 
+          margin-left: 10px;
+        }
+        > input {
+          display: flex;
+          width: 240px;
           font-size: 20px;
-          margin-right: 20px;
+          padding: 4px 10px;
+          margin-right: 10px;
+          border: 1px solid white;
+        }
+        > svg {
+          cursor: pointer;
         }
       }
     }
   }
+  > .mySkill {
+    display: flex;
+    border: 1px solid #37B7C3;
+    flex-direction: column;
+    padding: 10px;
 
+    > .inputSkill {
+      width: 100%;
+      display: flex;
+      margin-bottom: 20px;
+      justify-content: center;
+
+      > input {
+        display: flex;
+        width: 800px;
+        padding: 10px 20px;
+        font-size: 18px;
+        border: 1px solid #7b7b7b;
+        border-radius: 20px;
+      }
+
+      > label {
+        display: flex;
+        cursor: pointer;
+        > p {
+          margin-right: 4px;
+        }
+      }
+    }
+
+    > .skillList {
+      display: flex;
+      flex-wrap: wrap;
+
+      > div {
+        position: relative;
+        display: flex;
+        border: 1px solid #4B70F5;
+        border-radius: 10px;
+        align-items: center;
+        padding: 4px 10px;
+        margin: 10px;
+        > p {
+          font-size: 16px;
+          margin-left: 10px;
+        }
+        > .closeBtn {
+          position: absolute;
+          top: -4px;
+          right: -6px;
+          background-color: white;
+          cursor: pointer;
+        }
+      }
+    }
+  }
 }
