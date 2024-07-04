@@ -27,24 +27,28 @@ const ModifyPage = () => {
     /** 게시글 내용 저장 */
     const editorRef = useRef();
 
+    /** 첨부파일 관리 */
+    const [oldFile, setOldFile] = useState([]);
+    const [newFile, setNewFile] = useState([]);
+    const [newFileName, setNewFileName] = useState([]);
+    const [deleteFileList, setDeleteFileList] = useState([]);
+
     /** 태그 관리 */
     const [tagList, setTagList] = useState([]);
     const [inputTag, setInputTag] = useState("");
 
     /** 수정할 게시글 조회 */
     useEffect(() => {
-
         if (pno === '') {
             alert("게시글을 찾을 수 없습니다.");
             return;
         }
         const selectArticle = async () => {
-            console.log("pno",pno)
             try {
                 const response = await articleViewApi(pno); 
-                console.log("response : ", response)
                 setArticleView(response);
                 setInputTag(response.tagName.join(' '));
+                setOldFile(response.fileName);
                 editorRef.current.getInstance().setMarkdown(response.content);
             } catch (error) {
                 console.log(error);
@@ -52,47 +56,67 @@ const ModifyPage = () => {
             }
         }
         selectArticle();
-
     }, [])
 
     /** 게시글 내용 수정 */
     const handleModify = (e) => {
         const {name, value} = e.target;
-        setArticleView(prevArticle => ({
-            ...prevArticle,
-            [name]: value,
-        }));
+        setArticleView(prevArticle => ({ ...prevArticle, [name]: value, }));
+    }
+
+    /** 새 첨부파일 관리 */
+    const createFile = (event) => {
+        const files = event.target.files;
+        const filesArray = Array.from(files);
+        setNewFile((prev) => [...prev, ...filesArray]);
+
+        const fileNames = filesArray.map(file => file.name);
+        setNewFileName((prev) => [...prev, ...fileNames]);
+    }
+
+    /** old 파일 삭제 */
+    const deleteOldFile = (e) => {
+        const fileNo = e.target.id;
+        setDeleteFileList((prev) => [...prev, fileNo]);
+        setOldFile((prev) => prev.filter(file => !Object.keys(file).includes(fileNo.toString())));
+    }
+
+    /** new 파일 삭제 */
+    const deleteNewFile =(index) => {
+        setNewFile((prev) => prev.filter((_, i) => i !== index));
+        setNewFileName((prev) => prev.filter((_, i) => i !== index));
     }
 
     /** 입력한 태그 자동 생성 */
-    const createTag = (event) => {
-        setInputTag(event.target.value);
-        const tagArray = inputTag.replace(/\s+/g, '').split("#").filter(tag => tag !== "");
-        if (tagArray.length > 10) {
-            alert("태그는 10개까지 생성가능합니다.");
-            setInputTag(prevValue);
-        }else {
-            prevValue = inputTag;
-            setTagList(tagArray);
+    useEffect(()=> {
+        const createTag = () => {
+            const tagArray = inputTag.replace(/\s+/g, '').split("#").filter(tag => tag !== "");
+            if (tagArray.length > 10) {
+                alert("태그는 10개까지 생성가능합니다.");
+                setInputTag(prevValue);
+            }else {
+                prevValue = inputTag;
+                setTagList(tagArray);
+            }
         }
-    }
+        createTag();
+    }, [inputTag]);
+    
 
     /** 게시글 저장 */
     const handleSubmit = async () => {
         // 게시글 내용 꺼내오기
         let contents = editorRef.current.getInstance().getHTML();
-        console.log("contents : ", contents)
 
         // 게시글 내용 속 이미지 변환 (changeImages 컴포넌트화 시킴)
         const resultData = await changeImages(contents);
         if (resultData !== null) {
             // null 체크 안하면 에러
             resultData.imageList.forEach((image, i) => {
-                const imageURL = `${RootUrl()}/uploads/post/images/${image.name}`;
+                const imageURL = `${RootUrl()}/uploads/post/images/$#@^/${image.name}`;
                 contents = contents.replace(resultData.srcPull[i].slice(5, -1), imageURL);
             });
         }
-        console.log("resultData : ", resultData);
 
         // 필요한 데이터 formData에 담기
         const formData = new FormData();
@@ -101,12 +125,13 @@ const ModifyPage = () => {
         formData.append("content", contents);
         formData.append("cateNo", articleView.cateNo);
         formData.append("userNo", loginSlice.userno);
-        formData.append("tag", inputTag);
-        /* 삭제할 파일 이름 가지고 가야함
-        for (let i = 0; i < fileList.length; i++) {
-            formData.append('files', fileList[i]);
+        formData.append("tagName", tagList);
+        formData.append("deleteFile", deleteFileList);
+        
+        for (let i = 0; i < newFile.length; i++) {
+            formData.append('files', newFile[i]);
         }
-        */
+        
         if (resultData !== null) {
             for (let i = 0; i < resultData.imageList.length; i++) {
                 formData.append('images', resultData.imageList[i]);
@@ -116,21 +141,14 @@ const ModifyPage = () => {
         // 서버 전송
         try {
             const response = await articleModifyApi(formData);
-            console.log(response);
             if (response > 0) {
+                alert("게시글이 수정되었습니다.");
                 navigate(`/article/view?pno=${response}`);
             }
         }catch (err) {
             console.log(err);
         }
-
-
     }
-
-    // changeImages에서 src 추출할때 base64만 추출하게 변경해야함 ㅇ
-    // 게시글 내용, 파일은 따로 state 만들어서 관리해야함
-    // 파일은 클릭하면 삭제 가능하게 하고 디자인도 변경 (파일몇개.. 이거 안보이게)
-    // 게시글 저장할때 state들 모아서 data로 전달해야함
 
   return (
     <MainLayout>
@@ -151,16 +169,23 @@ const ModifyPage = () => {
         </div>
 
         <div className='cntRow articleFile'>
-            <input type="file" multiple />
+            <input type="file" multiple onChange={createFile}/>
             <div className='modifyFile'>
-                {articleView.fileName && articleView.fileName.map((file, index) => (
-                    <span key={index}>{file}</span>
+                {oldFile && oldFile.map((file, index) => (
+                    <>
+                    {Object.keys(file).map((key) => (
+                        <span key={key} id={key} onClick={deleteOldFile}>{file[key]}</span>
+                    ))}
+                    </>
+                ))}
+                {newFileName && newFileName.map((file, index) => (
+                    <span key={index} onClick={() => deleteNewFile(index)}>{file}</span>
                 ))}
             </div>
         </div>
 
         <div className='cntColumn articleTag'>
-            <input type="text" placeholder='#게시글 #태그 #추가' value={inputTag} onChange={createTag}/>
+            <input type="text" placeholder='#게시글 #태그 #추가' value={inputTag} onChange={(e) => setInputTag(e.target.value)}/>
             <div className='cntWrapRow' style={{marginTop:"0"}}>
                 {tagList ? tagList.map((tag, index) => (
                     <span key={index} className='tag'>#{tag}</span>

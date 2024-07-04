@@ -23,11 +23,9 @@ const List = () => {
 
     /** 서버에서 게시글 목록 받아오는 useEffect */
     useEffect(() => {
-        console.log(pageable);
         const selectArticleList = async () => {
             try {
                 const response = await articleListApi(pageable);
-                console.log(response);
                 setPostList(response);
             }catch (err) {
                 console.log(err);
@@ -49,6 +47,13 @@ const List = () => {
     // pg변경 함수 (페이징 버튼 클릭시)
     const changePage = (newPg) => {
         setPageable(prev => ({...prev, pg: newPg}));
+    }
+
+    /** 태그 클릭시 검색 */
+    const searchByTag = (tag) => {
+        setSearchType("tag");
+        setSearchKeyword(tag);
+        searchHandler();
     }
 
   return (
@@ -74,8 +79,8 @@ const List = () => {
             <p className={`${pageable.sort === "hit" ? 'tabOn' : ''}`}
                 onClick={(e) => {setPageable(prev => ({...prev, sort:"hit"}))}}>조회순</p>
 
-            <p className={`${pageable.sort === "good" ? 'tabOn' : ''}`}
-                onClick={() => setPageable({...pageable, sort:"good"})}>추천순</p>
+            <p className={`${pageable.sort === "heart" ? 'tabOn' : ''}`}
+                onClick={() => setPageable({...pageable, sort:"heart"})}>추천순</p>
 
             <label htmlFor="search">
                 <select name="" id="search" onChange={(e) => setSearchType(e.target.value)}>
@@ -92,7 +97,7 @@ const List = () => {
         </div>
 
         <div className='cntColumn articleList'>
-            <ArticleBoxComponent postList={postList}/>
+            <ArticleBoxComponent postList={postList} searchByTag={searchByTag}/>
         </div>
 
         <div className='pageAndBtn'>

@@ -59,23 +59,23 @@ const Develop = () => {
 
         <div className="cntWrapRow">
           <p>
-            className='cntRow' <br />
+            className='cntWrapRow' <br />
             컨텐츠 가로 배치 자동줄바꿈
           </p>
           <p>
-            className='cntRow' <br />
+            className='cntWrapRow' <br />
             컨텐츠 가로 배치 자동줄바꿈
           </p>
           <p>
-            className='cntRow' <br />
+            className='cntWrapRow' <br />
             컨텐츠 가로 배치 자동줄바꿈
           </p>
           <p>
-            className='cntRow' <br />
+            className='cntWrapRow' <br />
             컨텐츠 가로 배치 자동줄바꿈
           </p>
           <p>
-            className='cntRow' <br />
+            className='cntWrapRow' <br />
             컨텐츠 가로 배치 자동줄바꿈
           </p>
         </div>

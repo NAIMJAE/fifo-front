@@ -74,6 +74,13 @@ const Header = () => {
     alert("로그아웃 되었습니다.");
   };
 
+  /** 강제 리랜더링 */
+  const handleLinkClick = (e) => {
+    e.preventDefault();
+    window.location.href = e.target.href;
+    window.location.reload();
+  };
+
   return (
     <header>
       <div>

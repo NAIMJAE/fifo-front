@@ -63,3 +63,294 @@
     }
   }
 }
+
+/* 마이페이지 메인 */
+.myIndex {
+  .aside {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    box-sizing: border-box;
+    padding: 10px;
+
+    height: 600px;
+    border-right: 1px solid #9f9f9f;
+
+    > div:nth-child(1) {
+      margin-top: 20px;
+      align-items: center;
+      > img {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+      }
+      > label {
+        display: flex;
+        margin-top: 20px;
+        align-items: center;
+        cursor: pointer;
+        > p {
+          font-size: 20px;
+          font-weight: bolder;
+        }
+        > p::after {
+          content: " 님";
+          font-weight: normal;
+        }
+        > svg {
+          display: flex;
+          margin-left: 10px;
+        }
+      }
+      
+      > h3 {
+        font-size: 16px;
+        margin-top: 10px;
+      }
+      > h3::after {
+        content: "℃";
+        font-weight: normal;
+      }
+    }
+  }
+
+  .myMain {
+    display: flex;
+    flex-direction: column;
+    width: 900px;
+    box-sizing: border-box;
+    padding: 10px;
+
+    height: 600px;
+    
+    > h1 {
+      font-size: 20px;
+      font-weight: bolder;
+      margin: 20px 0 10px;
+    }
+
+    > div > .myProject {
+      display: flex;
+      padding: 20px 30px;
+      justify-content: space-between;
+      border: 1px solid #7b7b7b;
+      border-radius: 10px;
+      > div {
+        width: 30%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        > p {
+          font-size: 18px;
+          font-weight: bolder;
+          color: #7b7b7b;
+        }
+        >h2 {
+          font-size: 24px;
+          font-weight: bolder;
+          margin: 10px 0;
+        }
+        >h2:after {
+          content: "건";
+          font-size: 16px;
+        }
+        > h3 {
+          cursor: pointer;
+        }
+        > h3::after {
+          content: " >";
+        }
+        
+      }
+    }
+
+    > div {
+      display: flex;
+      padding: 20px 30px;
+      justify-content: space-between;
+      > .myRank {
+        display: flex;
+        width: 200px;
+        padding: 10px 20px;
+        margin-bottom: 10px;
+        border-radius: 20px;
+        justify-content: center;
+        align-items: center;
+        justify-content: space-between;
+        > p {
+          font-size: 18px;
+          font-weight: bolder;
+        }
+        > h4 {
+          font-size: 18px;
+        }
+      }
+      > .skill1 {
+        border: 1px solid #6F4E37;
+        background-color: #A67B5B;
+      }
+      > .skill2 {
+        border: 1px solid #B4B4B8;
+        background-color: #C7C8CC;
+      }
+      > .skill3 {
+        border: 1px solid #FFAF45;
+        background-color: #FFC94A;
+      }
+      > .skill4 {
+        border: 1px solid #088395;
+        background-color: #37B7C3;
+      }
+      > .skill5 {
+        border: 1px solid #4C3BCF;
+        background-color: #4B70F5;
+      }
+    }
+  }
+}
+
+/* 마이페이지 내 정보 수정 */
+.myProfile {
+  padding: 20px;
+  width: 1000px;
+  margin: 0 auto;
+  border: 1px solid #088395;
+
+  > h1 {
+    font-size: 24px;
+    font-weight: bolder;
+    margin: 10px 0;
+  }
+  > h2 {
+    font-size: 20px;
+    font-weight: bolder;
+    margin: 10px 0 20px;
+  }
+
+  > .basicInfo {
+    display: flex;
+    border: 1px solid #37B7C3;
+    .myThumb {
+      position: relative;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      > img {
+        width: 250px;
+        height: 250px;
+        border: 1px solid #3a3b3b;
+      }
+      > label {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        > svg {
+          cursor: pointer;
+        }
+      }
+      > input[type="file"] {
+        display: none;
+      }
+    }
+
+    .myInfo {
+      padding: 10px 0 10px 40px;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+
+      > label {
+        display: flex;
+        margin-top: 10px;
+        align-items: center;
+        > h2 {
+          font-size: 26px;
+          font-weight: bolder;
+          margin-bottom: 10px;
+        }
+        > h3 {
+          font-size: 20px;
+          font-weight: bolder;
+          margin-right: 10px;
+        }
+        > h4 {
+          font-size: 16px;
+          color: #7b7b7b;
+          margin-left: 10px;
+        }
+        > h5 {
+          color: #7b7b7b; 
+          margin-left: 10px;
+        }
+        > input {
+          display: flex;
+          width: 240px;
+          font-size: 20px;
+          padding: 4px 10px;
+          margin-right: 10px;
+          border: 1px solid white;
+        }
+        > svg {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+  > .mySkill {
+    display: flex;
+    border: 1px solid #37B7C3;
+    flex-direction: column;
+    padding: 10px;
+
+    > .inputSkill {
+      width: 100%;
+      display: flex;
+      margin-bottom: 20px;
+      justify-content: center;
+
+      > input {
+        display: flex;
+        width: 800px;
+        padding: 10px 20px;
+        font-size: 18px;
+        border: 1px solid #7b7b7b;
+        border-radius: 20px;
+      }
+
+      > label {
+        display: flex;
+        cursor: pointer;
+        > p {
+          margin-right: 4px;
+        }
+      }
+    }
+
+    > .skillList {
+      display: flex;
+      flex-wrap: wrap;
+
+      > div {
+        position: relative;
+        display: flex;
+        border: 1px solid #4B70F5;
+        border-radius: 10px;
+        align-items: center;
+        padding: 4px 10px;
+        margin: 10px;
+        > p {
+          font-size: 16px;
+          margin-left: 10px;
+        }
+        > .closeBtn {
+          position: absolute;
+          top: -4px;
+          right: -6px;
+          background-color: white;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

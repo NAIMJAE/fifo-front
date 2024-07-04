@@ -4,12 +4,12 @@ import '../../styles/article.scss'
 import {Viewer} from '@toast-ui/react-editor';
 import Breadcrumb from '../../components/common/main/Breadcrumb';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCommentDots, faEye, faHeart, faThumbsUp, faTrashCan } from '@fortawesome/free-regular-svg-icons';
+import { faHeart, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import CommentListComponent from '../../components/article/CommentListComponent';
 import CommentWriteComponent from '../../components/article/CommentWriteComponent';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { articleViewApi, commentInsertApi, increaseHeartApi, replyInsertApi } from '../../api/articleApi';
+import { articleViewApi, commentInsertApi, deletePostApi, increaseHeartApi, replyInsertApi } from '../../api/articleApi';
 import { FrontUrl, RootUrl } from '../../api/RootUrl';
 import Moment from 'moment';
 import { useSelector } from 'react-redux';
@@ -40,10 +40,8 @@ const ViewPage = () => {
             return;
         }
         const selectArticle = async () => {
-            console.log("pno",pno)
             try {
                 const response = await articleViewApi(pno); 
-                console.log("response : ", response)
                 setArticleView(response);
                 setComNum(response.comNum);
             } catch (error) {
@@ -87,7 +85,6 @@ const ViewPage = () => {
     /** 댓글 작성 */
     const insertComment = async (comment) => {
         comment.pno = articleView.pno;
-        console.log("comment : ", comment);
 
         try {
             const response = await commentInsertApi(comment);
@@ -119,7 +116,24 @@ const ViewPage = () => {
         }
     }
 
-    // 게시글 조회수 카운팅, 게시글 수정, 삭제, 첨부파일 다운로드 남음
+    /** 게시글 삭제 */
+    const deletePost = async (pno) => {
+
+        let result = window.confirm("게시글을 삭제하시겠습니까?");
+        if (result) {
+            try {
+                const response = await deletePostApi(pno);
+                if (response > 0) {
+                    alert("게시글이 삭제되었습니다.");
+                    navigate("/");
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
+
+    // 게시글 조회수 카운팅, 삭제, 첨부파일 다운로드 남음
 
   return (
     <MainLayout>
@@ -162,7 +176,11 @@ const ViewPage = () => {
         <div className='cntWrapRow viewFile'>
             <p>첨부파일</p>
             {articleView.fileName && articleView.fileName.map((file, index) => (
-                <span key={index}>{file}</span>
+                <>
+                {Object.keys(file).map((key) => (
+                    <span key={key} id={key}>{file[key]}</span>
+                ))}
+                </>
             ))}
         </div>
 
@@ -180,7 +198,7 @@ const ViewPage = () => {
                     <FontAwesomeIcon icon={faPen} color='#1e1e1e' size='lg'/>
                     수정
                 </button>
-                <button>
+                <button onClick={() => deletePost(articleView.pno)}>
                     <FontAwesomeIcon icon={faTrashCan} color='#1e1e1e' size='lg'/>
                     삭제
                 </button>
@@ -189,7 +207,13 @@ const ViewPage = () => {
         
 
         <div className='cntColumn writeComment'>
-            {articleView.pno > 0 && <CommentWriteComponent comNum={comNum} insertComment={insertComment} loginSlice={loginSlice}/>}
+            {loginSlice.userno !== undefined ? (
+                <>
+                {articleView.pno > 0 && <CommentWriteComponent comNum={comNum} insertComment={insertComment} loginSlice={loginSlice}/>}
+                </>
+            ) : (
+                <p>댓글을 작성하시려면 로그인이 필요합니다.</p>
+            )}
         </div>
 
         <div className='cntColumn viewComment'>

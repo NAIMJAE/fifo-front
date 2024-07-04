@@ -1,8 +1,8 @@
 import { faFloppyDisk, faHeart, faMessage, faTrashCan } from '@fortawesome/free-regular-svg-icons'
-import { faAnglesRight, faPen, faReply, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { faPen, faReply, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { commentHeartApi, commentModifyApi, deleteCommentApi, heartCheckApi, selectCommentApi } from '../../api/articleApi'
+import React, { useCallback, useEffect, useState } from 'react'
+import { commentHeartApi, commentModifyApi, deleteCommentApi, selectCommentApi } from '../../api/articleApi'
 import PageingComponent from '../../components/common/paging/PageingComponent'
 import { RootUrl } from '../../api/RootUrl'
 import Moment from 'moment';
@@ -32,7 +32,7 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
         const selectComment = async () => {
             try {
                 const response = await selectCommentApi(comPageable);
-                console.log("댓글 불러오기 response : ", response)
+                console.log(response)
                 if (response === 0) {
                     
                 }else {
@@ -141,8 +141,9 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
             try {
                 const response = await deleteCommentApi(cno);
                 if (response > 0) {
-                    alert("댓글이 삭제되었습니다.")
-                    setComState(!comState)
+                    alert("댓글이 삭제되었습니다.");
+                    
+                    setComState(!comState);
                 }
             } catch (error) {
                 console.log(error);
@@ -152,11 +153,13 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
 
     /** 댓글 좋아요 */
     const heartComment = async (e, cno) => {
-        console.log("aa",loginSlice.userno)
-        console.log("aa",cno)
+        if (loginSlice.userno === undefined) {
+            return;
+        }
         const data = {
             userNo: loginSlice.userno,
             cno: cno,
+            pno: pno,
         }
 
         try {
@@ -306,7 +309,10 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
                     {comment.updateDate && (<span> {formatRelativeTime(comment.updateDate)} 수정</span>)}
                 </h3>
 
+                
                 <div>
+                {commentStates.find(state => state.id === comment.cno && !state.isEditing) &&
+                    <>
                     {comment.state > 0 ? (
                         null
                     ) : (
@@ -315,11 +321,15 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
                             <span>{comment.heart}</span>
                         </button>
                     )}
-
-                    <button onClick={() => viewReply(comment.cno)}>
+                
+                    {loginSlice.userno !== undefined && (
+                        <button onClick={() => viewReply(comment.cno)}>
                         <FontAwesomeIcon icon={faMessage} />
                         <b>답글</b>
                     </button>
+                    )}
+                    </>
+                }
 
                     {comment.state > 0 ? (
                         null
@@ -361,7 +371,7 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
                     
                 </div>
             </div>
-            <textarea ref={autoResizeTextarea} readOnly>{comment.content}</textarea>
+            <textarea ref={autoResizeTextarea} value={comment.content} readOnly></textarea>
 
 {/******** 답글 작성 ********/}
             {replyStates.find(state => state.id === comment.cno && state.isEditing) && 
@@ -408,10 +418,13 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
                                     null
                                 ) : (
                                     <>
+                                        {replyModiStates.find(state => state.id === reply.cno && !state.isEditing) && 
+
                                         <button className='heart' onClick={(e) => heartComment(e, reply.cno)}>
                                             <FontAwesomeIcon icon={faHeart} color='#FF0000' size='lg'/>
                                             <span>{reply.heart}</span>
                                         </button>
+                                        }
 
                                         {(loginSlice.userno === reply.userNo) &&
                                         <>
@@ -449,7 +462,7 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
                                 
                             </div>
                         </div>
-                        <textarea ref={autoResizeTextarea} readOnly>{reply.content}</textarea>
+                        <textarea ref={autoResizeTextarea} value={reply.content} readOnly></textarea>
                     </div>
                 </div>
             ))}

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import MainLayout from '../../layout/MainLayout'
 import { articleWriteApi } from '../../api/articleApi';
 import { RootUrl } from '../../api/RootUrl';
@@ -20,7 +20,7 @@ const Write = () => {
     const [title, setTitle] = useState("");
 
 /** 카테고리 저장 */
-    const [cate, setCate] = useState("");
+    const [cate, setCate] = useState("1");
 
 /** 게시글 내용 저장 */
     const editorRef = useRef();
@@ -40,30 +40,31 @@ const Write = () => {
     const [tagList, setTagList] = useState([]);
     const [inputTag, setInputTag] = useState("");
 
-    const createTag = (event) => {
-        setInputTag(event.target.value);
-        const tagArray = inputTag.replace(/\s+/g, '').split("#").filter(tag => tag !== "");
-        if (tagArray.length > 10) {
-            alert("태그는 10개까지 생성가능합니다.");
-            setInputTag(prevValue);
-        }else {
-            prevValue = inputTag;
-            setTagList(tagArray);
+    useEffect(()=> {
+        const createTag = () => {
+            const tagArray = inputTag.replace(/\s+/g, '').split("#").filter(tag => tag !== "");
+            if (tagArray.length > 10) {
+                alert("태그는 10개까지 생성가능합니다.");
+                setInputTag(prevValue);
+            }else {
+                prevValue = inputTag;
+                setTagList(tagArray);
+            }
         }
-    }
+        createTag();
+    }, [inputTag]);
 
 /** 게시글 작성 */
     const handleSubmit = async () => {
         // 게시글 내용 꺼내오기
         let contents = editorRef.current.getInstance().getHTML();
-        console.log("contents : ", contents)
 
         // 게시글 내용 속 이미지 변환 (changeImages 컴포넌트화 시킴)
         const resultData = await changeImages(contents);
         if (resultData !== null) {
             // null 체크 안하면 에러
             resultData.imageList.forEach((image, i) => {
-                const imageURL = `${RootUrl()}/uploads/post/images/${image.name}`;
+                const imageURL = `${RootUrl()}/uploads/post/images/$#@^/${image.name}`;
                 contents = contents.replace(resultData.srcPull[i].slice(5, -1), imageURL);
             });
         }
@@ -74,7 +75,7 @@ const Write = () => {
         formData.append("content", contents);
         formData.append("cateNo", cate);
         formData.append("userNo", loginSlice.userno);
-        formData.append("tag", inputTag);
+        formData.append("tagName", tagList);
         for (let i = 0; i < fileList.length; i++) {
             formData.append('files', fileList[i]);
         }
@@ -87,7 +88,6 @@ const Write = () => {
         // 서버 전송
         try {
             const response = await articleWriteApi(formData);
-            console.log(response);
             if (response > 0) {
                 navigate(`/article/view?pno=${response}`);
             }
@@ -125,7 +125,7 @@ const Write = () => {
         </div>
 
         <div className='cntColumn articleTag'>
-            <input type="text" placeholder='#게시글 #태그 #추가' value={inputTag} onChange={createTag}/>
+            <input type="text" placeholder='#게시글 #태그 #추가' value={inputTag} onChange={(e) => setInputTag(e.target.value)}/>
             <div className='cntWrapRow'>
                 {tagList ? tagList.map((tag, index) => (
                     <span key={index} className='tag'>#{tag}</span>
