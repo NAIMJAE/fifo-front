@@ -77,8 +77,8 @@ const Header = () => {
   /** 강제 리랜더링 */
   const handleLinkClick = (e) => {
     e.preventDefault();
+    console.log(e.target.href)
     window.location.href = e.target.href;
-    window.location.reload();
   };
 
   return (

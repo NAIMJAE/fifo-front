@@ -71,7 +71,7 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
     }
 
 //**** 댓글 관련 함수들 ****//
-    /** 댓글 수정 */
+    /** 댓글 수정 UI 생성 */
     const modifyComment = (e, cno) => {
         const commentDiv = e.target.closest(`div[id='${cno}']`);
         const textarea = commentDiv.querySelector('textarea');
@@ -82,6 +82,16 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
         setCommentStates(prevStates =>
             prevStates.map(comment =>
                 comment.id === cno ? { ...comment, isEditing: !comment.isEditing } : comment
+            )
+        );
+    }
+
+    /** 댓글 수정 */
+    const writeModifyComment = (e, cno) => {
+        console.log(e.target.value)
+        setCommentStates(prevStates =>
+            prevStates.map(comment =>
+                comment.id === cno ? { ...comment, content: e.target.value } : comment
             )
         );
     }
@@ -112,6 +122,8 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
             cno: cno,
             content: textarea.value,
         }
+
+        console.log("댓글수정 : ",data)
 
         try {
             const response = await commentModifyApi(data);
@@ -221,8 +233,18 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
             cancelReply(cno); // 답글 저장 후 UI 닫기
         }
     };
-
+    
     /** 답글 수정 */
+    const writeModifyReply = (e, cno) => {
+        console.log(e.target.value)
+        setReplyModiStates(prevStates =>
+            prevStates.map(comment =>
+                comment.id === cno ? { ...comment, content: e.target.value } : comment
+            )
+        );
+    }
+
+    /** 답글 수정 UI 활성 */
     const modifyReply = (e, cno) => {
         const commentDiv = e.target.closest(`div[id='${cno}']`);
         const textarea = commentDiv.querySelector('textarea');
@@ -371,7 +393,10 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
                     
                 </div>
             </div>
-            <textarea ref={autoResizeTextarea} value={comment.content} readOnly></textarea>
+            <textarea ref={autoResizeTextarea}
+                value={commentStates.find(state => state.id === comment.cno)?.content || ''}
+                onChange={(e) => writeModifyComment(e, comment.cno)}
+                readOnly></textarea>
 
 {/******** 답글 작성 ********/}
             {replyStates.find(state => state.id === comment.cno && state.isEditing) && 
@@ -462,7 +487,10 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
                                 
                             </div>
                         </div>
-                        <textarea ref={autoResizeTextarea} value={reply.content} readOnly></textarea>
+                        <textarea ref={autoResizeTextarea}
+                            value={replyModiStates.find(state => state.id === reply.cno)?.content || ''}
+                            onChange={(e) => writeModifyReply(e, reply.cno)}
+                            readOnly></textarea>
                     </div>
                 </div>
             ))}
