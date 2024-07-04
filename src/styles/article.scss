@@ -210,15 +210,17 @@
     }
 }
 .articleFile {
-    height: 40px;
+    height: auto;
     margin: 10px 30px;
     border: 1px solid #9f9f9f;
     border-radius: 4px;
     align-items: center;
 
+
     input[type="file"] {
-        width: 240px;
+        width: 100px;
         padding: 0 10px;
+        margin: 5px 0;
         font-size: 16px;
         cursor: pointer;
         border-right: 1px solid #9f9f9f;
@@ -228,7 +230,7 @@
         padding: 0 10px;
         margin-left: 10px;
         span {
-            margin-right: 20px;
+            margin-left: 10px;
         }
     }
 }
@@ -639,9 +641,11 @@
 
 /*** article - modify ***/
 .modifyFile {
+    width: 1036px;
     padding: 10px 0;
     align-items: center;
     display: flex;
+    flex-wrap: wrap;
     p {
         padding: 0 10px;
         font-weight: bolder;
@@ -649,7 +653,7 @@
     span {
         color: #1e1e1e;
         display: flex;
-        margin: 0 10px;
+        margin: 5px 0 5px 10px;
         padding: 4px 8px;
         border: 1px solid #7b7b7b;
         border-radius: 4px;

@@ -74,6 +74,13 @@ const Header = () => {
     alert("로그아웃 되었습니다.");
   };
 
+  /** 강제 리랜더링 */
+  const handleLinkClick = (e) => {
+    e.preventDefault();
+    window.location.href = e.target.href;
+    window.location.reload();
+  };
+
   return (
     <header>
       <div>
@@ -107,7 +114,7 @@ const Header = () => {
           <Link to="/develop">개발참조</Link>
           <Link to="/">내모임</Link>
           <Link to="/gathering/list">모임찾기</Link>
-          <Link to="/article/list">게시판</Link>
+          <Link to="/article/list" onClick={handleLinkClick}>게시판</Link>
           <Link to="/grade/language">등급평가</Link>
         </div>
       </div>

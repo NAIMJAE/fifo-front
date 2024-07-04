@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { RootUrl } from '../../api/RootUrl';
 import Moment from 'moment';
 
-const ArticleBoxComponent = ({ postList }) => {
+const ArticleBoxComponent = ({ postList, searchByTag }) => {
 
   return (
     <>
@@ -22,7 +22,7 @@ const ArticleBoxComponent = ({ postList }) => {
                 <div>
                     <div className='tagBox'>    
                     {post.tagName && post.tagName.map((tag, index) => (
-                        <Link key={index}>{tag}</Link>
+                        <Link key={index} onClick={() => searchByTag(tag)}>{tag}</Link>
                     ))}
                     </div>
                     <div className='hitBox'>
@@ -32,8 +32,6 @@ const ArticleBoxComponent = ({ postList }) => {
                         <h2>{post.hit}</h2>
                         <FontAwesomeIcon icon={faCommentDots} color='#1e1e1e' size='lg'/>
                         <h2>{post.comNum}</h2>
-                        <FontAwesomeIcon icon={faThumbsUp} color='#1e1e1e' size='lg'/>
-                        <h2>{post.good}</h2>
                     </div>
                 </div>
             </div>

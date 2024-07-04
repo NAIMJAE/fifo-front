@@ -19,7 +19,7 @@ export const articleListApi = async (data) => {
 };
 
 /** 게시글 보기 API */
-export const articleViewApi = async (pno) => {
+export const articleViewApi = async (pno, userno) => {
     const response = await axios.get(`${rootURL}/post/${pno}`);
     return response.data;
 };
@@ -37,6 +37,12 @@ export const articleModifyApi = async (formData) => {
             'Content-Type': 'multipart/form-data',
         },
     });
+    return response.data;
+};
+
+/** 게시글 삭제 API */
+export const deletePostApi = async (pno) => {
+    const response = await axios.delete(`${rootURL}/post/${pno}`);
     return response.data;
 };
 
