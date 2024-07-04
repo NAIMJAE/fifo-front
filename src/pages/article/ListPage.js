@@ -40,8 +40,11 @@ const List = () => {
 
     /** 검색 버튼 클릭 */
     const searchHandler = () => {
-        setPageable(prev => ({...prev, type: searchType}));
-        setPageable(prev => ({...prev, keyword: searchKeyword}));
+        setPageable(prev => ({
+            ...prev,
+            type: searchType,
+            keyword: searchKeyword
+        }));
     }
 
     // pg변경 함수 (페이징 버튼 클릭시)
@@ -51,9 +54,14 @@ const List = () => {
 
     /** 태그 클릭시 검색 */
     const searchByTag = (tag) => {
+        console.log("g2")
         setSearchType("tag");
         setSearchKeyword(tag);
-        searchHandler();
+        setPageable(prev => ({
+            ...prev,
+            type: "tag",
+            keyword: tag
+        }));
     }
 
   return (
