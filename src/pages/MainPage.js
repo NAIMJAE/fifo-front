@@ -24,6 +24,7 @@ const MainPage = () => {
   });
 
   // 모임글 목록 useState
+  const [pageReaponse, setPageResponse] = useState([]);
   const [gathList, setGathList] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -32,7 +33,10 @@ const MainPage = () => {
     const selectArticleList = async () => {
       try {
         const response = await gatheringListApi(pageRequest);
-        setGathList(response);
+        setPageResponse(response);
+        setGathList(pageReaponse.dtoList);
+        console.log(pageReaponse);
+        console.log(gathList);
         setLoading(false);
       } catch (err) {
         console.log(err);
@@ -69,7 +73,7 @@ const MainPage = () => {
                   <GatherBoxComponent gathList={gathList} />
                 </div>
                 <div className="pageAndBtn">
-                  <PageingComponent cntList={gathList} changePage={changePage} />
+                  <PageingComponent cntList={pageReaponse} changePage={changePage} />
                   <Link to="/gathering/write" className="hvMdBtn">글쓰기</Link>
                 </div>
               </>
