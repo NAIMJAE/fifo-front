@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { RootUrl } from '../../api/RootUrl';
 
 const CommentWriteComponent = ({ comNum, insertComment, loginSlice }) => {

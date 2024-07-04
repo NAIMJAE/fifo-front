@@ -4,11 +4,12 @@ import Footer from '../components/common/main/Footer'
 import Main from '../components/common/main/Main'
 
 const MainLayout = ({children}) => {
+  /** 리랜더링 */
   return (
     <div id='container'>
         <Header></Header>
         <Main>
-            {children}
+        {children}
         </Main>
         <Footer></Footer>
     </div>
