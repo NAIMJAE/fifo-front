@@ -9,10 +9,11 @@ import CommentListComponent from '../../components/article/CommentListComponent'
 import CommentWriteComponent from '../../components/article/CommentWriteComponent';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { articleViewApi, commentInsertApi, deletePostApi, increaseHeartApi, replyInsertApi } from '../../api/articleApi';
+import { articleViewApi, commentInsertApi, deletePostApi, increaseHeartApi, postFileDownloadApi, replyInsertApi } from '../../api/articleApi';
 import { FrontUrl, RootUrl } from '../../api/RootUrl';
 import Moment from 'moment';
 import { useSelector } from 'react-redux';
+import { FileDownload } from '@mui/icons-material';
 
 const ViewPage = () => {
 
@@ -133,7 +134,42 @@ const ViewPage = () => {
         }
     }
 
-    // 게시글 조회수 카운팅, 삭제, 첨부파일 다운로드 남음
+    /** 첨부파일 다운로드 */
+    const downloadFile = async (e) => {
+
+        if (loginSlice.userno === undefined) {
+            alert("로그인 후 다운로드 가능합니다.");
+            return;
+        }
+
+        const fno = e.target.id;
+        try {
+            const response = await postFileDownloadApi(fno);
+
+            // filename 부분을 추출하여 파일 이름으로 사용
+            const contentDisposition = response.headers["content-disposition"];
+            let fileName = 'downloaded-file';
+            if (contentDisposition) {
+                const fileNameMatch = contentDisposition.match(/filename\*?=['"]?([^;]+)['"]?/);
+                if (fileNameMatch != null && fileNameMatch.length > 1) {
+                    fileName = decodeURIComponent(fileNameMatch[1].replace(/['"]/g, ''));
+                }
+            }
+
+            const blob = new Blob([response.data], {
+                type: response.headers["content-type"],
+            });
+            const link = document.createElement("a");
+            link.href = window.URL.createObjectURL(blob);
+            link.download = fileName;
+            link.click();
+            window.URL.revokeObjectURL(link.href);
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
 
   return (
     <MainLayout>
@@ -178,7 +214,7 @@ const ViewPage = () => {
             {articleView.fileName && articleView.fileName.map((file, index) => (
                 <>
                 {Object.keys(file).map((key) => (
-                    <span key={key} id={key}>{file[key]}</span>
+                    <span key={key} id={key} onClick={(e) => downloadFile(e)}>{file[key]}</span>
                 ))}
                 </>
             ))}
