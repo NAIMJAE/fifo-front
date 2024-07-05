@@ -459,6 +459,43 @@
     margin: 0;
   }
 }
+// 글보기 참가신청 현황 모달 
+.recruitModalBox{
+  position: absolute;
+  width: 400px;
+  height: 200px;
+  top: 40px;
+  left: 100px;
+  z-index: 20;
+}
+.recruitModal {
+  position: absolute;
+  top: 150px;
+  left: 180px;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 300px;
+  background-color: #fff;
+  border: 2px solid #9f9f9f;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  padding: 16px;
+  border-radius: 10px;
+  z-index: 200;
+}
+.recruitInfoModal {
+  position: absolute;
+  top: 150px;
+  left: -255px;
+  transform: translate(-50%, -50%);
+  width: 550px;
+  height: 300px;
+  background-color: #fff;
+  border: 2px solid #9f9f9f;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  padding: 16px;
+  border-radius: 10px;
+  z-index: 200;
+}
 // 글쓰기 버튼
 .writeBtn {
   display: flex;
@@ -715,6 +752,9 @@
   justify-content: center;
   margin-bottom: 10px;
 
+  > .gathRecruit {
+    position: relative;
+  }
   >div {
     width: 35%;
     padding: 15px;
@@ -730,6 +770,14 @@
 
     >.gathCate {
       color: #666565;
+    }
+    > .gathCateValue {
+      > span {
+        font-size: 17px;
+        font-weight: 600;
+        color: #4169e1;
+        cursor: pointer;
+      }
     }
   }
 }
