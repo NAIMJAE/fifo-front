@@ -34,7 +34,7 @@ const MainPage = () => {
       try {
         const response = await gatheringListApi(pageRequest);
         setPageResponse(response);
-        setGathList(pageReaponse.dtoList);
+        setGathList(response.dtoList);
         console.log(pageReaponse);
         console.log(gathList);
         setLoading(false);
