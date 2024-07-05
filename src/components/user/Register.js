@@ -1,24 +1,61 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { globalPath } from "../../globalPaths";
 import "../../styles/user/register.scss";
+import Checkbox from "@mui/material/Checkbox";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import Backdrop from "../common/backdrop/backdrop.js";
+import TermsModal from "./termsModal.js";
+import SkillIcon from "../gathering/SkillIcon";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 
 const url = globalPath.path;
 
 const Register = () => {
+  /**회원가입 state */
   const [register, setRegister] = useState({
     email: "",
     pass: "",
     name: "",
     nick: "",
   });
+
+  /**약관 체크관리 state */
+  const [isAllChecked, setIsAllChecked] = useState(false);
+  const [check1, setCheck1] = useState(false);
+  const [check2, setCheck2] = useState(false);
+
+  /**전체 선택 체크박스 상태 관리 함수 */
+  const handlerAllCheck = () => {
+    setIsAllChecked(!isAllChecked);
+  };
+
+  useEffect(() => {
+    if (isAllChecked) {
+      setCheck1(true);
+      setCheck2(true);
+    } else if (!isAllChecked) {
+      setCheck1(false);
+      setCheck2(false);
+    }
+  }, [isAllChecked]);
+
+  const handlerCheck1 = () => {
+    setCheck1(!check1);
+  };
+
+  const handlerCheck2 = () => {
+    setCheck2(!check2);
+  };
+
+  /**비밀번호 보이기 관리 */
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
+  /**backdrop 관리 state */
   const [open, setOpen] = useState(false);
   const handleClose = () => {
     setOpen(false);
@@ -79,6 +116,62 @@ const Register = () => {
   const handlerPasswordVisble = () => {
     setShowPassword(!showPassword);
   };
+
+  /** 약관 모달 관리 */
+  const termsModalClose = () => setOpenTerms(false);
+  const [openTerms, setOpenTerms] = useState(false);
+  const [handlerModal, setHandlerModal] = useState("");
+  const [privacy, setPrivacy] = useState("");
+  const [terms, setTerms] = useState("");
+
+  /**약관 보여지기 */
+  const viewTerms = async (e) => {
+    e.preventDefault();
+    setHandlerModal("terms");
+    await axios
+      .post(`${url}/user/terms`)
+      .then((response) => {
+        setTerms(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    setOpenTerms(true);
+  };
+
+  /**정보 처리방침 보여지기 */
+  const viewPrivacy = async (e) => {
+    e.preventDefault();
+
+    setHandlerModal("privacy");
+
+    await axios
+      .post(`${url}/user/privacy`)
+      .then((response) => {
+        setPrivacy(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    setOpenTerms(true);
+  };
+
+  /**스킬 리스트 가져오기*/
+  const [skillList, setSkillList] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`${url}/user/`)
+      .then((response) => {
+        console.log(response.data);
+        setSkillList(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   return (
     <div className="register">
       <Link to="/">
@@ -145,11 +238,26 @@ const Register = () => {
             type="text"
             placeholder="별명을 알파벳, 한글, 숫자를 10자 이하로 입력해주세요"
           ></input>
-
+          <div>
+            <div>기술 스택(업무 툴/ 스킬)</div>
+            <span>나의 기술 스택을 선택해주세요.</span>
+            <div className="skillList">
+              {skillList &&
+                skillList.map((skill, index) => (
+                  <div>
+                    <SkillIcon skill={skill} classType={"bigSkillImg"} />
+                  </div>
+                ))}
+            </div>
+          </div>
           <div className="terms-agree">약관동의</div>
           <div className="terms-all-div">
             <label className="agreeAll-label">
-              <input type="checkbox" />
+              <Checkbox
+                className="agreeAllbox"
+                checked={isAllChecked}
+                onClick={handlerAllCheck}
+              />
               <span>전체동의</span>
               <span className="all-agree-span">
                 전체 동의를 선택하시면 아래의 모든 약관에 동의하게 됩니다.
@@ -157,8 +265,21 @@ const Register = () => {
             </label>
 
             <div className="terms-div">
-              <input type="checkbox" />
-              <input type="checkbox" />
+              <label className="terms-label">
+                <Checkbox checked={check1} onClick={handlerCheck1} />
+                <span className="termsContent">서비스 이용약관</span>
+                <Link className="link" to={"#"} onClick={viewTerms}>
+                  보기
+                </Link>
+              </label>
+
+              <label className="privacy-label">
+                <Checkbox checked={check2} onClick={handlerCheck2} />
+                <span className="privacyContent">개인정보 처리 방침</span>
+                <Link className="link" to={"#"} onClick={viewPrivacy}>
+                  보기
+                </Link>
+              </label>
             </div>
           </div>
         </div>
@@ -170,7 +291,16 @@ const Register = () => {
           onClick={handlerSubmitClick}
         />
       </form>
+
       <Backdrop handleClose={handleClose} open={open} />
+      <TermsModal
+        termsModalClose={termsModalClose}
+        openTerms={openTerms}
+        setOpenTerms={setOpenTerms}
+        handlerModal={handlerModal}
+        terms={terms}
+        privacy={privacy}
+      />
     </div>
   );
 };
