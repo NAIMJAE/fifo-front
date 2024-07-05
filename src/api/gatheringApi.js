@@ -33,7 +33,12 @@ export const gathCommentInsertApi = async (comment) => {
 };
 
 /** 댓글 불러오기 API */
-export const gathCommentsSelectApi = async (gathno) => {
-    const response = await axios.get(`${rootURL}/gathcomment/${gathno}`);
+export const gathCommentsSelectApi = async (data) => {
+    const response = await axios.get(`${rootURL}/gathcomment`, {
+        params :{
+            pg: data.pg,
+            gathno: data.gathno,
+        }
+    });
     return response.data;
 };

@@ -9,18 +9,23 @@ import { Button } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import HiddenInputFile from '../../components/gathering/HiddenInputFile';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import DateModal from '../../components/gathering/modal/DateModal';
 
 const Write = () => {
+    const loginSlice = useSelector((state) => state.authSlice) || {};
     const navigate = useNavigate();
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalOpen2, setModalOpen2] = useState(false);
     /** 모임 Data */
     const [gathering, setGathering] = useState({
         gathcate: 0,  // 카테고리
-        userno: 1,  // 임시 유저 정보
+        userno: loginSlice.userno,
         gathtitle: "",  // 제목
         gathdetail: "",  // 게시글 내용 (content)
         gathmode: "",  // 모임 방식
         gathnowmember: 0,  // 모집된 인원 (초기값 0)
-        gathtotalmember: "",  // 모집 총 인원
+        gathtotalmember: 2,  // 모집 총 인원
         gathsupport: "",  // 지원 방법
         gathrecruitfield: "",  // 모집 분야
         gathlanguage: "",  // 모집 언어
@@ -48,7 +53,7 @@ const Write = () => {
         const { name, value } = e.target;
         setGathering({
             ...gathering,
-            [name]: name === 'gathtotalmember' ? parseInt(value, 10) : value
+            [name]: name === 'gathtotalmember' ? parseInt(value) : value
         });
     }
 
@@ -95,7 +100,7 @@ const Write = () => {
         if (resultData !== null) {
             // null 체크 안하면 에러
             resultData.imageList.forEach((image, i) => {
-                const imageURL = `${RootUrl()}/uploads/gathering/images/${image.name}`;
+                const imageURL = `${RootUrl()}/uploads/gathering/images/$#@^/${image.name}`;
                 contents = contents.replace(resultData.srcPull[i].slice(5, -1), imageURL);
             });
         }
@@ -129,8 +134,33 @@ const Write = () => {
             console.log(err);
         }
     }
+    /** 날짜 */
+    const [recruit, setRecruit] = useState([
+        {
+            startDate: new Date(),
+            endDate: null,
+            key: 'selection'
+        }
+    ]);
+    const [mooim, setMooim] = useState([
+        {
+            startDate: new Date(),
+            endDate: null,
+            key: 'selection'
+        }
+    ]);
+    /** 모달 창 상태 관리 */
+
+    const handleModal = () => setModalOpen(!modalOpen);
+
+    const handleModal2 = () => setModalOpen2(!modalOpen2);
+
+    const handleDateChange = () => {
+
+    }
 
     return (
+        
         <MainLayout>
             <div className='cntRow gatheringTitle'>
                 모임 생성
@@ -167,12 +197,8 @@ const Write = () => {
                     </select>
                 </div>
                 <div className='cntColumn'>
-                    <span>모집 기간</span>
-                    <div>
-                        <input type="date" name="recruitstart" onChange={handleInputChange} />
-                        <b>~</b>
-                        <input type="date" name="recruitend" onChange={handleInputChange} />
-                    </div>
+                    <button className="hvMdBtn maR10" onClick={handleModal}>모집 기간</button>
+                    
                 </div>
             </div>
             <div className='cntRow gatheringData'>
@@ -185,12 +211,8 @@ const Write = () => {
                     </select>
                 </div>
                 <div className='cntColumn'>
-                    <span>진행 기간</span>
-                    <div>
-                        <input type="date" name="projectstart" onChange={handleInputChange} />
-                        <b>~</b>
-                        <input type="date" name="projectend" onChange={handleInputChange} />
-                    </div>
+                    <button className="hvMdBtn maR10" onClick={handleModal2}>진행 기간</button>
+                        
                 </div>
             </div>
             <div className='cntRow gatheringData'>
@@ -225,6 +247,8 @@ const Write = () => {
                 <button>취소</button>
                 <button className='blue' onClick={handleSubmit}>작성</button>
             </div>
+            {modalOpen && <DateModal date={recruit} setDate={setRecruit} handleModal={handleModal}/>}
+            {modalOpen2 && <DateModal date={mooim} setDate={setMooim} handleModal={handleModal2}/>}
         </MainLayout>
     );
 }
