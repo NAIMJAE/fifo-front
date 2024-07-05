@@ -4,7 +4,7 @@ import '../../styles/gathering.scss'
 import { Viewer } from '@toast-ui/react-editor';
 import Breadcrumb from '../../components/common/main/Breadcrumb';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
+import { faSquareCaretDown, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import GathCommentListComponent from '../../components/gathering/GathCommentListComponent';
 import CommentWriteComponent from '../../components/article/CommentWriteComponent';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
@@ -14,6 +14,7 @@ import Moment from 'moment';
 import { useSelector } from 'react-redux';
 import { gathCommentInsertApi, gatheringViewApi } from '../../api/gatheringApi';
 import { Alert } from '@mui/material';
+import RecruitModal from '../../components/gathering/modal/RecruitModal';
 
 const ViewPage = () => {
 
@@ -75,6 +76,11 @@ const ViewPage = () => {
             console.log(error);
         }
     }
+
+    /** 참가 신청 현황 모달 관리 */
+    const [recruitState, setRecruitState] = useState(false);
+    const handleModal = () => setRecruitState(!recruitState);
+
 
     return (
         <MainLayout>
@@ -141,10 +147,18 @@ const ViewPage = () => {
                         <span className='gathCate'>모집 언어</span>
                         <span className='gathCateValue'>Java Javascript</span>
                     </div>
-                    <div className='cntRow'>
-                        <button className="hvMdBtn maR10">참여신청</button>
-                    </div>
-
+                    {gatheringView.userno === loginSlice.userno ? (
+                        <div className='cntRow gathRecruit'>
+                            <span className='gathCate'>지원 현황</span>
+                            <span className='gathCateValue'>4명 <span onClick={handleModal}>상세 <FontAwesomeIcon icon={faSquareCaretDown} size='lg' color='#4169e1'/></span></span>
+                            {/** 모임 참가 신청 현황 모달 */}
+                            {recruitState && <RecruitModal handleModal={handleModal}/>}
+                        </div>
+                    ) : (
+                        <div className='cntRow'>
+                            <button className="hvMdBtn maR10">참여신청</button>
+                        </div>
+                    )}
                 </div>
                 <div className='alertBox'>
                     <Alert className='alert' severity="info">참여를 신청하면, 내 언어 레벨과 매너 온도 등의 정보가 모임 호스트에게 전달됩니다.</Alert>
@@ -172,7 +186,6 @@ const ViewPage = () => {
             <div className='cntColumn viewComment'>
                 {gatheringView.gathno > 0 && <GathCommentListComponent gathno={gatheringView.gathno} comState={comState} setComState={setComState} loginSlice={loginSlice}/>}
             </div>
-
         </MainLayout>
     )
 }
