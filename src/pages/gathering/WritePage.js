@@ -17,6 +17,7 @@ const Write = () => {
     const navigate = useNavigate();
     const [modalOpen, setModalOpen] = useState(false);
     const [modalOpen2, setModalOpen2] = useState(false);
+
     /** 모임 Data */
     const [gathering, setGathering] = useState({
         gathcate: 0,  // 카테고리
@@ -95,6 +96,19 @@ const Write = () => {
         // 게시글 내용 꺼내오기
         let contents = editorRef.current.getInstance().getHTML();
 
+        const recruitstart = changeDateType(recruit[0].startDate);
+        const recruitend = changeDateType(recruit[0].endDate);
+        const projectstart = changeDateType(mooim[0].startDate);
+        const projectend = changeDateType(mooim[0].endDate);
+
+        setGathering({
+            ...gathering,
+            recruitstart: recruitstart,
+            recruitend: recruitend,
+            projectstart: projectstart,
+            projectend: projectend
+        });
+
         // 게시글 내용 속 이미지 변환 (changeImages 컴포넌트화 시킴)
         const resultData = await changeImages(contents);
         if (resultData !== null) {
@@ -104,6 +118,8 @@ const Write = () => {
                 contents = contents.replace(resultData.srcPull[i].slice(5, -1), imageURL);
             });
         }
+        // 날짜 정보 입력
+        
 
         const formData = new FormData();
         const gatheringData = { ...gathering, gathdetail: contents };
@@ -149,22 +165,37 @@ const Write = () => {
             key: 'selection'
         }
     ]);
+    /** 날짜 형태 바꾸기 */
+    const changeDateType = (date) => {
+
+        // 년, 월, 일 추출
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1 필요
+        const day = String(date.getDate()).padStart(2, '0');
+
+        // "YYYY-MM-DD" 형식으로 조합
+        const formatedDate = `${year}-${month}-${day}`;
+
+        return formatedDate;
+    }
     /** 모달 창 상태 관리 */
 
     const handleModal = () => setModalOpen(!modalOpen);
-
     const handleModal2 = () => setModalOpen2(!modalOpen2);
 
     const handleDateChange = () => {
+        console.log("mooim : ", mooim[0].startDate);
+        console.log("recruit : ", recruit[0].endDate);
 
     }
 
     return (
-        
+
         <MainLayout>
             <div className='cntRow gatheringTitle'>
                 모임 생성
             </div>
+            <button onClick={handleDateChange}>444444444</button>
             <div className='cntRow gatheringCateGroup'>
                 <div className='selectGroup'>
                     <span>모임 유형</span>
@@ -198,7 +229,7 @@ const Write = () => {
                 </div>
                 <div className='cntColumn'>
                     <button className="hvMdBtn maR10" onClick={handleModal}>모집 기간</button>
-                    
+
                 </div>
             </div>
             <div className='cntRow gatheringData'>
@@ -212,7 +243,7 @@ const Write = () => {
                 </div>
                 <div className='cntColumn'>
                     <button className="hvMdBtn maR10" onClick={handleModal2}>진행 기간</button>
-                        
+
                 </div>
             </div>
             <div className='cntRow gatheringData'>
@@ -247,8 +278,8 @@ const Write = () => {
                 <button>취소</button>
                 <button className='blue' onClick={handleSubmit}>작성</button>
             </div>
-            {modalOpen && <DateModal date={recruit} setDate={setRecruit} handleModal={handleModal}/>}
-            {modalOpen2 && <DateModal date={mooim} setDate={setMooim} handleModal={handleModal2}/>}
+            {modalOpen && <DateModal date={recruit} setDate={setRecruit} handleModal={handleModal} />}
+            {modalOpen2 && <DateModal date={mooim} setDate={setMooim} handleModal={handleModal2} />}
         </MainLayout>
     );
 }
