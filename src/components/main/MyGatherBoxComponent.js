@@ -1,52 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { RootUrl } from '../../api/RootUrl';
-import { myGatheringListApi } from "../../api/gatheringApi";
 
-const MyGatherBoxComponent = ({ loginSlice, pageRequest }) => {
-    
-    // 모임글 목록 useState
-    const [gathList, setGathList] = useState([]);
-    const [loading, setLoading] = useState(true);
- 
-    // 서버에서 모임글 목록 받아오는 useEffect
-    useEffect(() => {
-      const selectArticleList = async () => {
-        try {
-          const response = await myGatheringListApi(pageRequest);
-          setGathList(response);
-          setLoading(false);
-        } catch (err) {
-          console.log(err);
-        }
-      };
-      selectArticleList();
-    }, [pageRequest, loginSlice]);
-
+const MyGatherBoxComponent = ({ mooimList, mooimcate }) => {
+  
   return (
     <>
-      {gathList && gathList.length > 0 ? (
-        gathList.map((gathering, index) => (
-          <div className='gathCard'>
-            <div className='cntColumn'>
-              <h4>{gathering.gathtitle}</h4>
-            </div>
+      {mooimList && mooimList.length > 0 ? (
+        mooimList
+        .filter(mooim => mooim.mooimcate === mooimcate).map((mooim, index) => (
+            <div className='gathCard'>
+              <div className='cntColumn'>
+                <h4>{mooim.gathtitle}</h4>
+              </div>
 
-            <div className='gathCardContent cntRow'>
-              <div className='imgBox'>
-                {gathering.thumb && gathering.thumb.trim() ? (
-                  <img src={`${RootUrl()}/uploads/gathering/thumb/${gathering.thumb}`} alt="thumb" />
-                ) : (
-                  <img src="../../images/sample/ppoppi_angry.png" alt="sample" />
-                )}
-              </div>
-              <div className='myGatherLink'>
-                <Link to={`gathering/project`} className='gathLink'>채팅</Link>
-                <Link to={`gathering/project`} className='gathLink'>프로젝트</Link>
-                <Link to={`gathering/project`} className='gathLink'>게시판</Link>
+              <div className='gathCardContent cntRow'>
+                <div className='imgBox'>
+                  {mooim.thumb && mooim.thumb.trim() ? (
+                    <img src={`${RootUrl()}/uploads/mooim/thumb/${mooim.thumb}`} alt="thumb" />
+                  ) : (
+                    <img src="../../images/sample/ppoppi_angry.png" alt="sample" />
+                  )}
+                </div>
+                <div className='myGatherLink'>
+                  <Link to={`mooim/chat/${mooim.mooimno}`} className='gathLink'>채팅</Link>
+                  <Link to={`mooim/project/${mooim.mooimno}`} className='gathLink'>프로젝트</Link>
+                  <Link to={`mooim/calendar/${mooim.mooimno}`} className='gathLink'>캘린더</Link>
+                  <Link to={`mooim/doc/${mooim.mooimno}`} className='gathLink'>게시판</Link>
+                </div>
               </div>
             </div>
-          </div>
         ))
       ) : (
         <>
@@ -63,9 +46,9 @@ const MyGatherBoxComponent = ({ loginSlice, pageRequest }) => {
                 
               </div>
               <div className='myGatherLink'>
-                <Link to={`gathering/project`} className='gathLink'>채팅</Link>
-                <Link to={`gathering/project`} className='gathLink'>프로젝트</Link>
-                <Link to={`gathering/project`} className='gathLink'>게시판</Link>
+                <Link to={`mooim/project`} className='gathLink'>채팅</Link>
+                <Link to={`mooim/project`} className='gathLink'>프로젝트</Link>
+                <Link to={`mooim/project`} className='gathLink'>게시판</Link>
               </div>
             </div>
           </div>
