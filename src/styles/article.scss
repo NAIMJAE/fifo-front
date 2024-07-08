@@ -263,7 +263,7 @@
         display: flex;
         align-items: center;
         padding: 10px;
-        border-bottom: 1px solid #9f9f9f;
+        border-bottom: 3px solid #f6f5f5;
         h1 {
             font-size: 20px;
             font-weight: bolder;
@@ -294,7 +294,7 @@
                 margin-left: 10px;
                 padding: 2px 10px;
                 cursor: pointer;
-                border: 1px solid #9f9f9f;
+                border: 1px solid #7b7b7b;
                 border-radius: 4px;
                 > h3 {
                     font-size: 16px;
@@ -340,14 +340,14 @@
     margin: 0 30px;
     padding: 10px;
     min-height: 300px;
-    border-bottom: 1px solid #9f9f9f;
+    border-bottom: 3px solid #f6f5f5;
 }
 
 .viewFile {
     margin: 0 30px;
     padding: 10px 0;
     align-items: center;
-    border-bottom: 1px solid #9f9f9f;
+    border-bottom: 3px solid #f6f5f5;
 
     p {
         padding: 0 10px;
@@ -391,8 +391,8 @@
 
 .writeComment {
     margin: 50px 30px 20px;
-    border-top: 1px solid #7b7b7b;
-    border-bottom: 1px solid #7b7b7b;
+    border-top: 3px solid #f6f5f5;
+    border-bottom: 3px solid #f6f5f5;
 
     * {
         display: flex;
