@@ -2,56 +2,55 @@ import React, { useEffect, useState } from "react";
 import MainLayout from "../../layout/MainLayout";
 import { useSelector } from "react-redux";
 import MyGatherBoxComponent from "../../components/main/MyGatherBoxComponent";
+import { myGatheringListApi } from "../../api/gatheringApi";
 
 const ListPage = () => {
   const loginSlice = useSelector((state) => state.authSlice) || {};
-  const [gathcate, setGathcate] = useState(1); 
+  const [mooimList, setMooimList] = useState([]);
   const [pageRequest, setPageRequest] = useState({
-    userno : 1,
-    gathcate : gathcate,
-    pg : 1,
-    type : '',
-    keyword : '',
+    userno: loginSlice.userno,
+    pg: 1,
+    type: '',
+    keyword: '',
   });
 
+  /** 내 모임글 목록 불러오기 */
   useEffect(() => {
-    console.log("로그인정보 : ", loginSlice);
-  }, []);
+    const selectArticleList = async () => {
+      try {
+        const response = await myGatheringListApi(pageRequest);
+        setMooimList(response.dtoList);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    selectArticleList();
+  }, [pageRequest, loginSlice]);
 
   return (
     <MainLayout>
       <div className="cntRow adBox">광고 박스</div>
+      <div className='cntRow articleSearch'>
+        <p className={`${pageRequest.keyword === "doing" ? 'tabOn' : ''}`}
+          onClick={(e) => { setPageRequest(prev => ({ ...prev, keyword: "doing" })) }}>진행중</p>
+        <p className={`${pageRequest.keyword === "gethering" ? 'tabOn' : ''}`}
+          onClick={(e) => { setPageRequest(prev => ({ ...prev, keyword: "gethering" })) }}>모집중</p>
+        <p className={`${pageRequest.keyword === "done" ? 'tabOn' : ''}`}
+          onClick={(e) => { setPageRequest(prev => ({ ...prev, keyword: "done" })) }}>완료</p>
 
+      </div>
       <div className="cntColumn">
-        <div className="searhBox">
-          <div className='cntRow articleCate'>
-            <p className={`${gathcate === 1 ? 'cateOn' : ''}`}
-                onClick={() => { setGathcate(1) }}>프로젝트</p>
-
-            <p className={`${gathcate === 2 ? 'cateOn' : ''}`}
-                onClick={() => { setGathcate(2) }}>스터디</p>
-
-            <p className={`${gathcate === 3 ? 'cateOn' : ''}`}
-                onClick={() => { setGathcate(3) }}>모임</p>
-
-            <p className={`${gathcate === 4 ? 'cateOn' : ''}`}
-                onClick={() => { setGathcate(4) }}>모집중</p>
-          </div>
-          <select name="" id="">
-            <option value="">검색옵션</option>
-            <option value="">검색1</option>
-            <option value="">검색2</option>
-            <option value="">검색3</option>
-          </select>
-
-          <label htmlFor="search">
-            <input type="text" id="search" />
-            <button>검색</button>
-          </label>
-        </div>
-
+        <span className="myMooimCate">프로젝트</span>
         <div className="cntWrapRow mainGatherList">
-          <MyGatherBoxComponent loginSlice={loginSlice} pageRequest={pageRequest}/>
+          <MyGatherBoxComponent mooimList={mooimList} mooimcate="1"/>
+        </div>
+        <span className="myMooimCate">스터디</span>
+        <div className="cntWrapRow mainGatherList">
+          <MyGatherBoxComponent mooimList={mooimList} mooimcate="2"/>
+        </div>
+        <span className="myMooimCate">모임</span>
+        <div className="cntWrapRow mainGatherList">
+          <MyGatherBoxComponent mooimList={mooimList} mooimcate="3"/>
         </div>
       </div>
     </MainLayout>
