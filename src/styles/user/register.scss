@@ -111,6 +111,70 @@
 
     cursor: pointer;
   }
+
+  .skill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .skillStack {
+      display: flex;
+      font-weight: 500;
+    }
+    .selectStack {
+      display: flex;
+      color: #808080;
+      font-size: x-small;
+      margin-bottom: 0.8rem;
+      justify-content: center;
+      align-items: center;
+    }
+    .skillList {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+
+      .skillIcons {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #e4e4e4;
+        cursor: pointer;
+        box-sizing: border-box;
+        padding: 4px 10px;
+        margin: 4px 8px;
+        border-radius: 10px;
+
+        .skillIcon {
+          margin-right: 4px;
+        }
+        .skillName {
+          margin-left: 8px;
+        }
+      }
+      .skillIconsClick {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #ffffff;
+        cursor: pointer;
+        box-sizing: border-box;
+        padding: 4px 10px;
+        margin: 4px 8px;
+        border-radius: 10px;
+        background-color: #0090f9;
+        .skillIcon {
+          margin-right: 4px;
+        }
+        .skillName {
+          margin-left: 8px;
+        }
+      }
+      .skillIcons:hover {
+        background-color: #0090f9;
+      }
+    }
+  }
 }
 
 .terms-agree {

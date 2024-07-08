@@ -9,8 +9,6 @@ import Backdrop from "../common/backdrop/backdrop.js";
 import TermsModal from "./termsModal.js";
 import SkillIcon from "../gathering/SkillIcon";
 import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 
 const url = globalPath.path;
 
@@ -160,18 +158,37 @@ const Register = () => {
 
   /**스킬 리스트 가져오기*/
   const [skillList, setSkillList] = useState([]);
+  const [skillSelect, setSkillSelect] = useState([]);
 
   useEffect(() => {
     axios
-      .get(`${url}/user/`)
+      .get(`${url}/user/language`)
       .then((response) => {
         console.log(response.data);
-        setSkillList(response.data);
+        setSkillList(response.data.map((language) => language.languagename));
+        setSkillSelect(
+          response.data.map((language, index) => ({
+            id: index,
+            state: false,
+          }))
+        );
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
+
+  /**스킬 아이콘  */
+  const iconClick = (e, index) => {
+    // e.preventDefault();
+    console.log(e.target.value);
+
+    setSkillSelect((prev) =>
+      prev.map((lan) =>
+        lan.id === index ? { ...lan, state: !lan.state } : lan
+      )
+    );
+  };
   return (
     <div className="register">
       <Link to="/">
@@ -238,16 +255,31 @@ const Register = () => {
             type="text"
             placeholder="별명을 알파벳, 한글, 숫자를 10자 이하로 입력해주세요"
           ></input>
-          <div>
-            <div>기술 스택(업무 툴/ 스킬)</div>
-            <span>나의 기술 스택을 선택해주세요.</span>
+          <div className="skill">
+            <label className="skillStack">기술 스택(업무 툴/ 스킬)</label>
+            <label className="selectStack">
+              나의 기술 스택을 선택해주세요.
+            </label>
             <div className="skillList">
-              {skillList &&
-                skillList.map((skill, index) => (
-                  <div>
-                    <SkillIcon skill={skill} classType={"bigSkillImg"} />
-                  </div>
-                ))}
+              {skillList.map((skill, index) => (
+                <div
+                  className={
+                    skillSelect.find((lan) => lan.id === index && lan.state)
+                      ? "skillIconsClick"
+                      : "skillIcons"
+                  }
+                  key={index}
+                  value={skill}
+                  onClick={(e) => iconClick(e, index)}
+                >
+                  <SkillIcon
+                    className="skillIcon"
+                    skill={skill}
+                    classType={"bigSkillImg"}
+                  />
+                  <span className="skillName">{skill}</span>
+                </div>
+              ))}
             </div>
           </div>
           <div className="terms-agree">약관동의</div>
