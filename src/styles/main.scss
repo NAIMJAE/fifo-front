@@ -40,6 +40,7 @@ main {
     box-sizing: border-box;
 }
 #contentArea {
+    position: relative;
     display: flex;
     flex-direction: column;
     width: 1200px;
@@ -239,6 +240,7 @@ footer {
             }
         }
     }
+
 }
 
 /** 모임 기술 이미지 */

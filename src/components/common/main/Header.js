@@ -22,7 +22,7 @@ const Header = () => {
   useEffect(() => {
     setLoginState(authSlice.userno);
     console.log(loginState);
-  }, [authSlice.email]);
+  }, [authSlice.userno]);
 
   /**로그인 관리 */
   const dispatch = useDispatch();
@@ -77,7 +77,7 @@ const Header = () => {
   /** 강제 리랜더링 */
   const handleLinkClick = (e) => {
     e.preventDefault();
-    console.log(e.target.href)
+    console.log(e.target.href);
     window.location.href = e.target.href;
   };
 

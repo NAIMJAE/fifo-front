@@ -19,7 +19,7 @@ export const articleListApi = async (data) => {
 };
 
 /** 게시글 보기 API */
-export const articleViewApi = async (pno, userno) => {
+export const articleViewApi = async (pno) => {
     const response = await axios.get(`${rootURL}/post/${pno}`);
     return response.data;
 };
@@ -44,6 +44,14 @@ export const articleModifyApi = async (formData) => {
 export const deletePostApi = async (pno) => {
     const response = await axios.delete(`${rootURL}/post/${pno}`);
     return response.data;
+};
+
+/** 게시글 파일 다운로드 */
+export const postFileDownloadApi = async (pno) => {
+    const response = await axios.get(`${rootURL}/post/download/${pno}`, {
+        responseType: 'blob', // Blob 형태로 응답을 처리
+      });
+    return response;
 };
 
 /** 댓글 작성 API */

@@ -4,8 +4,8 @@ import '../../styles/gathering.scss'
 import { Viewer } from '@toast-ui/react-editor';
 import Breadcrumb from '../../components/common/main/Breadcrumb';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
-import CommentListComponent from '../../components/article/CommentListComponent';
+import { faSquareCaretDown, faTrashCan } from '@fortawesome/free-regular-svg-icons';
+import GathCommentListComponent from '../../components/gathering/GathCommentListComponent';
 import CommentWriteComponent from '../../components/article/CommentWriteComponent';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { useLocation } from 'react-router-dom';
@@ -14,6 +14,7 @@ import Moment from 'moment';
 import { useSelector } from 'react-redux';
 import { gathCommentInsertApi, gatheringViewApi } from '../../api/gatheringApi';
 import { Alert } from '@mui/material';
+import RecruitModal from '../../components/gathering/modal/RecruitModal';
 
 const ViewPage = () => {
 
@@ -44,7 +45,7 @@ const ViewPage = () => {
                 const response = await gatheringViewApi(gathno);
                 console.log("response : ", response)
                 setGatheringView(response);
-                setComNum(response.comNum);
+                setComNum(response.gathcomment);
             } catch (error) {
                 console.log(error);
                 alert("해당 글을 찾을 수 없습니다.");
@@ -59,11 +60,14 @@ const ViewPage = () => {
     }
     /** 댓글 작성 */
     const insertComment = async (comment) => {
-        comment.gathno = gatheringView.gathno;
-        console.log("comment : ", comment);
 
+        const gathComment = {
+            content: comment.content,
+            userno: loginSlice.userno,
+            gathno: gatheringView.gathno,
+        };
         try {
-            const response = await gathCommentInsertApi(comment);
+            const response = await gathCommentInsertApi(gathComment);
             if (response > 0) {
                 setComState(!comState);
                 alert("댓글이 작성되었습니다.");
@@ -72,6 +76,11 @@ const ViewPage = () => {
             console.log(error);
         }
     }
+
+    /** 참가 신청 현황 모달 관리 */
+    const [recruitState, setRecruitState] = useState(false);
+    const handleModal = () => setRecruitState(!recruitState);
+
 
     return (
         <MainLayout>
@@ -138,13 +147,21 @@ const ViewPage = () => {
                         <span className='gathCate'>모집 언어</span>
                         <span className='gathCateValue'>Java Javascript</span>
                     </div>
-                    <div className='cntRow'>
-                        <button className="hvMdBtn maR10">참여신청</button>
-                    </div>
-                    
+                    {gatheringView.userno === loginSlice.userno ? (
+                        <div className='cntRow gathRecruit'>
+                            <span className='gathCate'>지원 현황</span>
+                            <span className='gathCateValue'>4명 <span onClick={handleModal}>상세 <FontAwesomeIcon icon={faSquareCaretDown} size='lg' color='#4169e1'/></span></span>
+                            {/** 모임 참가 신청 현황 모달 */}
+                            {recruitState && <RecruitModal handleModal={handleModal}/>}
+                        </div>
+                    ) : (
+                        <div className='cntRow'>
+                            <button className="hvMdBtn maR10">참여신청</button>
+                        </div>
+                    )}
                 </div>
                 <div className='alertBox'>
-                    <Alert  className='alert' severity="info">참여를 신청하면, 내 언어 레벨과 매너 온도 등의 정보가 모임 호스트에게 전달됩니다.</Alert>
+                    <Alert className='alert' severity="info">참여를 신청하면, 내 언어 레벨과 매너 온도 등의 정보가 모임 호스트에게 전달됩니다.</Alert>
                 </div>
             </div>
             <div className='cntRow viewContents'>
@@ -167,9 +184,8 @@ const ViewPage = () => {
             </div>
 
             <div className='cntColumn viewComment'>
-                {gatheringView.gathno > 0 && <CommentListComponent gathno={gatheringView.gathno} comState={comState} />}
+                {gatheringView.gathno > 0 && <GathCommentListComponent gathno={gatheringView.gathno} comState={comState} setComState={setComState} loginSlice={loginSlice}/>}
             </div>
-
         </MainLayout>
     )
 }
