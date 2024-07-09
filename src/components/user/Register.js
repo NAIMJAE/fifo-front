@@ -9,6 +9,7 @@ import Backdrop from "../common/backdrop/backdrop.js";
 import TermsModal from "./termsModal.js";
 import SkillIcon from "../gathering/SkillIcon";
 import axios from "axios";
+import { NavigateBeforeRounded } from "@mui/icons-material";
 
 const url = globalPath.path;
 
@@ -160,6 +161,7 @@ const Register = () => {
   const [skillList, setSkillList] = useState([]);
   const [skillSelect, setSkillSelect] = useState([]);
 
+  useEffect(() => {}, [skillSelect]);
   useEffect(() => {
     axios
       .get(`${url}/user/language`)
@@ -189,6 +191,14 @@ const Register = () => {
       )
     );
   };
+  const options = [
+    "@naver.com",
+    "@gamil.com",
+    "@daum.com",
+    "@nate.com",
+    "@outlook.com",
+    "직접입력",
+  ];
   return (
     <div className="register">
       <Link to="/">
@@ -212,10 +222,15 @@ const Register = () => {
             name="email"
             value={register.email}
             onChange={handlerRegister}
-            className="inputElement"
+            className="inputEmail"
             type="text"
             placeholder="예시) example@fifo.com"
           ></input>
+          <select className="afterEmail">
+            {options.map((email, index) => (
+              <option key={index}>{email}</option>
+            ))}
+          </select>
           <label className="textLabel">비밀번호</label>
           <div className="passContainer">
             <input
