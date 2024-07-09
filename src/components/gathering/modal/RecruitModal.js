@@ -54,6 +54,7 @@ const RecruitModal = ({handleModal}) => {
                 </div>
             ))}
         </div>
+
         {(popState && recruit) &&
             <div className='recruitInfoModal'>
                 <div className='cntRow' style={{justifyContent:"space-between"}}>
@@ -62,8 +63,7 @@ const RecruitModal = ({handleModal}) => {
                     <h3>{recruit.on}도</h3>
                 </div>
             </div>
-        }
-            
+        }  
     </div>
   )
 }
