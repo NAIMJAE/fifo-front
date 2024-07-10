@@ -42,3 +42,9 @@ export const gathCommentsSelectApi = async (data) => {
     });
     return response.data;
 };
+
+/** 모임 신청 API */
+export const recruitApi = async (data) => {
+    const response = await axios.post(`${rootURL}/gathRecruit`, data);
+    return response.data;
+};

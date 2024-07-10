@@ -12,7 +12,7 @@ import { useLocation } from 'react-router-dom';
 import { FrontUrl, RootUrl } from '../../api/RootUrl';
 import Moment from 'moment';
 import { useSelector } from 'react-redux';
-import { gathCommentInsertApi, gatheringViewApi } from '../../api/gatheringApi';
+import { gathCommentInsertApi, gatheringViewApi, recruitApi } from '../../api/gatheringApi';
 import { Alert } from '@mui/material';
 import RecruitModal from '../../components/gathering/modal/RecruitModal';
 
@@ -28,6 +28,8 @@ const ViewPage = () => {
 
     /** 게시글 useState */
     const [gatheringView, setGatheringView] = useState({});
+    /** 참여현황 useState */
+    const [recruitList, setRecruitList] = useState([]);
     /** 댓글 상태 관리 useState */
     const [comState, setComState] = useState(false);
     /** 댓글 개수 관리 */
@@ -45,6 +47,7 @@ const ViewPage = () => {
                 const response = await gatheringViewApi(gathno);
                 console.log("response : ", response)
                 setGatheringView(response);
+                setRecruitList(response.recruitList);
                 setComNum(response.gathcomment);
             } catch (error) {
                 console.log(error);
@@ -80,6 +83,23 @@ const ViewPage = () => {
     /** 참가 신청 현황 모달 관리 */
     const [recruitState, setRecruitState] = useState(false);
     const handleModal = () => setRecruitState(!recruitState);
+
+
+
+
+    /** 참여 신청 버튼 */
+    const handleRecruit = async () => {
+        const data = {
+            userno: loginSlice.userno,
+            gathno: gatheringView.gathno,
+        }
+        try {
+            const response = await recruitApi(data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 
 
     return (
@@ -152,11 +172,11 @@ const ViewPage = () => {
                             <span className='gathCate'>지원 현황</span>
                             <span className='gathCateValue'>4명 <span onClick={handleModal}>상세 <FontAwesomeIcon icon={faSquareCaretDown} size='lg' color='#4169e1'/></span></span>
                             {/** 모임 참가 신청 현황 모달 */}
-                            {recruitState && <RecruitModal handleModal={handleModal}/>}
+                            {recruitState && <RecruitModal gathno={gathno} handleModal={handleModal}/>}
                         </div>
                     ) : (
                         <div className='cntRow'>
-                            <button className="hvMdBtn maR10">참여신청</button>
+                            <button className="hvMdBtn maR10" onClick={handleRecruit}>참여신청</button>
                         </div>
                     )}
                 </div>
