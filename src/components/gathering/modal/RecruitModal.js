@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { info } from 'sass';
 
-const RecruitModal = ({handleModal}) => {
+const RecruitModal = ({ gathno, handleModal }) => {
 
     /** 모모달 띄우는 상태 */ 
     const [popState, setPopState] = useState(false);
