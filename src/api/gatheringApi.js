@@ -48,3 +48,14 @@ export const recruitApi = async (data) => {
     const response = await axios.post(`${rootURL}/gathRecruit`, data);
     return response.data;
 };
+
+/** 모인 신청 수락 API */
+export const acceptRecruitApi = async (recruitno, state) => {
+    const response = await axios.get(`${rootURL}/gathRecruit`, {
+        params :{
+            recruitno: recruitno,
+            state: state,
+        }
+    });
+    return response.data;
+};
