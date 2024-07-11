@@ -30,6 +30,8 @@ const ViewPage = () => {
     const [gatheringView, setGatheringView] = useState({});
     /** 참여현황 useState */
     const [recruitList, setRecruitList] = useState([]);
+    /** 해당 사용자 참여 신청 여부 */
+    const [recruitTF, setRecruitTF] = useState(false);
     /** 댓글 상태 관리 useState */
     const [comState, setComState] = useState(false);
     /** 댓글 개수 관리 */
@@ -47,8 +49,19 @@ const ViewPage = () => {
                 const response = await gatheringViewApi(gathno);
                 console.log("response : ", response)
                 setGatheringView(response);
-                setRecruitList(response.recruitList);
                 setComNum(response.gathcomment);
+
+                // 현재 로그인한 사용자가 해당 모임에 신청 했는지 안했는지 확인
+                setRecruitList(response.recruitList);
+                if (loginSlice.userno !== undefined) {
+                    const isUserInRecruitList = response.recruitList.some(recruit => {
+                        if (recruit.userno == loginSlice.userno) {
+                            setRecruitTF(true);
+                            return true; // 조건을 만족하면 true 반환
+                        }
+                        return false; // 조건을 만족하지 않으면 false 반환
+                    });
+                }
             } catch (error) {
                 console.log(error);
                 alert("해당 글을 찾을 수 없습니다.");
@@ -98,6 +111,11 @@ const ViewPage = () => {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    /** 참여 신청 취소 버튼 */
+    const cancelRecruit = async () => {
+        
     }
 
 
@@ -176,7 +194,15 @@ const ViewPage = () => {
                         </div>
                     ) : (
                         <div className='cntRow'>
-                            <button className="hvMdBtn maR10" onClick={handleRecruit}>참여신청</button>
+                            {loginSlice.userno !== undefined && !recruitTF &&
+                                <button className="hvMdBtn maR10" onClick={handleRecruit}>참여신청</button>
+                            }
+                            {loginSlice.userno !== undefined && recruitTF &&
+                                <button className="hvMdBtn maR10" onClick={handleRecruit}>신청취소</button>
+                            }
+                            {loginSlice.userno == undefined &&
+                                <span>신청할거면 로그인해</span>
+                            }
                         </div>
                     )}
                 </div>
