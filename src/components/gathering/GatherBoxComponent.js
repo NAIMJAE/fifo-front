@@ -31,7 +31,7 @@ const GatherBoxComponent = ({ gathList }) => {
         gathList.map((gathering, index) => (
           <Link to={`/gathering/view?gathno=${gathering.gathno}`} key={index}>
             <div>
-            <span>{getCategoryName(gathering.gathcate)}</span>
+              <span>{getCategoryName(gathering.gathcate)}</span>
             </div>
 
             <div className='imgBox'>
@@ -62,31 +62,10 @@ const GatherBoxComponent = ({ gathList }) => {
         ))
       ) : (
         <>
-          {/** 데이터가 없을 때 */}
-          <Link to="/">
-            <div>
-              <span>프로젝트</span>
-            </div>
-
-            <div className='imgBox'>
-              <img src="../../images/sample/ppoppi_angry.png" alt="" />
-            </div>
-
-            <div className='cntColumn'>
-              <h3>홍길동</h3>
-              <h4>사이드 프로젝트 팀원 모집</h4>
-              <h5>모집기간 : 24.06.02 ~ 24.06.16</h5>
-              <div className='gathSkillList'>
-                {mockSkills.map((skill, index) => (
-                  <Chip
-                    key={index}
-                    label={skill.name}
-                    sx={{ backgroundColor: getSkillColor(skill.name.split(' ')[0]), color: 'white', marginRight: '5px', marginBottom: '5px' }}
-                  />
-                ))}
-              </div>
-            </div>
-          </Link>
+          <div className='ctnRow'>
+            {/** 데이터가 없을 때 */}
+            <img src="../../images/sample/nodata.png" alt="" style={{ width: '100%' }} />
+          </div>
         </>
       )}
     </>

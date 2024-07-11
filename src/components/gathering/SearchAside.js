@@ -65,7 +65,7 @@ export default function SearchAside({ setPageRequest }) {
       gathlanguage: selectedLanguage && selectedLevel ? `${selectedLanguage} ${selectedLevel}` : null,
     };
 
-    memoizedSetPageRequest(prev => ({ ...prev, gatheringDTO }));
+    memoizedSetPageRequest(prev => ({ ...prev, gatheringDTO : gatheringDTO }));
   }, [meetingType, meetingMethod, members, position, languages, selectedLanguage, selectedLevel]);
 
   /** 언어 선택 */
@@ -107,13 +107,13 @@ export default function SearchAside({ setPageRequest }) {
         <FormControl component="fieldset" sx={{ mt: 2 }}>
           <FormLabel component="legend">모집 유형</FormLabel>
           <Box className='meetingType'>
-            <button className={meetingType === 'project' ? 'active' : ''} onClick={() => setMeetingType('project')}>
+            <button className={meetingType === 1 ? 'active' : ''} onClick={() => setMeetingType(1)}>
               프로젝트
             </button>
-            <button className={meetingType === 'study' ? 'active' : ''} onClick={() => setMeetingType('study')}>
+            <button className={meetingType === 2 ? 'active' : ''} onClick={() => setMeetingType(2)}>
               스터디
             </button>
-            <button className={meetingType === 'meeting' ? 'active' : ''} onClick={() => setMeetingType('meeting')}>
+            <button className={meetingType === 3 ? 'active' : ''} onClick={() => setMeetingType(3)}>
               모임
             </button>
           </Box>
@@ -122,13 +122,13 @@ export default function SearchAside({ setPageRequest }) {
         <FormControl component="fieldset" sx={{ mt: 2 }}>
           <FormLabel component="legend">모집 방식</FormLabel>
           <Box className='meetingMethod'>
-            <button className={meetingMethod === 'online_offline' ? 'active' : ''} onClick={() => setMeetingMethod('online_offline')}>
+            <button className={meetingMethod === '온/오프라인' ? 'active' : ''} onClick={() => setMeetingMethod('온/오프라인')}>
               온/오프라인
             </button>
-            <button className={meetingMethod === 'online' ? 'active' : ''} onClick={() => setMeetingMethod('online')}>
+            <button className={meetingMethod === '온라인' ? 'active' : ''} onClick={() => setMeetingMethod('온라인')}>
               온라인
             </button>
-            <button className={meetingMethod === 'offline' ? 'active' : ''} onClick={() => setMeetingMethod('offline')}>
+            <button className={meetingMethod === '오프라인' ? 'active' : ''} onClick={() => setMeetingMethod('오프라인')}>
               오프라인
             </button>
           </Box>
