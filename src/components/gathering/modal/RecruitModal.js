@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { info } from 'sass';
+import { acceptRecruitApi } from '../../../api/gatheringApi';
 
-const RecruitModal = ({ gathno, handleModal }) => {
+const RecruitModal = ({ recruitList, handleModal }) => {
 
     /** 모모달 띄우는 상태 */ 
     const [popState, setPopState] = useState(false);
@@ -9,58 +9,75 @@ const RecruitModal = ({ gathno, handleModal }) => {
     /** 모모달에 출력할 정보 */ 
     const [recruit, setRecruit] = useState("");
     
-    /** 모달에 출력할 정보 */ 
-    const [example, setExample] = useState([
-        {
-            id: 0,
-            name: "김선광",
-            state: "수락대기",
-            pop: false,
-            on: 24,
-            // 매너온도, 활동지역, 언어레벨?
-        },
-        {
-            id: 1,
-            name: "잇응윤",
-            state: "수락대기",
-            pop: false,
-            on: 34,
-        },
-        {
-            id: 2,
-            name: "바김재",
-            state: "수락대기",
-            pop: false,
-            on: 100,
-        },
-    ]);
-
     /** 모달에서 모모달 띄우는 함수 */
-    // example에 있는 유저 상세 정보 넣기
-    const overMouse = (index) => {
-        const foundData = example.find(info => info.id === index);
+    const overMouse = (recruitno) => {
+        const foundData = recruitList.find(info => info.recruitno === recruitno);
         setRecruit(foundData);
         setPopState(true);
     }
 
+    /** 신청 수락 */
+    const acceptRecruit = async (nick, recruitno) => {
+        let result = window.confirm("정말 "+nick+"님의 참여신청을 수락하시겠습니까")
+        // 나중에 멘트좀..
+
+        if(result) {
+            try {
+                const response = await acceptRecruitApi(recruitno, "신청 수락");
+                if (response > 0) {
+                    alert(nick+"님의 신청이 수락되었습니다.")
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
+
+    /** 신청 거절 */
+    const refuseRecruit = async (nick, recruitno) => {
+        let result = window.confirm("정말 "+nick+"님의 참여신청을 거절하시겠습니까")
+        // 나중에 멘트좀..
+
+        if(result) {
+            try {
+                const response = await acceptRecruitApi(recruitno, "신청 거절");
+                if (response > 0) {
+                    alert(nick+"님의 신청이 거절되었습니다.")
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
+
+    /** 버블링 막는 함수 */
+    function bubblingBlock(event) {
+        event.stopPropagation();
+    }
+
   return (
     <div className='recruitModalBox' onClick={handleModal}>
-        <div className='recruitModal'>
-            {example && example.map((each, index) => (
-                <div className='cntRow' key={index} style={{justifyContent:"space-between"}} 
-                    onMouseOver={() => overMouse(index)}>
-                    <p>{each.name}</p>
-                    <h3>{each.state}</h3>
+        <div className='recruitModal' onClick={bubblingBlock}>
+            {recruitList && recruitList.map((each) => (
+                <div className='cntRow' key={each.recruitno} style={{justifyContent:"space-between"}} 
+                    onMouseOver={() => overMouse(each.recruitno)}>
+                    <p>{each.nick}</p>
+                    <h3>{each.recruitstate}</h3>
                 </div>
             ))}
         </div>
 
         {(popState && recruit) &&
-            <div className='recruitInfoModal'>
-                <div className='cntRow' style={{justifyContent:"space-between"}}>
-                    <p>{recruit.name}</p>
-                    <h3>{recruit.state}</h3>
-                    <h3>{recruit.on}도</h3>
+            <div className='recruitInfoModal' onClick={bubblingBlock}>
+                <div className='cntColumn'>
+                    <p>{recruit.nick}</p>
+                    <h3>{recruit.recruitstate}</h3>
+                    <h3>{recruit.region}</h3>
+                    <h3>{recruit.intro}</h3>
+                </div>
+                <div className='cntRow'>
+                    <button onClick={() => acceptRecruit(recruit.nick, recruit.recruitno)}>수락</button>
+                    <button onClick={() => refuseRecruit(recruit.nick, recruit.recruitno)}>거절</button>
                 </div>
             </div>
         }  
