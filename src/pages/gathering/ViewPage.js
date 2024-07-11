@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { gathCommentInsertApi, gatheringViewApi, recruitApi } from '../../api/gatheringApi';
 import { Alert } from '@mui/material';
 import RecruitModal from '../../components/gathering/modal/RecruitModal';
+import ApplicationModal from '../../components/gathering/modal/ApplicationModal';
 
 const ViewPage = () => {
 
@@ -197,7 +198,7 @@ const ViewPage = () => {
                     ) : (
                         <div className='cntRow'>
                             {loginSlice.userno !== undefined && !recruitTF &&
-                                <button className="hvMdBtn maR10" onClick={handleRecruit}>참여신청</button>
+                                <button className="hvMdBtn maR10" onClick={()=>setAppState(true)}>참여신청</button>
                             }
                             {loginSlice.userno !== undefined && recruitTF &&
                                 <button className="hvMdBtn maR10" onClick={handleRecruit}>신청취소</button>
@@ -206,7 +207,7 @@ const ViewPage = () => {
                                 <span>신청할거면 로그인해</span>
                             }
                             {/** 모임 참가 신청 모달 */}
-
+                            {appState && <ApplicationModal/>}
                         </div>
                     )}
                 </div>
