@@ -5,7 +5,7 @@ import '../styles/gathering.scss';
 import SearchAside from '../components/gathering/SearchAside';
 import { gatheringListApi } from '../api/gatheringApi';
 import PageingComponent from '../components/common/paging/PageingComponent';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Breadcrumb from '../components/common/main/Breadcrumb';
 import { useSelector } from 'react-redux';
 
@@ -13,7 +13,7 @@ const MainPage = () => {
   /** 사이드바 열림 상태 관리 */
   const [sideBar, setSideBar] = useState(false);
   const toggleSideBar = () => setSideBar(!sideBar);
-
+  const navigate = useNavigate();
   /** 검색 카테고리 useState */
   const [pageRequest, setPageRequest] = useState({
     no: 1,
@@ -49,11 +49,18 @@ const MainPage = () => {
   };
 
   const loginSlice = useSelector((state) => state.authSlice) || {};
-  const [gathcate, setGathcate] = useState(1);
 
   useEffect(() => {
     console.log("로그인정보 : ", loginSlice);
   }, []);
+
+  const writeHandler = () => {
+    if(loginSlice.userno != null){
+      navigate('/gathering/write');
+    }else {
+      alert("로그인이 필요한 서비스입니다.");
+    }
+  }
 
   return (
     <MainLayout>
@@ -72,7 +79,7 @@ const MainPage = () => {
                 </div>
                 <div className="pageAndBtn">
                   <PageingComponent cntList={pageReaponse} changePage={changePage} />
-                  <Link to="/gathering/write" className="hvMdBtn">글쓰기</Link>
+                  <button className="hvMdBtn" onClick={writeHandler}>글쓰기</button>
                 </div>
               </>
             )}
