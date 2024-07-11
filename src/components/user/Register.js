@@ -9,18 +9,68 @@ import Backdrop from "../common/backdrop/backdrop.js";
 import TermsModal from "./termsModal.js";
 import SkillIcon from "../gathering/SkillIcon";
 import axios from "axios";
-import { NavigateBeforeRounded } from "@mui/icons-material";
 
 const url = globalPath.path;
 
 const Register = () => {
-  /**회원가입 state */
+  /**회원가입 정보 state */
   const [register, setRegister] = useState({
     email: "",
     pass: "",
     name: "",
     nick: "",
   });
+
+  // useEffect(() => {
+  //   console.log(register);
+  // }, [register]);
+
+  /**유효성 검사 */
+  const [emailValid, setEmailValid] = useState(true); // 이메일 유효성 상태
+  const [passValid, setPassValid] = useState(true); // 비밀번호 유효성 상태
+  const [nameValid, setNameValid] = useState(true); // 이름 유효성 상태
+  const [nickValid, setNickValid] = useState(true); // 닉네임 유효성 상태
+
+  useEffect(() => {
+    console.log(emailValid);
+  }, [emailValid]);
+
+  /**이메일 검사 함수 */
+  const isValidEmail = (email) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    setEmailValid(emailPattern.test(email));
+  };
+  /**비밀번호 검사 함수 */
+  const isValidPass = (pass) => {
+    const passPattern =
+      /^(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$/;
+    setPassValid(passPattern.test(pass));
+  };
+  /**이름 검사 함수 */
+  const isValidName = (name) => {
+    const namePattern = /^(?=.*[가-힣]{2,})|(?=.*[a-zA-Z]{4,})$/;
+    setNameValid(namePattern.test(name));
+  };
+  /**닉네임 검사 함수 */
+  const isValidNick = (nick) => {
+    const nickPattern =
+      /^(?=.*[가-힣]{2,})(?!.*[^\가-힣a-zA-Z0-9]).{2,10}$|^(?=.*[a-zA-Z]{4,})(?!.*[^\가-힣a-zA-Z0-9]).{4,10}$/;
+    setNickValid(nickPattern.test(nick));
+  };
+
+  /**적기 시작할 때 유효성검사 */
+  const handlerEmailInput = () => {
+    setEmailValid(false);
+  };
+  const handlerPassInput = () => {
+    setPassValid(false);
+  };
+  const handlerNameInput = () => {
+    setNameValid(false);
+  };
+  const handlerNickInput = () => {
+    setNickValid(false);
+  };
 
   /**약관 체크관리 state */
   const [isAllChecked, setIsAllChecked] = useState(false);
@@ -32,6 +82,7 @@ const Register = () => {
     setIsAllChecked(!isAllChecked);
   };
 
+  /**전체 동의 체크 시 */
   useEffect(() => {
     if (isAllChecked) {
       setCheck1(true);
@@ -60,11 +111,29 @@ const Register = () => {
     setOpen(false);
   };
 
-  /**회원가입 입력 정보 저장 */
+  /**회원가입 입력 정보 저장
+   * 유효성 검사 실행
+   */
   const handlerRegister = (e) => {
     e.preventDefault();
-    setRegister({ ...register, [e.target.name]: e.target.value });
-    console.log(register);
+    const { name, value } = e.target;
+    setRegister((prevRegister) => ({
+      ...prevRegister,
+      [name]: value,
+    }));
+
+    if (name === "email") {
+      isValidEmail(value);
+    }
+    if (name === "pass") {
+      isValidPass(value);
+    }
+    if (name === "name") {
+      isValidName(value);
+    }
+    if (name === "nick") {
+      isValidNick(value);
+    }
   };
 
   /**회원가입 버튼 클릭 */
@@ -87,10 +156,34 @@ const Register = () => {
     if (!nick) {
       alert("닉네임을 입력해주세요");
       return;
+    }
+    if (!check1) {
+      alert("서비스 이용약관에 동의하셔야합니다.");
+      return;
+    }
+    if (!check2) {
+      alert("개인정보 처리방침에 동의하셔야합니다.");
+      return;
+    }
+    if (!emailValid) {
+      alert("이메일이 올바르지 않습니다.");
+      return;
+    }
+    if (!passValid) {
+      alert("비밀번호가 올바르지 않습니다.");
+      return;
+    }
+    if (!nameValid) {
+      alert("이름이 올바르지 않습니다.");
+      return;
+    }
+    if (!nickValid) {
+      alert("닉네임이 올바르지 않습니다.");
+      return;
     } else {
       setOpen(true);
-      setTimeout(() => {
-        axios
+      setTimeout(async () => {
+        await axios
           .post(`${url}/user/register`, register)
           .then((response) => {
             console.log(response.data);
@@ -108,6 +201,7 @@ const Register = () => {
             setOpen(false);
           });
       }, 1000);
+      /**스킬 넣기 */
     }
   };
 
@@ -191,6 +285,10 @@ const Register = () => {
       )
     );
   };
+
+  /**이메일 셀렉트 관리 */
+  const [selectEmail, setSelectEmail] = useState("");
+
   const options = [
     "@naver.com",
     "@gamil.com",
@@ -199,6 +297,47 @@ const Register = () => {
     "@outlook.com",
     "직접입력",
   ];
+
+  /**이메일 옵션 선택시 register.email뒤에 값 입력 */
+  const selectOptions = (e) => {
+    const selectedValue = e.target.value;
+    setSelectEmail(selectedValue);
+
+    if (selectedValue === "직접입력") {
+      setSelectEmail("");
+    } else {
+      setRegister((prevRegister) => ({
+        ...prevRegister,
+        email: prevRegister.email + selectedValue,
+      }));
+    }
+  };
+
+  /** 4글자 이상 입력 되었을 때 select 창 생성
+   * 셀렉트가 선택되면 select 창 없애기*/
+  const getEmailClassName = () => {
+    if (register.email.length >= 4 && selectEmail === "") {
+      return "afterEmail";
+    } else {
+      return "afterEmailNone";
+    }
+  };
+
+  /**적은거 사라지면 setSelectEmail에 값 비워줘서
+   * 다시 className변경 => select 보이게 하기
+   */
+  useEffect(() => {
+    if (register.email.length <= 2) {
+      console.log("셋셀렉트이메일 초기화!");
+      setSelectEmail("");
+    }
+  }, [register.email]);
+
+  useEffect(() => {
+    console.log("셀렉트바뀜!");
+    console.log(selectEmail);
+  }, [selectEmail]);
+
   return (
     <div className="register">
       <Link to="/">
@@ -215,22 +354,28 @@ const Register = () => {
           회원가입에 필요한 기본정보를 입력해주세요.
         </span>
       </div>
-      <form>
+      <form className="registerForm">
         <div className="input-div">
           <label className="textLabel">이메일</label>
           <input
             name="email"
             value={register.email}
             onChange={handlerRegister}
+            onInput={handlerEmailInput}
             className="inputEmail"
             type="text"
             placeholder="예시) example@fifo.com"
           ></input>
-          <select className="afterEmail">
+          <select className={getEmailClassName()} onChange={selectOptions}>
             {options.map((email, index) => (
-              <option key={index}>{email}</option>
+              <option key={index} value={email}>
+                {email}
+              </option>
             ))}
           </select>
+          {!emailValid && (
+            <span className="validContext">올바르지 않은 이메일입니다.</span>
+          )}
           <label className="textLabel">비밀번호</label>
           <div className="passContainer">
             <input
@@ -238,7 +383,9 @@ const Register = () => {
               value={register.pass}
               onChange={handlerRegister}
               className="inputElement"
+              onInput={handlerPassInput}
               type={showPassword ? "text" : "password"}
+              placeholder="비밀번호는 8자 이상, 특수문자를 입력해주세요"
             ></input>
             {showPassword ? (
               <RemoveRedEyeIcon
@@ -251,25 +398,38 @@ const Register = () => {
                 onClick={handlerPasswordVisble}
               />
             )}
+            {!passValid && (
+              <span className="validContext">
+                올바르지 않은 비밀번호입니다.
+              </span>
+            )}
           </div>
           <label className="textLabel">이름</label>
           <input
             name="name"
             value={register.name}
             onChange={handlerRegister}
+            onInput={handlerNameInput}
             className="inputElement"
             type="text"
             placeholder="김뽀삐"
           ></input>
+          {!nameValid && (
+            <span className="validContext">올바르지 않은 이름입니다.</span>
+          )}
           <label className="textLabel">닉네임</label>
           <input
             name="nick"
             value={register.nick}
             onChange={handlerRegister}
+            onInput={handlerNickInput}
             className="inputElement"
             type="text"
             placeholder="별명을 알파벳, 한글, 숫자를 10자 이하로 입력해주세요"
           ></input>
+          {!nickValid && (
+            <span className="validContext">올바르지 않은 닉네임입니다.</span>
+          )}
           <div className="skill">
             <label className="skillStack">기술 스택(업무 툴/ 스킬)</label>
             <label className="selectStack">
