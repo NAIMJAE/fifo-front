@@ -12,6 +12,13 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import DateModal from '../../components/gathering/modal/DateModal';
 
+// 날짜 유틸리티 함수
+const addDays = (date, days) => {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+};
+
 const Write = () => {
     const loginSlice = useSelector((state) => state.authSlice) || {};
     const navigate = useNavigate();
@@ -27,14 +34,13 @@ const Write = () => {
         gathmode: "",  // 모임 방식
         gathnowmember: 0,  // 모집된 인원 (초기값 0)
         gathtotalmember: 2,  // 모집 총 인원
-        gathsupport: "",  // 지원 방법
         gathrecruitfield: "",  // 모집 분야
         gathlanguage: "",  // 모집 언어
         recruitstart: "",  // 모집 시작일
         recruitend: "",  // 모집 종료일
         projectstart: "",  // 프로젝트 시작일
         projectend: "",  // 프로젝트 종료일
-        gathstate: ""  // 모집 상태
+        gathstate: "1"  // 모집 상태
     });
 
     /** 선택한 포지션 문자열 저장 */
@@ -93,9 +99,26 @@ const Write = () => {
 
     /** 게시글 작성 */
     const handleSubmit = async () => {
-        // 게시글 내용 꺼내오기
         let contents = editorRef.current.getInstance().getHTML();
 
+        // 필수 입력 필드 검사
+        const requiredFields = [
+            { field: 'gathtitle', name: '제목' },
+            { field: 'gathmode', name: '모임 방식' },
+            { field: 'gathrecruitfield', name: '모집 분야' },
+            { field: 'gathlanguage', name: '모집 언어' },
+            { field: 'recruitstart', name: '모집 시작일' },
+            { field: 'recruitend', name: '모집 종료일' },
+            { field: 'projectstart', name: '프로젝트 시작일' },
+            { field: 'projectend', name: '프로젝트 종료일' }
+        ];
+
+        for (let { field, name } of requiredFields) {
+            if (!gathering[field]) {
+                alert(`${name} 필드를 입력해 주세요.`);
+                return;
+            }
+        }
 
         // 게시글 내용 속 이미지 변환 (changeImages 컴포넌트화 시킴)
         const resultData = await changeImages(contents);
@@ -106,8 +129,6 @@ const Write = () => {
                 contents = contents.replace(resultData.srcPull[i].slice(5, -1), imageURL);
             });
         }
-
-
 
         const formData = new FormData();
         const gatheringData = { ...gathering, gathdetail: contents };
@@ -139,20 +160,21 @@ const Write = () => {
         }
     }
     /** 날짜 */
-    const [recruit, setRecruit] = useState([
-        {
-            startDate: new Date(),
-            endDate: null,
-            key: 'selection'
-        }
-    ]);
-    const [mooim, setMooim] = useState([
-        {
-            startDate: new Date(),
-            endDate: null,
-            key: 'selection'
-        }
-    ]);
+    const initializeRecruit = () => {
+        const startDate = new Date();
+        const endDate = addDays(startDate, 7); // startDate의 1주일 후
+        return [{ startDate, endDate, key: 'selection' }];
+    };
+
+    const initializeMooim = (recruitEndDate) => {
+        const startDate = recruitEndDate ? addDays(recruitEndDate, 1) : new Date();
+        const endDate = addDays(startDate, 30);
+        return [{ startDate, endDate, key: 'selection' }];
+    };
+
+    const [recruit, setRecruit] = useState(initializeRecruit);
+    const [mooim, setMooim] = useState(initializeMooim(recruit.endDate));
+
     /** 날짜 형태 바꾸기 */
     const changeDateType = (date) => {
 
@@ -166,29 +188,35 @@ const Write = () => {
 
         return formatedDate;
     }
+
     /** 모달 창 상태 관리 */
     const handleModal = () => {
         setModalOpen(!modalOpen);
-        // 날짜 정보 입력
-        const recruitstart = changeDateType(recruit[0].startDate);
-        const recruitend = changeDateType(recruit[0].endDate);
-        setGathering({
-            ...gathering,
-            recruitstart: recruitstart,
-            recruitend: recruitend,
-        });
+        if (modalOpen) {
+            // 날짜 정보 입력
+            const recruitstart = changeDateType(recruit[0].startDate);
+            const recruitend = changeDateType(recruit[0].endDate);
+            setGathering({
+                ...gathering,
+                recruitstart: recruitstart,
+                recruitend: recruitend,
+            });
+        }
+
     };
     const handleModal2 = () => {
         setModalOpen2(!modalOpen2);
-        // 날짜 정보 입력
-        const projectstart = changeDateType(mooim[0].startDate);
-        const projectend = changeDateType(mooim[0].endDate);
+        if (modalOpen2) {
+            // 날짜 정보 입력
+            const projectstart = changeDateType(mooim[0].startDate);
+            const projectend = changeDateType(mooim[0].endDate);
 
-        setGathering({
-            ...gathering,
-            projectstart: projectstart,
-            projectend: projectend
-        });
+            setGathering({
+                ...gathering,
+                projectstart: projectstart,
+                projectend: projectend
+            });
+        }
     };
     return (
 
@@ -260,7 +288,7 @@ const Write = () => {
 
                 <div className='cntRow cntSelectDate'>
                     <button className="hvMdBtn maR10" onClick={handleModal2}>진행 기간</button>
-
+                    <p>{gathering.projectstart} ~ {gathering.projectend}</p>
                 </div>
             </div>
             <div className='cntRow detail'>

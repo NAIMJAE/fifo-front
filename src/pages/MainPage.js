@@ -50,10 +50,6 @@ const MainPage = () => {
 
   const loginSlice = useSelector((state) => state.authSlice) || {};
 
-  useEffect(() => {
-    console.log("로그인정보 : ", loginSlice);
-  }, []);
-
   const writeHandler = () => {
     if(loginSlice.userno != null){
       navigate('/gathering/write');

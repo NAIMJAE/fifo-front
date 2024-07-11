@@ -16,6 +16,7 @@ import { gathCommentInsertApi, gatheringViewApi, recruitApi } from '../../api/ga
 import { Alert } from '@mui/material';
 import RecruitModal from '../../components/gathering/modal/RecruitModal';
 import ApplicationModal from '../../components/gathering/modal/ApplicationModal';
+import { el } from 'date-fns/locale';
 
 const ViewPage = () => {
 
@@ -26,7 +27,8 @@ const ViewPage = () => {
     const shareURL = FrontUrl() + location.pathname + location.search
 
     const loginSlice = useSelector((state) => state.authSlice) || {};
-
+    /** useEffect 재랜더릴용 useState */
+    const [lender, setLender] = useState(false);
     /** 게시글 useState */
     const [gatheringView, setGatheringView] = useState({});
     /** 참여현황 useState */
@@ -69,7 +71,7 @@ const ViewPage = () => {
             }
         }
         selectArticle();
-    }, []);
+    }, [lender]);
 
     /** 게시글 링크 복사하기 */
     const copyUrl = () => {
@@ -104,13 +106,23 @@ const ViewPage = () => {
     const handleAppModal = () => setAppState(!appState);
 
     /** 참여 신청 버튼 */
-    const handleRecruit = async () => {
+    const handleApplication = async (input) => {
         const data = {
             userno: loginSlice.userno,
             gathno: gatheringView.gathno,
+            intro: input,
         }
+        console.log("data : ", data);
+        
         try {
             const response = await recruitApi(data);
+            if(response > 0) {
+                alert("참여 신청되었습니다.");
+                setRecruitTF(true);
+                setLender(!lender);
+            }else {
+                alert("참여 신청 실패")
+            }
         } catch (error) {
             console.log(error);
         }
@@ -118,7 +130,23 @@ const ViewPage = () => {
 
     /** 참여 신청 취소 버튼 */
     const cancelRecruit = async () => {
-
+        let result = window.confirm("참여 신청을 취소하시겠습니까?");
+        if(result) {
+            const data = {
+                userno: loginSlice.userno,
+                gathno: gatheringView.gathno,
+            }
+            try {
+                const response = await recruitApi(data);
+                if(response < 1) {
+                    alert("참여 신청이 취소되었습니다.");
+                    setRecruitTF(false);
+                    setLender(!lender);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
     }
 
 
@@ -191,9 +219,9 @@ const ViewPage = () => {
                     {gatheringView.userno === loginSlice.userno ? (
                         <div className='cntRow gathRecruit'>
                             <span className='gathCate'>지원 현황</span>
-                            <span className='gathCateValue'>4명 <span onClick={handleModal}>상세 <FontAwesomeIcon icon={faSquareCaretDown} size='lg' color='#4169e1'/></span></span>
+                            <span className='gathCateValue'>{recruitList.length}명 <span onClick={handleModal}>상세 <FontAwesomeIcon icon={faSquareCaretDown} size='lg' color='#4169e1'/></span></span>
                             {/** 모임 참가 신청 현황 모달 */}
-                            {recruitState && <RecruitModal gathno={gathno} handleModal={handleModal}/>}
+                            {recruitState && <RecruitModal recruitList={recruitList} handleModal={handleModal}/>}
                         </div>
                     ) : (
                         <div className='cntRow'>
@@ -201,13 +229,11 @@ const ViewPage = () => {
                                 <button className="hvMdBtn maR10" onClick={()=>setAppState(true)}>참여신청</button>
                             }
                             {loginSlice.userno !== undefined && recruitTF &&
-                                <button className="hvMdBtn maR10" onClick={handleRecruit}>신청취소</button>
+                                <button className="hvMdBtn maR10" onClick={cancelRecruit}>신청취소</button>
                             }
                             {loginSlice.userno == undefined &&
                                 <span>신청할거면 로그인해</span>
                             }
-                            {/** 모임 참가 신청 모달 */}
-                            {appState && <ApplicationModal/>}
                         </div>
                     )}
                 </div>
@@ -237,6 +263,9 @@ const ViewPage = () => {
             <div className='cntColumn viewComment'>
                 {gatheringView.gathno > 0 && <GathCommentListComponent gathno={gatheringView.gathno} comState={comState} setComState={setComState} loginSlice={loginSlice}/>}
             </div>
+
+            {/** 모임 참가 신청 모달 */}
+            {appState && <ApplicationModal handleAppModal={handleAppModal} handleApplication={handleApplication}/>}
         </MainLayout>
     )
 }
