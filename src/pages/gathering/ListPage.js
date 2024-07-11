@@ -6,6 +6,7 @@ import { myGatheringListApi } from "../../api/gatheringApi";
 import GatherBoxComponent from "../../components/gathering/GatherBoxComponent";
 
 const ListPage = () => {
+  const [loadingGath, setLoading] = useState(false);
   const loginSlice = useSelector((state) => state.authSlice) || {};
   const [mooimList, setMooimList] = useState([]);
   const [mooimDTO, setMooimDTO] = useState({
@@ -18,7 +19,12 @@ const ListPage = () => {
     const selectArticleList = async () => {
       try {
         const response = await myGatheringListApi(mooimDTO);
-        setMooimList(response.dtoList);
+        setMooimList(response);
+        if(mooimDTO.mooimstate == 3){
+          setLoading(true);
+        }else {
+          setLoading(false);
+        }
       } catch (err) {
         console.log(err);
       }
@@ -38,7 +44,7 @@ const ListPage = () => {
           onClick={(e) => { setMooimDTO(prev => ({ ...prev, mooimstate: 3 })) }}>모집중</p>
 
       </div>
-      {mooimDTO.mooimstate == 3 ? (
+      {loadingGath ? (
         <>
           {/** 모임 글 목록 */}
           <div className="cntWrapRow gatherList">
@@ -49,15 +55,15 @@ const ListPage = () => {
         <div className="cntColumn">
           <span className="myMooimCate">프로젝트</span>
           <div className="cntWrapRow mainGatherList">
-            <MyGatherBoxComponent mooimList={mooimList} mooimcate="1" />
+            <MyGatherBoxComponent mooimList={mooimList} mooimcate={1} />
           </div>
           <span className="myMooimCate">스터디</span>
           <div className="cntWrapRow mainGatherList">
-            <MyGatherBoxComponent mooimList={mooimList} mooimcate="2" />
+            <MyGatherBoxComponent mooimList={mooimList} mooimcate={2} />
           </div>
           <span className="myMooimCate">모임</span>
           <div className="cntWrapRow mainGatherList">
-            <MyGatherBoxComponent mooimList={mooimList} mooimcate="3" />
+            <MyGatherBoxComponent mooimList={mooimList} mooimcate={3} />
           </div>
         </div>
       )}
