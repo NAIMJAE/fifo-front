@@ -98,7 +98,9 @@ const ViewPage = () => {
     const handleModal = () => setRecruitState(!recruitState);
 
 
-
+    /** 참가 신청 모달 관리 */
+    const [appState, setAppState] = useState(false);
+    const handleAppModal = () => setAppState(!appState);
 
     /** 참여 신청 버튼 */
     const handleRecruit = async () => {
@@ -115,7 +117,7 @@ const ViewPage = () => {
 
     /** 참여 신청 취소 버튼 */
     const cancelRecruit = async () => {
-        
+
     }
 
 
@@ -203,6 +205,8 @@ const ViewPage = () => {
                             {loginSlice.userno == undefined &&
                                 <span>신청할거면 로그인해</span>
                             }
+                            {/** 모임 참가 신청 모달 */}
+
                         </div>
                     )}
                 </div>
