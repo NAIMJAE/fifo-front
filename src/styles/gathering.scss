@@ -352,6 +352,14 @@
       border-radius: 4px;
     }
   }
+  > .cntSelectDate > p {
+    font-size: 19px;
+    color: #7b7b7b;
+  }
+  >.MuiButton-colorPrimary {
+    height: 53px;
+    align-self: end;
+  }
 
   select {
     display: flex;
