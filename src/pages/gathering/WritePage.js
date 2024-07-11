@@ -96,18 +96,6 @@ const Write = () => {
         // 게시글 내용 꺼내오기
         let contents = editorRef.current.getInstance().getHTML();
 
-        const recruitstart = changeDateType(recruit[0].startDate);
-        const recruitend = changeDateType(recruit[0].endDate);
-        const projectstart = changeDateType(mooim[0].startDate);
-        const projectend = changeDateType(mooim[0].endDate);
-
-        setGathering({
-            ...gathering,
-            recruitstart: recruitstart,
-            recruitend: recruitend,
-            projectstart: projectstart,
-            projectend: projectend
-        });
 
         // 게시글 내용 속 이미지 변환 (changeImages 컴포넌트화 시킴)
         const resultData = await changeImages(contents);
@@ -118,8 +106,8 @@ const Write = () => {
                 contents = contents.replace(resultData.srcPull[i].slice(5, -1), imageURL);
             });
         }
-        // 날짜 정보 입력
-        
+
+
 
         const formData = new FormData();
         const gatheringData = { ...gathering, gathdetail: contents };
@@ -179,23 +167,35 @@ const Write = () => {
         return formatedDate;
     }
     /** 모달 창 상태 관리 */
+    const handleModal = () => {
+        setModalOpen(!modalOpen);
+        // 날짜 정보 입력
+        const recruitstart = changeDateType(recruit[0].startDate);
+        const recruitend = changeDateType(recruit[0].endDate);
+        setGathering({
+            ...gathering,
+            recruitstart: recruitstart,
+            recruitend: recruitend,
+        });
+    };
+    const handleModal2 = () => {
+        setModalOpen2(!modalOpen2);
+        // 날짜 정보 입력
+        const projectstart = changeDateType(mooim[0].startDate);
+        const projectend = changeDateType(mooim[0].endDate);
 
-    const handleModal = () => setModalOpen(!modalOpen);
-    const handleModal2 = () => setModalOpen2(!modalOpen2);
-
-    const handleDateChange = () => {
-        console.log("mooim : ", mooim[0].startDate);
-        console.log("recruit : ", recruit[0].endDate);
-
-    }
-
+        setGathering({
+            ...gathering,
+            projectstart: projectstart,
+            projectend: projectend
+        });
+    };
     return (
 
         <MainLayout>
             <div className='cntRow gatheringTitle'>
                 모임 생성
             </div>
-            <button onClick={handleDateChange}>444444444</button>
             <div className='cntRow gatheringCateGroup'>
                 <div className='selectGroup'>
                     <span>모임 유형</span>
@@ -228,12 +228,6 @@ const Write = () => {
                     </select>
                 </div>
                 <div className='cntColumn'>
-                    <button className="hvMdBtn maR10" onClick={handleModal}>모집 기간</button>
-
-                </div>
-            </div>
-            <div className='cntRow gatheringData'>
-                <div className='cntColumn'>
                     <span>모집 포지션</span>
                     <select name="position" onChange={handlePositionSelect}>
                         <option value="백앤드" disabled={selectedPositions.includes('백앤드')}>백앤드</option>
@@ -241,18 +235,12 @@ const Write = () => {
                         <option value="디자이너" disabled={selectedPositions.includes('디자이너')}>디자이너</option>
                     </select>
                 </div>
-                <div className='cntColumn'>
-                    <button className="hvMdBtn maR10" onClick={handleModal2}>진행 기간</button>
-
-                </div>
             </div>
             <div className='cntRow gatheringData'>
                 <div className='cntColumn'>
                     <span>모집 언어</span>
                     <SkillTags onChange={handleLanguageChange} />
                 </div>
-            </div>
-            <div className='cntRow gatheringData'>
                 <Button
                     component="label"
                     role={undefined}
@@ -263,6 +251,17 @@ const Write = () => {
                     {thumbnailName || "thumbnail upload"}
                     <HiddenInputFile accept="image/*" onChange={handleThumbnailChange} />
                 </Button>
+            </div>
+            <div className='cntRow gatheringData'>
+                <div className='cntRow cntSelectDate'>
+                    <button className="hvMdBtn maR10" onClick={handleModal}>모집 기간</button>
+                    <p>{gathering.recruitstart} ~ {gathering.recruitend}</p>
+                </div>
+
+                <div className='cntRow cntSelectDate'>
+                    <button className="hvMdBtn maR10" onClick={handleModal2}>진행 기간</button>
+
+                </div>
             </div>
             <div className='cntRow detail'>
                 세부사항
