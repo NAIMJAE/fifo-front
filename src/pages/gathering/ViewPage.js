@@ -113,14 +113,14 @@ const ViewPage = () => {
             intro: input,
         }
         console.log("data : ", data);
-        
+
         try {
             const response = await recruitApi(data);
-            if(response > 0) {
+            if (response > 0) {
                 alert("참여 신청되었습니다.");
                 setRecruitTF(true);
                 setLender(!lender);
-            }else {
+            } else {
                 alert("참여 신청 실패")
             }
         } catch (error) {
@@ -131,14 +131,14 @@ const ViewPage = () => {
     /** 참여 신청 취소 버튼 */
     const cancelRecruit = async () => {
         let result = window.confirm("참여 신청을 취소하시겠습니까?");
-        if(result) {
+        if (result) {
             const data = {
                 userno: loginSlice.userno,
                 gathno: gatheringView.gathno,
             }
             try {
                 const response = await recruitApi(data);
-                if(response < 1) {
+                if (response < 1) {
                     alert("참여 신청이 취소되었습니다.");
                     setRecruitTF(false);
                     setLender(!lender);
@@ -184,49 +184,53 @@ const ViewPage = () => {
                 <div className='cntRow gathCategory'>
                     <div className='cntRow'>
                         <span className='gathCate'>모임 유형</span>
-                        <span className='gathCateValue'>프로젝트</span>
+                        <span className='gathCateValue'>
+                            {gatheringView.gathcate === 1 ? '프로젝트' :
+                                gatheringView.gathcate === 2 ? '스터디' :
+                                    gatheringView.gathcate === 3 ? '모임' : '알 수 없음'}
+                        </span>
                     </div>
                     <div className='cntRow'>
                         <span className='gathCate'>모임 방식</span>
-                        <span className='gathCateValue'>온라인</span>
+                        <span className='gathCateValue'>{gatheringView.gathmode}</span>
                     </div>
                 </div>
                 <div className='cntRow gathCategory'>
                     <div className='cntRow'>
                         <span className='gathCate'>모집 인원</span>
-                        <span className='gathCateValue'>1 / 5</span>
+                        <span className='gathCateValue'>{gatheringView.gathnowmember} / {gatheringView.gathtotalmember}</span>
                     </div>
                     <div className='cntRow'>
                         <span className='gathCate'>모집 기간</span>
-                        <span className='gathCateValue'>7월 26일까지</span>
+                        <span className='gathCateValue'>{gatheringView.recruitend} 까지</span>
                     </div>
                 </div>
                 <div className='cntRow gathCategory'>
                     <div className='cntRow'>
                         <span className='gathCate'>모집 분야</span>
-                        <span className='gathCateValue'>프론트, 백엔드</span>
+                        <span className='gathCateValue'>{gatheringView.gathrecruitfield}</span>
                     </div>
                     <div className='cntRow'>
                         <span className='gathCate'>진행 기간</span>
-                        <span className='gathCateValue'>7월 27일 ~ 8월 30일</span>
+                        <span className='gathCateValue'>{gatheringView.projectstart} ~ {gatheringView.projectend}</span>
                     </div>
                 </div>
                 <div className='cntRow gathCategory'>
                     <div className='cntRow'>
                         <span className='gathCate'>모집 언어</span>
-                        <span className='gathCateValue'>Java Javascript</span>
+                        <span className='gathCateValue'>{gatheringView.gathlanguage}</span>
                     </div>
                     {gatheringView.userno === loginSlice.userno ? (
                         <div className='cntRow gathRecruit'>
                             <span className='gathCate'>지원 현황</span>
-                            <span className='gathCateValue'>{recruitList.length}명 <span onClick={handleModal}>상세 <FontAwesomeIcon icon={faSquareCaretDown} size='lg' color='#4169e1'/></span></span>
+                            <span className='gathCateValue'>{recruitList.length}명 <span onClick={handleModal}>상세 <FontAwesomeIcon icon={faSquareCaretDown} size='lg' color='#4169e1' /></span></span>
                             {/** 모임 참가 신청 현황 모달 */}
-                            {recruitState && <RecruitModal recruitList={recruitList} handleModal={handleModal}/>}
+                            {recruitState && <RecruitModal recruitList={recruitList} handleModal={handleModal} setLender={setLender}/>}
                         </div>
                     ) : (
                         <div className='cntRow'>
                             {loginSlice.userno !== undefined && !recruitTF &&
-                                <button className="hvMdBtn maR10" onClick={()=>setAppState(true)}>참여신청</button>
+                                <button className="hvMdBtn maR10" onClick={() => setAppState(true)}>참여신청</button>
                             }
                             {loginSlice.userno !== undefined && recruitTF &&
                                 <button className="hvMdBtn maR10" onClick={cancelRecruit}>신청취소</button>
@@ -255,17 +259,21 @@ const ViewPage = () => {
                     삭제
                 </button>
             </div>
-
             <div className='cntColumn writeComment'>
+            {loginSlice.userno !== undefined ? (
+                <>
                 {gatheringView.gathno > 0 && <CommentWriteComponent comNum={comNum} insertComment={insertComment} loginSlice={loginSlice} />}
-            </div>
-
+                </>
+            ) : (
+                <p>댓글을 작성하시려면 로그인이 필요합니다.</p>
+            )}
+        </div>
             <div className='cntColumn viewComment'>
-                {gatheringView.gathno > 0 && <GathCommentListComponent gathno={gatheringView.gathno} comState={comState} setComState={setComState} loginSlice={loginSlice}/>}
+                {gatheringView.gathno > 0 && <GathCommentListComponent gathno={gatheringView.gathno} comState={comState} setComState={setComState} loginSlice={loginSlice} />}
             </div>
 
             {/** 모임 참가 신청 모달 */}
-            {appState && <ApplicationModal handleAppModal={handleAppModal} handleApplication={handleApplication}/>}
+            {appState && <ApplicationModal handleAppModal={handleAppModal} handleApplication={handleApplication} />}
         </MainLayout>
     )
 }
