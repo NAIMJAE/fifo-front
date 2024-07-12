@@ -60,10 +60,11 @@ const LoginComponent = ({
                 onClick={handlerPasswordVisble}
               />
             )}
+            <button className="btnLogin" onClick={handlerLogin}>
+              로그인하기
+            </button>
           </form>
-          <button className="btnLogin" onClick={handlerLogin}>
-            로그인하기
-          </button>
+
           <button className="btnFindId" onClick={handlerLogin}>
             아이디 찾기
           </button>

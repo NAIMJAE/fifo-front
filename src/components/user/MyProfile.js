@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "../../styles/user/myProfile.scss";
 import { Button } from "@mui/material";
 import { RootUrl } from "../../api/RootUrl";
@@ -9,22 +9,58 @@ import {
   faCircleXmark,
   faFloppyDisk,
   faPencil,
+  faPlus,
+  faPlusCircle,
   faUserPen,
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import { globalPath } from "../../globalPaths";
+import moment from "moment/moment";
+import axios from "axios";
+import { differenceInYears } from "date-fns";
 
 const MyProfile = () => {
   const authSlice = useSelector((state) => state.authSlice);
 
-  /** 임시 정보 */
-  const [example, setExample] = useState({
-    name: "홍길동",
-    nick: "우리집삐뽀",
-    email: "fifo1234@naver.com",
-    hp: "010-1234-1234",
-    region: "부산",
-    skillList: ["JAVA", "REACT", "HTML", "SPRING", "CSS", "KOREAN"],
+  const userno = authSlice.userno;
+
+  const url = globalPath.path;
+
+  /** 유저 정보 */
+  const [information, setInformation] = useState({
+    name: "",
+    nick: "",
+    email: "",
+    hp: "",
+    region: "",
+    birth: "",
+    gender: "",
+    rdate: "",
+    languagename: [],
+    levels: [],
   });
+
+  useEffect(() => {
+    console.log(information);
+  }, [information]);
+  /**나이 계산하기 */
+  const calcAge = () => {
+    const date = new Date();
+    return differenceInYears(date, information.birth);
+  };
+  const age = calcAge();
+
+  /**유저 정보 가져오기 */
+  useEffect(() => {
+    axios
+      .get(`${url}/user/getProfile?userno=${userno}`)
+      .then((response) => {
+        setInformation(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   /** input 입력 활성화 상태 관리 useState */
   const [inputModify, setInputModify] = useState({
@@ -35,6 +71,29 @@ const MyProfile = () => {
     region: false,
     skill: false,
   });
+
+  /**스킬 리스트 가져오기 */
+  const [skillList, setSkillList] = useState([]);
+  const [skillSelect, setSkillSelect] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`${url}/user/language`)
+      .then((response) => {
+        console.log(response.data);
+        setSkillList(response.data.map((language) => language.languagename));
+        setSkillSelect(
+          response.data.map((language, index) => ({
+            id: index,
+            state: false,
+            languagename: language.languagename,
+          }))
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [inputModify.skill]);
 
   const fileInputRef = useRef(null);
   /** 프로필 사진 수정 */
@@ -55,8 +114,8 @@ const MyProfile = () => {
   /** 기본 정보 수정 */
   const inputMyInfo = (e) => {
     const { name, value } = e.target;
-    setExample((prev) => ({ ...prev, [name]: value }));
-    console.log("example : ", example);
+    setInformation((prev) => ({ ...prev, [name]: value }));
+    console.log("information : ", information);
 
     // 유효성 검사 넣어주세요
   };
@@ -85,7 +144,27 @@ const MyProfile = () => {
   };
 
   /** 내 스킬 편집 */
+  const iconClick = (e, index, skill) => {
+    e.preventDefault();
+    console.log(skill);
 
+    setSkillSelect((prev) =>
+      prev.map((lan) =>
+        lan.id === index ? { ...lan, state: !lan.state } : lan
+      )
+    );
+  };
+  const clickAdd = (e) => {
+    e.preventDefault();
+  };
+  const clickCancle = (e) => {
+    e.preventDefault();
+
+    setInputModify((prev) => ({
+      ...prev,
+      skill: false,
+    }));
+  };
   /** 내 스킬 편집 저장 */
 
   return (
@@ -114,10 +193,10 @@ const MyProfile = () => {
 
               <div className="myInfo">
                 <label htmlFor="">
-                  <h2>홍길동</h2>
-                  <h4>남자</h4>
-                  <h4>27세</h4>
-                  <h5>2024.05.12 가입</h5>
+                  <h2>{information.name}</h2>
+                  <h4>{information.gender === "M" ? "남자" : "여자"}</h4>
+                  <h4>{age}세</h4>
+                  <h5>{moment(information.rdate).format("YYYY-MM-DD")} 가입</h5>
                 </label>
 
                 <label htmlFor="">
@@ -126,7 +205,7 @@ const MyProfile = () => {
                     type="text"
                     id="nick"
                     name="nick"
-                    value={example.nick}
+                    value={information.nick}
                     onChange={(e) => inputMyInfo(e)}
                     readOnly
                   />
@@ -151,20 +230,89 @@ const MyProfile = () => {
 
                 <label htmlFor="">
                   <h3>이메일 : </h3>
-                  <input type="email" value={example.email} />
-                  <FontAwesomeIcon icon={faPencil} size="lg" color="#7b7b7b" />
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={information.email}
+                    onChange={(e) => inputMyInfo(e)}
+                    readOnly
+                  />
+                  {inputModify.email ? (
+                    <FontAwesomeIcon
+                      icon={faFloppyDisk}
+                      size="lg"
+                      color="#7b7b7b"
+                      data-target-id="email"
+                      onClick={(e) => saveMyinfo(e)}
+                    />
+                  ) : (
+                    <FontAwesomeIcon
+                      icon={faPencil}
+                      size="lg"
+                      color="#7b7b7b"
+                      data-target-id="email"
+                      onClick={(e) => changeMyInfo(e)}
+                    />
+                  )}
                 </label>
 
                 <label htmlFor="">
                   <h3>연락처 : </h3>
-                  <input type="text" value={example.hp} />
-                  <FontAwesomeIcon icon={faPencil} size="lg" color="#7b7b7b" />
+                  <input
+                    type="text"
+                    id="hp"
+                    name="hp"
+                    value={information.hp}
+                    onChange={(e) => inputMyInfo(e)}
+                    readOnly
+                  />
+                  {inputModify.hp ? (
+                    <FontAwesomeIcon
+                      icon={faFloppyDisk}
+                      size="lg"
+                      color="#7b7b7b"
+                      data-target-id="hp"
+                      onClick={(e) => saveMyinfo(e)}
+                    />
+                  ) : (
+                    <FontAwesomeIcon
+                      icon={faPencil}
+                      size="lg"
+                      color="#7b7b7b"
+                      data-target-id="hp"
+                      onClick={(e) => changeMyInfo(e)}
+                    />
+                  )}
                 </label>
 
                 <label htmlFor="">
                   <h3>활동지역 : </h3>
-                  <input type="text" value={example.region} />
-                  <FontAwesomeIcon icon={faPencil} size="lg" color="#7b7b7b" />
+                  <input
+                    type="text"
+                    id="region"
+                    name="region"
+                    value={information.region}
+                    onChange={(e) => inputMyInfo(e)}
+                    readOnly
+                  />
+                  {inputModify.region ? (
+                    <FontAwesomeIcon
+                      icon={faFloppyDisk}
+                      size="lg"
+                      color="#7b7b7b"
+                      data-target-id="region"
+                      onClick={(e) => saveMyinfo(e)}
+                    />
+                  ) : (
+                    <FontAwesomeIcon
+                      icon={faPencil}
+                      size="lg"
+                      color="#7b7b7b"
+                      data-target-id="region"
+                      onClick={(e) => changeMyInfo(e)}
+                    />
+                  )}
                 </label>
               </div>
             </div>
@@ -173,16 +321,47 @@ const MyProfile = () => {
             <div className="mySkill">
               <div className="inputSkill">
                 {inputModify.skill ? (
-                  <input type="text" id="skill" />
+                  <div className="skillIconList">
+                    {skillList.map((skill, index) => (
+                      <div
+                        className={
+                          skillSelect.find(
+                            (lan) => lan.id === index && lan.state
+                          )
+                            ? "skillIconsClick"
+                            : "skillIcons"
+                        }
+                        key={index}
+                        onClick={(e) => iconClick(e, index, skill)}
+                      >
+                        <SkillIcon
+                          className="skillIcon"
+                          skill={skill}
+                          classType={"bigSkillImg"}
+                        />
+                        <span className="skillName">{skill}</span>
+                      </div>
+                    ))}
+                    <br />
+                    <span>
+                      <button className="btn add-btn" onClick={clickAdd}>
+                        추가
+                      </button>
+                      <button className="btn cancel-btn" onClick={clickCancle}>
+                        취소
+                      </button>
+                    </span>
+                  </div>
                 ) : (
                   <label
                     htmlFor=""
                     data-target-id="skill"
                     onClick={(e) => changeMySkill(e)}
                   >
-                    <p>내 스킬 편집</p>
+                    <p>내 기술 스택 추가 {"  "}</p>
+
                     <FontAwesomeIcon
-                      icon={faPencil}
+                      icon={faPlusCircle}
                       size="lg"
                       color="#7b7b7b"
                     />
@@ -191,80 +370,23 @@ const MyProfile = () => {
               </div>
 
               <div className="skillList">
-                {example.skillList &&
-                  example.skillList.map((skill, index) => (
+                {information.languagename &&
+                  information.languagename.map((skill, index) => (
                     <div>
                       <SkillIcon skill={skill} classType={"bigSkillImg"} />
                       <p>{skill}</p>
-                      {inputModify.skill && (
-                        <FontAwesomeIcon
-                          icon={faCircleXmark}
-                          className="closeBtn"
-                          size="lg"
-                          color="#FF0000"
-                        />
-                      )}
+                      <p>Level {information.levels[index]}</p>
                     </div>
                   ))}
               </div>
+              <p className="explainLevel">
+                내 기술 스텍을 클릭하여 레벨을 설정해주세요
+              </p>
             </div>
             <h2>내 경력</h2>
           </div>
         </div>
       </main>
-
-      {/**
-    <div id="mainDiv">
-      <div className="contentDiv">
-        <div className="headerDiv">
-          <h1>프로필 수정</h1>
-          <p>FIFO 프로필을 수정 하실 수 있습니다.</p>
-        </div>
-        <div className="main">
-          <div className="tableDiv">
-            <aside>프로필 사진</aside>
-            <span>
-              <img
-                src={`${RootUrl()}/uploads/user/${authSlice.thumb}`}
-                alt="profile"
-              />
-              <button>사진변경</button>
-            </span>
-          </div>
-
-          <div className="tableDiv">
-            <aside>이름</aside>
-            <span></span>
-          </div>
-
-          <div className="tableDiv">
-            <aside>별명</aside>
-            <span></span>
-          </div>
-
-          <div className="tableDiv">
-            <aside>휴대폰</aside>
-            <span></span>
-          </div>
-
-          <div className="tableDiv">
-            <aside>지역</aside>
-            <span></span>
-          </div>
-
-          <div className="tableDiv">
-            <aside>이름</aside>
-            <span></span>
-          </div>
-        </div>
-
-        <div className="footerDiv">
-          <Button variant="text">적용</Button>
-          <Button variant="text">취소</Button>
-        </div>
-      </div>
-    </div>
-     */}
     </>
   );
 };

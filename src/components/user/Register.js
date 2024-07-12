@@ -203,7 +203,6 @@ const Register = () => {
             setOpen(false);
           });
       }, 1000);
-      /**스킬 넣기 */
     }
   };
 
@@ -258,6 +257,7 @@ const Register = () => {
   const [skillSelect, setSkillSelect] = useState([]);
   const [inputSkills, setInputSkills] = useState([]);
 
+  /**스킬이 선택된것만 가져오기 */
   useEffect(() => {
     const selectedSkills = skillSelect
       .filter((skill) => skill.state)
@@ -273,6 +273,7 @@ const Register = () => {
     }));
   }, [inputSkills]);
 
+  /**스킬 리스트 가져오기 */
   useEffect(() => {
     axios
       .get(`${url}/user/language`)
