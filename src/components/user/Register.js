@@ -398,12 +398,10 @@ const Register = () => {
                 onClick={handlerPasswordVisble}
               />
             )}
-            {!passValid && (
-              <span className="validContext">
-                올바르지 않은 비밀번호입니다.
-              </span>
-            )}
           </div>
+          {!passValid && (
+            <span className="validContext">올바르지 않은 비밀번호입니다.</span>
+          )}
           <label className="textLabel">이름</label>
           <input
             name="name"
