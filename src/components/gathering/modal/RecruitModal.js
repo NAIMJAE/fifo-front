@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { acceptRecruitApi } from '../../../api/gatheringApi';
 
-const RecruitModal = ({ recruitList, handleModal }) => {
+const RecruitModal = ({ recruitList, handleModal, setLender }) => {
 
     /** 모모달 띄우는 상태 */ 
     const [popState, setPopState] = useState(false);
@@ -18,7 +18,7 @@ const RecruitModal = ({ recruitList, handleModal }) => {
 
     /** 신청 수락 */
     const acceptRecruit = async (nick, recruitno) => {
-        let result = window.confirm("정말 "+nick+"님의 참여신청을 수락하시겠습니까")
+        let result = window.confirm(nick+"님의 참여신청을 수락하시겠습니까")
         // 나중에 멘트좀..
 
         if(result) {
@@ -26,6 +26,7 @@ const RecruitModal = ({ recruitList, handleModal }) => {
                 const response = await acceptRecruitApi(recruitno, "신청 수락");
                 if (response > 0) {
                     alert(nick+"님의 신청이 수락되었습니다.")
+                    setLender(true);
                 }
             } catch (error) {
                 console.log(error);
@@ -43,6 +44,7 @@ const RecruitModal = ({ recruitList, handleModal }) => {
                 const response = await acceptRecruitApi(recruitno, "신청 거절");
                 if (response > 0) {
                     alert(nick+"님의 신청이 거절되었습니다.")
+                    setLender(true);
                 }
             } catch (error) {
                 console.log(error);
