@@ -102,7 +102,7 @@
           margin-left: 10px;
         }
       }
-      
+
       > h3 {
         font-size: 16px;
         margin-top: 10px;
@@ -122,7 +122,7 @@
     padding: 10px;
 
     height: 600px;
-    
+
     > h1 {
       font-size: 20px;
       font-weight: bolder;
@@ -145,12 +145,12 @@
           font-weight: bolder;
           color: #7b7b7b;
         }
-        >h2 {
+        > h2 {
           font-size: 24px;
           font-weight: bolder;
           margin: 10px 0;
         }
-        >h2:after {
+        > h2:after {
           content: "건";
           font-size: 16px;
         }
@@ -160,7 +160,6 @@
         > h3::after {
           content: " >";
         }
-        
       }
     }
 
@@ -186,24 +185,24 @@
         }
       }
       > .skill1 {
-        border: 1px solid #6F4E37;
-        background-color: #A67B5B;
+        border: 1px solid #6f4e37;
+        background-color: #a67b5b;
       }
       > .skill2 {
-        border: 1px solid #B4B4B8;
-        background-color: #C7C8CC;
+        border: 1px solid #b4b4b8;
+        background-color: #c7c8cc;
       }
       > .skill3 {
-        border: 1px solid #FFAF45;
-        background-color: #FFC94A;
+        border: 1px solid #ffaf45;
+        background-color: #ffc94a;
       }
       > .skill4 {
         border: 1px solid #088395;
-        background-color: #37B7C3;
+        background-color: #37b7c3;
       }
       > .skill5 {
-        border: 1px solid #4C3BCF;
-        background-color: #4B70F5;
+        border: 1px solid #4c3bcf;
+        background-color: #4b70f5;
       }
     }
   }
@@ -229,7 +228,7 @@
 
   > .basicInfo {
     display: flex;
-    border: 1px solid #37B7C3;
+    border: 1px solid #37b7c3;
     .myThumb {
       position: relative;
       padding: 10px;
@@ -280,7 +279,7 @@
           margin-left: 10px;
         }
         > h5 {
-          color: #7b7b7b; 
+          color: #7b7b7b;
           margin-left: 10px;
         }
         > input {
@@ -299,7 +298,7 @@
   }
   > .mySkill {
     display: flex;
-    border: 1px solid #37B7C3;
+    border: 1px solid #37b7c3;
     flex-direction: column;
     padding: 10px;
 
@@ -309,13 +308,77 @@
       margin-bottom: 20px;
       justify-content: center;
 
-      > input {
+      > .skillIconList {
         display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+
         width: 800px;
         padding: 10px 20px;
         font-size: 18px;
         border: 1px solid #7b7b7b;
         border-radius: 20px;
+        > .skillIcons {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border: 1px solid #e4e4e4;
+          cursor: pointer;
+          box-sizing: border-box;
+          padding: 4px 10px;
+          margin: 4px 8px;
+          border-radius: 10px;
+        }
+
+        /** 클릭 되었을때 css*/
+        .skillIconsClick {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border: 1px solid #e4e4e4;
+          cursor: pointer;
+          box-sizing: border-box;
+          padding: 4px 10px;
+          margin: 4px 8px;
+          border-radius: 10px;
+          background-color: #0090f9;
+        }
+        .skillIcons:hover {
+          background-color: #0090f9;
+        }
+        > span {
+          display: flex;
+          .btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 15px;
+            font-weight: border;
+            color: #000000;
+            border-radius: 10px;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            margin-left: 10px;
+          }
+          .add-btn {
+            background-color: #0090f9;
+            color: white;
+          }
+
+          .add-btn:hover {
+            background-color: #0285e2;
+          }
+
+          .cancel-btn {
+            background-color: #f44336;
+            color: white;
+          }
+
+          .cancel-btn:hover {
+            background-color: #da190b;
+          }
+        }
       }
 
       > label {
@@ -330,15 +393,19 @@
     > .skillList {
       display: flex;
       flex-wrap: wrap;
+      justify-content: center;
 
       > div {
         position: relative;
         display: flex;
-        border: 1px solid #4B70F5;
+        justify-content: center;
+        border: 1px solid #4b70f5;
         border-radius: 10px;
         align-items: center;
+        box-sizing: border-box;
         padding: 4px 10px;
         margin: 10px;
+        cursor: pointer;
         > p {
           font-size: 16px;
           margin-left: 10px;
@@ -351,6 +418,12 @@
           cursor: pointer;
         }
       }
+    }
+    .explainLevel {
+      display: flex;
+      justify-content: center;
+      font-size: 14px;
+      margin-top: 10px;
     }
   }
 }
