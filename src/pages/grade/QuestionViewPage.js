@@ -11,22 +11,22 @@ const QuestionViewPage = () => {
     const [language, setLanguage] = useState('');
     const [code, setCode] = useState('');
     const [questionInfo, setQuestionInfo] = useState({});
-    const [output, setOutput] = useState('??');
-    
+    const [output, setOutput] = useState('출력');
+
     const handleExecute = async () => {
-        
-      const response = await fetch('http://localhost:8080/fifo-back/question/execute', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-            questionNo: questionInfo.current, 
-            language: language, 
-            code: code
-        })
-      });
-      const result = await response.json();
-      setOutput(result.output);
-      console.log(result)
+        setOutput("")
+        const response = await fetch('http://localhost:8080/fifo-back/question/execute', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                questionNo: questionInfo.questionno,
+                language: language,
+                code: code
+            })
+        });
+        const result = await response.json();
+        setOutput(result.output);
+        console.log(result)
     };
 
     /** 선택 언어 문제 리스트 조회 */
@@ -41,6 +41,9 @@ const QuestionViewPage = () => {
 
     return (
         <MainLayout>
+            <div id='questionInfo'>
+                <h2>{questionInfo.questionno} {questionInfo.title}</h2>
+            </div>
 
             <div id='questionView'>
                 <MonacoEditor
