@@ -221,7 +221,7 @@ const ViewPage = () => {
                             <span className='gathCate'>지원 현황</span>
                             <span className='gathCateValue'>{recruitList.length}명 <span onClick={handleModal}>상세 <FontAwesomeIcon icon={faSquareCaretDown} size='lg' color='#4169e1'/></span></span>
                             {/** 모임 참가 신청 현황 모달 */}
-                            {recruitState && <RecruitModal recruitList={recruitList} handleModal={handleModal}/>}
+                            {recruitState && <RecruitModal recruitList={recruitList} handleModal={handleModal} lender={lender} setLender={setLender}/>}
                         </div>
                     ) : (
                         <div className='cntRow'>

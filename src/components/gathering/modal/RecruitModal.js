@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { acceptRecruitApi } from '../../../api/gatheringApi';
 
-const RecruitModal = ({ recruitList, handleModal }) => {
+const RecruitModal = ({ recruitList, handleModal, lender, setLender }) => {
 
     /** 모모달 띄우는 상태 */ 
     const [popState, setPopState] = useState(false);
@@ -25,7 +25,9 @@ const RecruitModal = ({ recruitList, handleModal }) => {
             try {
                 const response = await acceptRecruitApi(recruitno, "신청 수락");
                 if (response > 0) {
-                    alert(nick+"님의 신청이 수락되었습니다.")
+                    alert(nick+"님의 신청이 수락되었습니다.");
+                    setLender(!lender);
+                    handleModal();
                 }
             } catch (error) {
                 console.log(error);
@@ -42,7 +44,9 @@ const RecruitModal = ({ recruitList, handleModal }) => {
             try {
                 const response = await acceptRecruitApi(recruitno, "신청 거절");
                 if (response > 0) {
-                    alert(nick+"님의 신청이 거절되었습니다.")
+                    alert(nick+"님의 신청이 거절되었습니다.");
+                    setLender(!lender);
+                    handleModal();
                 }
             } catch (error) {
                 console.log(error);
@@ -75,10 +79,12 @@ const RecruitModal = ({ recruitList, handleModal }) => {
                     <h3>{recruit.region}</h3>
                     <h3>{recruit.intro}</h3>
                 </div>
-                <div className='cntRow'>
-                    <button onClick={() => acceptRecruit(recruit.nick, recruit.recruitno)}>수락</button>
-                    <button onClick={() => refuseRecruit(recruit.nick, recruit.recruitno)}>거절</button>
-                </div>
+                {recruit.recruitstate === "수락 대기" && 
+                    <div className='cntRow recruitBtn'>
+                        <button onClick={() => acceptRecruit(recruit.nick, recruit.recruitno)}>수락</button>
+                        <button onClick={() => refuseRecruit(recruit.nick, recruit.recruitno)}>거절</button>
+                    </div>
+                }
             </div>
         }  
     </div>
