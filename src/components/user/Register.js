@@ -19,21 +19,19 @@ const Register = () => {
     pass: "",
     name: "",
     nick: "",
+    languagename: [],
   });
 
-  // useEffect(() => {
-  //   console.log(register);
-  // }, [register]);
+  /**회원가입 로그보기 */
+  useEffect(() => {
+    console.log(register);
+  }, [register]);
 
   /**유효성 검사 */
   const [emailValid, setEmailValid] = useState(true); // 이메일 유효성 상태
   const [passValid, setPassValid] = useState(true); // 비밀번호 유효성 상태
   const [nameValid, setNameValid] = useState(true); // 이름 유효성 상태
   const [nickValid, setNickValid] = useState(true); // 닉네임 유효성 상태
-
-  useEffect(() => {
-    console.log(emailValid);
-  }, [emailValid]);
 
   /**이메일 검사 함수 */
   const isValidEmail = (email) => {
@@ -157,6 +155,10 @@ const Register = () => {
       alert("닉네임을 입력해주세요");
       return;
     }
+    if (inputSkills.length === 0 || inputSkills === undefined) {
+      alert("나의 기술 스택을 선택해주세요");
+      return;
+    }
     if (!check1) {
       alert("서비스 이용약관에 동의하셔야합니다.");
       return;
@@ -254,8 +256,23 @@ const Register = () => {
   /**스킬 리스트 가져오기*/
   const [skillList, setSkillList] = useState([]);
   const [skillSelect, setSkillSelect] = useState([]);
+  const [inputSkills, setInputSkills] = useState([]);
 
-  useEffect(() => {}, [skillSelect]);
+  useEffect(() => {
+    const selectedSkills = skillSelect
+      .filter((skill) => skill.state)
+      .map((skill) => skill.languagename);
+    setInputSkills(selectedSkills);
+  }, [skillSelect]);
+
+  /**회원가입 state에 inputSkills 넣기*/
+  useEffect(() => {
+    setRegister((prev) => ({
+      ...prev,
+      languagename: inputSkills,
+    }));
+  }, [inputSkills]);
+
   useEffect(() => {
     axios
       .get(`${url}/user/language`)
@@ -266,6 +283,7 @@ const Register = () => {
           response.data.map((language, index) => ({
             id: index,
             state: false,
+            languagename: language.languagename,
           }))
         );
       })
@@ -274,10 +292,10 @@ const Register = () => {
       });
   }, []);
 
-  /**스킬 아이콘  */
-  const iconClick = (e, index) => {
-    // e.preventDefault();
-    console.log(e.target.value);
+  /**스킬 아이콘 클릭 */
+  const iconClick = (e, index, skill) => {
+    e.preventDefault();
+    console.log(skill);
 
     setSkillSelect((prev) =>
       prev.map((lan) =>
@@ -304,6 +322,7 @@ const Register = () => {
     setSelectEmail(selectedValue);
 
     if (selectedValue === "직접입력") {
+      console.log("직접입력");
       setSelectEmail("");
     } else {
       setRegister((prevRegister) => ({
@@ -398,12 +417,10 @@ const Register = () => {
                 onClick={handlerPasswordVisble}
               />
             )}
-            {!passValid && (
-              <span className="validContext">
-                올바르지 않은 비밀번호입니다.
-              </span>
-            )}
           </div>
+          {!passValid && (
+            <span className="validContext">올바르지 않은 비밀번호입니다.</span>
+          )}
           <label className="textLabel">이름</label>
           <input
             name="name"
@@ -444,8 +461,7 @@ const Register = () => {
                       : "skillIcons"
                   }
                   key={index}
-                  value={skill}
-                  onClick={(e) => iconClick(e, index)}
+                  onClick={(e) => iconClick(e, index, skill)}
                 >
                   <SkillIcon
                     className="skillIcon"

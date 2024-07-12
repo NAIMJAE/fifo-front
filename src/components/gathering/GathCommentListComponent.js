@@ -27,6 +27,7 @@ const CommentListComponent = ({ gathno, comState, setComState, loginSlice }) => 
         const selectComment = async () => {
             try {
                 const response = await gathCommentsSelectApi(comPageable);
+                console.log("댓글 불러오기")
                 console.log(response)
                 if (response === 0) {
                     
@@ -185,7 +186,7 @@ const CommentListComponent = ({ gathno, comState, setComState, loginSlice }) => 
                         null
                     ) : (
                         <>
-                        {(loginSlice.userno === comment.userNo) &&
+                        {(loginSlice.userno === comment.userno) &&
                         <>
                             {commentStates.find(state => state.id === comment.commentno && state.isEditing) ? (
                                 <button onClick={(e) => saveComment(e, comment.commentno)}>

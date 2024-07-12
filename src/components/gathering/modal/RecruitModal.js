@@ -18,7 +18,7 @@ const RecruitModal = ({ recruitList, handleModal, lender, setLender }) => {
 
     /** 신청 수락 */
     const acceptRecruit = async (nick, recruitno) => {
-        let result = window.confirm("정말 "+nick+"님의 참여신청을 수락하시겠습니까")
+        let result = window.confirm(nick+"님의 참여신청을 수락하시겠습니까")
         // 나중에 멘트좀..
 
         if(result) {
