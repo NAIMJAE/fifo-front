@@ -5,6 +5,7 @@ import "../../styles/user/register.scss";
 import Checkbox from "@mui/material/Checkbox";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import CircularProgress from "@mui/material/CircularProgress";
 import Backdrop from "../common/backdrop/backdrop.js";
 import TermsModal from "./termsModal.js";
 import SkillIcon from "../gathering/SkillIcon";
@@ -28,10 +29,10 @@ const Register = () => {
   }, [register]);
 
   /**유효성 검사 */
-  const [emailValid, setEmailValid] = useState(true); // 이메일 유효성 상태
-  const [passValid, setPassValid] = useState(true); // 비밀번호 유효성 상태
-  const [nameValid, setNameValid] = useState(true); // 이름 유효성 상태
-  const [nickValid, setNickValid] = useState(true); // 닉네임 유효성 상태
+  const [emailValid, setEmailValid] = useState(null); // 이메일 유효성 상태
+  const [passValid, setPassValid] = useState(null); // 비밀번호 유효성 상태
+  const [nameValid, setNameValid] = useState(null); // 이름 유효성 상태
+  const [nickValid, setNickValid] = useState(null); // 닉네임 유효성 상태
 
   /**이메일 검사 함수 */
   const isValidEmail = (email) => {
@@ -59,6 +60,7 @@ const Register = () => {
   /**적기 시작할 때 유효성검사 */
   const handlerEmailInput = () => {
     setEmailValid(false);
+    setDuplicateEmial(null);
   };
   const handlerPassInput = () => {
     setPassValid(false);
@@ -68,6 +70,67 @@ const Register = () => {
   };
   const handlerNickInput = () => {
     setNickValid(false);
+    setDuplicateNick(null);
+  };
+
+  /**중복검사 */
+  const [duplicateEmail, setDuplicateEmial] = useState(null); // 이메일 중복검사 상태
+  const [duplicateNick, setDuplicateNick] = useState(null); // 닉네임 중복검사 상태
+  const [progressState1, setProgressState1] = useState(null); // progress관리1
+  const [progressState2, setProgressState2] = useState(null); // progress관리2
+
+  /**이메일 중복검사 포커스 아웃 */
+  const handlerEmial = (e) => {
+    const email = e.target.value;
+
+    if (emailValid) {
+      setProgressState1(true);
+
+      setTimeout(() => {
+        axios
+          .get(`${url}/user/duplicateTest?param=${email}`)
+          .then((response) => {
+            console.log(response.data);
+            if (response.data === 0) {
+              setDuplicateEmial(true);
+              setProgressState1(false);
+            } else {
+              setDuplicateEmial(false);
+              setProgressState1(false);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }, 2000);
+    }
+  };
+
+  /**닉네임 중복검사 포커스 아웃 */
+  const handlerNickCheck = (e) => {
+    const nick = e.target.value;
+
+    if (nickValid) {
+      setProgressState2(true);
+
+      setTimeout(() => {
+        axios
+          .get(`${url}/user/duplicateTest?param=${nick}`)
+          .then((response) => {
+            console.log(response.data);
+            if (response.data === 0) {
+              setDuplicateNick(true);
+              setProgressState2(false);
+            } else {
+              setDuplicateNick(false);
+              setProgressState2(false);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }, 2000);
+    }
   };
 
   /**약관 체크관리 state */
@@ -202,7 +265,7 @@ const Register = () => {
           .finally(() => {
             setOpen(false);
           });
-      }, 1000);
+      }, 3000);
     }
   };
 
@@ -273,7 +336,7 @@ const Register = () => {
     }));
   }, [inputSkills]);
 
-  /**스킬 리스트 가져오기 */
+  /**스킬 리스트 */
   useEffect(() => {
     axios
       .get(`${url}/user/language`)
@@ -383,6 +446,7 @@ const Register = () => {
             onChange={handlerRegister}
             onInput={handlerEmailInput}
             className="inputEmail"
+            onBlur={handlerEmial}
             type="text"
             placeholder="예시) example@fifo.com"
           ></input>
@@ -393,9 +457,19 @@ const Register = () => {
               </option>
             ))}
           </select>
-          {!emailValid && (
+          {emailValid != null && !emailValid && (
             <span className="validContext">올바르지 않은 이메일입니다.</span>
           )}
+          {duplicateEmail !== null && !duplicateEmail && (
+            <span className="validContext">이메일이 중복되었습니다.</span>
+          )}
+          {emailValid && duplicateEmail && (
+            <span className="passText">사용가능한 이메일입니다.</span>
+          )}
+          {progressState1 && (
+            <CircularProgress className="progress" size={"30px"} />
+          )}
+
           <label className="textLabel">비밀번호</label>
           <div className="passContainer">
             <input
@@ -419,7 +493,7 @@ const Register = () => {
               />
             )}
           </div>
-          {!passValid && (
+          {passValid != null && !passValid && (
             <span className="validContext">올바르지 않은 비밀번호입니다.</span>
           )}
           <label className="textLabel">이름</label>
@@ -432,21 +506,32 @@ const Register = () => {
             type="text"
             placeholder="김뽀삐"
           ></input>
-          {!nameValid && (
+          {nameValid != null && !nameValid && (
             <span className="validContext">올바르지 않은 이름입니다.</span>
           )}
+
           <label className="textLabel">닉네임</label>
           <input
             name="nick"
             value={register.nick}
             onChange={handlerRegister}
             onInput={handlerNickInput}
+            onBlur={handlerNickCheck}
             className="inputElement"
             type="text"
             placeholder="별명을 알파벳, 한글, 숫자를 10자 이하로 입력해주세요"
           ></input>
-          {!nickValid && (
+          {nickValid != null && !nickValid && (
             <span className="validContext">올바르지 않은 닉네임입니다.</span>
+          )}
+          {duplicateNick != null && !duplicateNick && (
+            <span className="validContext">닉네임이 중복되었습니다.</span>
+          )}
+          {emailValid && duplicateNick && (
+            <span className="passText">사용가능한 닉네임입니다.</span>
+          )}
+          {progressState2 && (
+            <CircularProgress className="progress" size={"30px"} />
           )}
           <div className="skill">
             <label className="skillStack">기술 스택(업무 툴/ 스킬)</label>
