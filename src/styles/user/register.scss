@@ -56,6 +56,17 @@
         letter-spacing: -0.05em;
         font-size: 13px;
       }
+      .progress {
+        margin-top: 10px;
+      }
+      .passText {
+        display: flex;
+        justify-content: start;
+        color: green;
+        margin-top: 0.5rem;
+        letter-spacing: -0.05em;
+        font-size: 13px;
+      }
       .textLabel {
         display: flex;
         margin-bottom: 0.8rem;

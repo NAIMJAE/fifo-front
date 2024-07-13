@@ -43,6 +43,7 @@ const MyProfile = () => {
   useEffect(() => {
     console.log(information);
   }, [information]);
+
   /**나이 계산하기 */
   const calcAge = () => {
     const date = new Date();
@@ -62,6 +63,8 @@ const MyProfile = () => {
       });
   }, []);
 
+  /**스킬 추가할 때 바로 반영 */
+  //useEffect(() => {}, []);
   /** input 입력 활성화 상태 관리 useState */
   const [inputModify, setInputModify] = useState({
     name: false,
@@ -78,15 +81,15 @@ const MyProfile = () => {
 
   useEffect(() => {
     axios
-      .get(`${url}/user/language`)
+      .get(`${url}/user/distinctLanguage?userno=${authSlice.userno}`)
       .then((response) => {
         console.log(response.data);
-        setSkillList(response.data.map((language) => language.languagename));
+        setSkillList(response.data);
         setSkillSelect(
           response.data.map((language, index) => ({
             id: index,
             state: false,
-            languagename: language.languagename,
+            languagename: language,
           }))
         );
       })
@@ -144,9 +147,8 @@ const MyProfile = () => {
   };
 
   /** 내 스킬 편집 */
-  const iconClick = (e, index, skill) => {
+  const iconClick = (e, index) => {
     e.preventDefault();
-    console.log(skill);
 
     setSkillSelect((prev) =>
       prev.map((lan) =>
@@ -154,9 +156,22 @@ const MyProfile = () => {
       )
     );
   };
+  /**추가 클릭시 선택한 스킬 추가 */
   const clickAdd = (e) => {
     e.preventDefault();
+
+    axios
+      .post(`${url}/user/addSkill?userno=${authSlice.userno}`, inputSkill)
+      .then((response) => {
+        console.log(response.data);
+        alert("추가 되었습니다.");
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
+
   const clickCancle = (e) => {
     e.preventDefault();
 
@@ -165,7 +180,22 @@ const MyProfile = () => {
       skill: false,
     }));
   };
-  /** 내 스킬 편집 저장 */
+
+  /** 내 스킬 추가 저장 */
+  const [inputSkill, setInputSkill] = useState([]);
+
+  /**선택한 스킬 추가하기 */
+  useEffect(() => {
+    const selectedSkill = skillSelect
+      .filter((skill) => skill.state)
+      .map((skill) => skill.languagename);
+
+    setInputSkill(selectedSkill);
+  }, [skillSelect]);
+
+  useEffect(() => {
+    console.log(inputSkill);
+  }, [inputSkill]);
 
   return (
     <>
@@ -322,27 +352,31 @@ const MyProfile = () => {
               <div className="inputSkill">
                 {inputModify.skill ? (
                   <div className="skillIconList">
-                    {skillList.map((skill, index) => (
-                      <div
-                        className={
-                          skillSelect.find(
-                            (lan) => lan.id === index && lan.state
-                          )
-                            ? "skillIconsClick"
-                            : "skillIcons"
-                        }
-                        key={index}
-                        onClick={(e) => iconClick(e, index, skill)}
-                      >
-                        <SkillIcon
-                          className="skillIcon"
-                          skill={skill}
-                          classType={"bigSkillImg"}
-                        />
-                        <span className="skillName">{skill}</span>
-                      </div>
-                    ))}
-                    <br />
+                    {skillList
+                      .filter(
+                        (selected) =>
+                          !information.languagename.includes(selected)
+                      )
+                      .map((skill, index) => (
+                        <div
+                          className={
+                            skillSelect.find(
+                              (lan) => lan.id === index && lan.state
+                            )
+                              ? "skillIconsClick"
+                              : "skillIcons"
+                          }
+                          key={index}
+                          onClick={(e) => iconClick(e, index, skill)}
+                        >
+                          <SkillIcon
+                            className="skillIcon"
+                            skill={skill}
+                            classType={"bigSkillImg"}
+                          />
+                          <span className="skillName">{skill}</span>
+                        </div>
+                      ))}
                     <span>
                       <button className="btn add-btn" onClick={clickAdd}>
                         추가
@@ -379,9 +413,6 @@ const MyProfile = () => {
                     </div>
                   ))}
               </div>
-              <p className="explainLevel">
-                내 기술 스텍을 클릭하여 레벨을 설정해주세요
-              </p>
             </div>
             <h2>내 경력</h2>
           </div>
