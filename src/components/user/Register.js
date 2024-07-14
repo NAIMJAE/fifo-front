@@ -20,6 +20,8 @@ const Register = () => {
     pass: "",
     name: "",
     nick: "",
+    birth: "",
+    gender: "",
     languagename: [],
   });
 
@@ -78,11 +80,11 @@ const Register = () => {
   const [duplicateNick, setDuplicateNick] = useState(null); // 닉네임 중복검사 상태
   const [progressState1, setProgressState1] = useState(null); // progress관리1
   const [progressState2, setProgressState2] = useState(null); // progress관리2
+  const [progressState3, setProgressState3] = useState(null); // progress관리3
 
   /**이메일 중복검사 포커스 아웃 */
   const handlerEmial = (e) => {
     const email = e.target.value;
-
     if (emailValid) {
       setProgressState1(true);
 
@@ -92,8 +94,22 @@ const Register = () => {
           .then((response) => {
             console.log(response.data);
             if (response.data === 0) {
-              setDuplicateEmial(true);
-              setProgressState1(false);
+              /**중복검사 통과 */
+              setTimeout(() => {
+                setDuplicateEmial(true);
+                setProgressState1(false);
+              }, 1000);
+
+              /**이메일 인증 */
+              axios
+                .post(`${url}/user/email-check`, { email: email })
+                .then((response) => {
+                  console.log(response.data);
+                  setEncodedCode(response.data);
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
             } else {
               setDuplicateEmial(false);
               setProgressState1(false);
@@ -119,6 +135,7 @@ const Register = () => {
           .then((response) => {
             console.log(response.data);
             if (response.data === 0) {
+              /**중복검사 통과 */
               setDuplicateNick(true);
               setProgressState2(false);
             } else {
@@ -131,6 +148,39 @@ const Register = () => {
           });
       }, 2000);
     }
+  };
+
+  /**이메일 인증코드 */
+  const [emailCode, setEmailCode] = useState(""); //이메일 인증 input state
+  const [encodedCode, setEncodedCode] = useState(""); // 인코딩된 인증번호
+  const [checkCode, setChecCode] = useState({ result: "" }); // 이메일 인증 결과
+
+  /**인증코드 검사 cange 핸들러 */
+  const handlerCheckEmail = (e) => {
+    setEmailCode(e.target.value);
+  };
+
+  /**인증코드 확인 버튼 */
+  const emailCodeBtn = (e) => {
+    e.preventDefault();
+
+    setProgressState3(true);
+
+    setTimeout(() => {
+      axios
+        .post(`${url}/user/check-code`, {
+          emailCode: emailCode,
+          encodedCode: encodedCode,
+        })
+        .then((response) => {
+          console.log(response.data.result);
+
+          setProgressState3(false);
+
+          setChecCode(response.data);
+        })
+        .catch((err) => console.log(err));
+    }, 2000);
   };
 
   /**약관 체크관리 state */
@@ -200,26 +250,58 @@ const Register = () => {
   /**회원가입 버튼 클릭 */
   const handlerSubmitClick = (e) => {
     e.preventDefault();
-    const { email, pass, name, nick } = register;
+    const { email, pass, name, nick, birth } = register;
 
     if (!email) {
       alert("이메일을 입력해주세요");
       return;
     }
+    if (!emailValid) {
+      alert("이메일이 올바르지 않습니다.");
+      return;
+    }
+    if (!duplicateEmail) {
+      alert("중복된 이메일입니다.");
+      return;
+    }
+    if (checkCode.result !== 1) {
+      alert("이메일 인증을 진행해주세요.");
+      return;
+    }
     if (!pass) {
-      alert("비밀번호를 입력해주세요");
+      alert("비밀번호를 입력해주세요.");
+      return;
+    }
+    if (!passValid) {
+      alert("비밀번호가 올바르지 않습니다.");
       return;
     }
     if (!name) {
-      alert("이름을 입력해주세요");
+      alert("이름을 입력해주세요.");
+      return;
+    }
+    if (!nameValid) {
+      alert("이름이 올바르지 않습니다.");
       return;
     }
     if (!nick) {
-      alert("닉네임을 입력해주세요");
+      alert("닉네임을 입력해주세요.");
+      return;
+    }
+    if (!nickValid) {
+      alert("닉네임이 올바르지 않습니다.");
+      return;
+    }
+    if (!duplicateNick) {
+      alert("중복된 닉네임입니다.");
+      return;
+    }
+    if (!birth) {
+      alert("생년월일을 입력해주세요.");
       return;
     }
     if (inputSkills.length === 0 || inputSkills === undefined) {
-      alert("나의 기술 스택을 선택해주세요");
+      alert("나의 기술 스택을 선택해주세요.");
       return;
     }
     if (!check1) {
@@ -228,22 +310,6 @@ const Register = () => {
     }
     if (!check2) {
       alert("개인정보 처리방침에 동의하셔야합니다.");
-      return;
-    }
-    if (!emailValid) {
-      alert("이메일이 올바르지 않습니다.");
-      return;
-    }
-    if (!passValid) {
-      alert("비밀번호가 올바르지 않습니다.");
-      return;
-    }
-    if (!nameValid) {
-      alert("이름이 올바르지 않습니다.");
-      return;
-    }
-    if (!nickValid) {
-      alert("닉네임이 올바르지 않습니다.");
       return;
     } else {
       setOpen(true);
@@ -413,6 +479,8 @@ const Register = () => {
     if (register.email.length <= 2) {
       console.log("셋셀렉트이메일 초기화!");
       setSelectEmail("");
+    } else if (register.email.length > 8) {
+      setSelectEmail("");
     }
   }, [register.email]);
 
@@ -464,8 +532,34 @@ const Register = () => {
             <span className="validContext">이메일이 중복되었습니다.</span>
           )}
           {emailValid && duplicateEmail && (
-            <span className="passText">사용가능한 이메일입니다.</span>
+            <span className="passText">
+              사용 가능한 이메일입니다. 이메일 인증을 진행해주세요.
+              <form className="emailForm">
+                <input
+                  type="text"
+                  value={emailCode}
+                  onChange={handlerCheckEmail}
+                  className="emailCodeCheck"
+                />
+                <input
+                  type="submit"
+                  onClick={emailCodeBtn}
+                  className="emailCodeBtn"
+                  value="확인"
+                />
+                {progressState3 && (
+                  <CircularProgress className="progressEmail" size={"20px"} />
+                )}
+              </form>
+            </span>
           )}
+          {checkCode.result === 1 && (
+            <span className="passText">인증 번호가 확인 되었습니다!</span>
+          )}
+          {checkCode.result !== null && checkCode.result === 0 && (
+            <span className="validContext">인증 번호를 다시 확인해주세요.</span>
+          )}
+
           {progressState1 && (
             <CircularProgress className="progress" size={"30px"} />
           )}
@@ -533,6 +627,24 @@ const Register = () => {
           {progressState2 && (
             <CircularProgress className="progress" size={"30px"} />
           )}
+          <label className="textLabel">생년월일</label>
+          <input
+            name="birth"
+            value={register.birth}
+            onChange={handlerRegister}
+            className="inputElement"
+            type="date"
+          ></input>
+          <label className="textLabel">성별</label>
+          <select
+            name="gender"
+            value={register.gender}
+            onChange={handlerRegister}
+            className="inputElement"
+          >
+            <option value="M">남성</option>
+            <option value="F">여성</option>
+          </select>
           <div className="skill">
             <label className="skillStack">기술 스택(업무 툴/ 스킬)</label>
             <label className="selectStack">

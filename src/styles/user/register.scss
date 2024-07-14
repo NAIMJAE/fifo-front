@@ -61,17 +61,50 @@
       }
       .passText {
         display: flex;
-        justify-content: start;
+        flex-direction: column;
+        align-items: start;
+        justify-content: center;
         color: green;
         margin-top: 0.5rem;
         letter-spacing: -0.05em;
         font-size: 13px;
+        .emailForm {
+          margin-top: 1rem;
+          .emailCodeCheck {
+            border-radius: 5px;
+            border: 1px solid #c9c4c4;
+            width: 235px;
+            height: 35px;
+            padding: 5px;
+          }
+          .emailCodeBtn {
+            margin-left: 0.5rem;
+            padding: 6px;
+            font-size: small;
+            font-weight: border;
+            color: #ffffff;
+            background-color: #0090f9;
+            border: none;
+            height: 35px;
+            width: 50px;
+            border-radius: 5px;
+            cursor: pointer;
+          }
+          .emailCodeBtn:hover {
+            background-color: #0280db;
+          }
+          .progressEmail {
+            position: absolute;
+            margin-top: 8px;
+            margin-left: 10px;
+          }
+        }
       }
       .textLabel {
         display: flex;
         margin-bottom: 0.8rem;
         font-weight: 500;
-        margin-top: 2rem;
+        margin-top: 1rem;
       }
       .passContainer {
         position: relative;
