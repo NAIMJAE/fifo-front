@@ -20,6 +20,9 @@ import axios from "axios";
 import { differenceInYears } from "date-fns";
 
 const MyProfile = () => {
+  // 스킬 추가 트리거
+  const [skillTriger, SetSkillTriger] = useState(false);
+
   const authSlice = useSelector((state) => state.authSlice);
 
   const userno = authSlice.userno;
@@ -40,9 +43,9 @@ const MyProfile = () => {
     levels: [],
   });
 
-  useEffect(() => {
-    console.log(information);
-  }, [information]);
+  // useEffect(() => {
+  //   console.log(information);
+  // }, [information]);
 
   /**나이 계산하기 */
   const calcAge = () => {
@@ -62,6 +65,17 @@ const MyProfile = () => {
         console.log(err);
       });
   }, []);
+
+  useEffect(() => {
+    axios
+      .get(`${url}/user/getProfile?userno=${userno}`)
+      .then((response) => {
+        setInformation(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [skillTriger]);
 
   /**스킬 추가할 때 바로 반영 */
   //useEffect(() => {}, []);
@@ -96,7 +110,7 @@ const MyProfile = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, [inputModify.skill]);
+  }, [skillTriger]);
 
   const fileInputRef = useRef(null);
   /** 프로필 사진 수정 */
@@ -114,6 +128,57 @@ const MyProfile = () => {
     setInputModify((prev) => ({ ...prev, [targetId]: true }));
   };
 
+  const changeMyRegion = (e) => {
+    const targetId = e.currentTarget.getAttribute("data-target-id");
+    const input = document.getElementById(targetId);
+
+    // div 생성
+    const div = document.createElement("div");
+    div.id = targetId + "Div";
+
+    // checkbox 생성
+    const options = [
+      "서울",
+      "경기",
+      "인천",
+      "부산",
+      "대구",
+      "대전",
+      "광주",
+      "울산",
+      "세종",
+      "강원",
+      "경남",
+      "경북",
+      "전남",
+      "전북",
+      "충남",
+      "충북",
+      "제주",
+      "전국",
+    ];
+    options.forEach((optionText) => {
+      const label = document.createElement("label");
+      label.classList.add("regionLabel");
+
+      const checkbox = document.createElement("input");
+
+      checkbox.type = "checkbox";
+      checkbox.value = optionText;
+      checkbox.classList.add("region-checkbox");
+
+      label.appendChild(checkbox);
+      label.appendChild(document.createTextNode(optionText));
+
+      div.appendChild(label);
+    });
+
+    // input을 div로 교체
+    input.parentNode.replaceChild(div, input);
+
+    setInputModify((prev) => ({ ...prev, [targetId]: true }));
+  };
+
   /** 기본 정보 수정 */
   const inputMyInfo = (e) => {
     const { name, value } = e.target;
@@ -123,17 +188,52 @@ const MyProfile = () => {
     // 유효성 검사 넣어주세요
   };
 
+  const [emailValid, setEmailValid] = useState(null);
+  const [nickValid, setNickValid] = useState(null);
+  const [hpValid, setHpValid] = useState(null);
+
+  /**이메일 검사 함수 */
+  const isValidEmail = (email) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    setEmailValid(emailPattern.test(email));
+  };
+
+  /**닉네임 검사 함수 */
+  const isValidNick = (nick) => {
+    const nickPattern =
+      /^(?=.*[가-힣]{2,})(?!.*[^\가-힣a-zA-Z0-9]).{2,10}$|^(?=.*[a-zA-Z]{4,})(?!.*[^\가-힣a-zA-Z0-9]).{4,10}$/;
+    setNickValid(nickPattern.test(nick));
+  };
+  /**연락처 검사 함수 */
+  const isValidHp = (hp) => {
+    const hpPattern = /^\d{3}-\d{3,4}-\d{4}$/;
+    setHpValid(hpPattern.test(hp));
+  };
+
   /** 기본 정보 수정 저장 */
   const saveMyinfo = async (e) => {
     const targetId = e.currentTarget.getAttribute("data-target-id");
     const input = document.getElementById(targetId);
 
+    console.log(input.value);
+    console.log(targetId);
+
     try {
-      // 서버에 수정된 정보 저장하고 오면 됨
-      // const response = await Api();
-      // if response가 수정 성공이면
-      input.style.border = "1px solid white";
-      input.readOnly = true;
+      const response = await axios.post(
+        `${url}/user/update?userno=${authSlice.userno}`,
+        {
+          type: targetId,
+          information: input.value,
+        }
+      );
+      if (response.data) {
+        input.style.border = "1px solid white";
+        input.readOnly = true;
+        alert("수정되었습니다.");
+      } else {
+        alert("수정에 실패했습니다.");
+      }
+
       setInputModify((prev) => ({ ...prev, [targetId]: false }));
     } catch (error) {
       console.log(error);
@@ -156,6 +256,7 @@ const MyProfile = () => {
       )
     );
   };
+
   /**추가 클릭시 선택한 스킬 추가 */
   const clickAdd = (e) => {
     e.preventDefault();
@@ -165,7 +266,7 @@ const MyProfile = () => {
       .then((response) => {
         console.log(response.data);
         alert("추가 되었습니다.");
-        window.location.reload();
+        SetSkillTriger(!skillTriger);
       })
       .catch((err) => {
         console.log(err);
@@ -257,7 +358,11 @@ const MyProfile = () => {
                     />
                   )}
                 </label>
-
+                {nickValid != null && !nickValid && (
+                  <span className="validContext">
+                    올바르지 않은 닉네임입니다.
+                  </span>
+                )}
                 <label htmlFor="">
                   <h3>이메일 : </h3>
                   <input
@@ -286,7 +391,11 @@ const MyProfile = () => {
                     />
                   )}
                 </label>
-
+                {emailValid != null && !emailValid && (
+                  <span className="validContext">
+                    올바르지 않은 이메일입니다.
+                  </span>
+                )}
                 <label htmlFor="">
                   <h3>연락처 : </h3>
                   <input
@@ -295,6 +404,7 @@ const MyProfile = () => {
                     name="hp"
                     value={information.hp}
                     onChange={(e) => inputMyInfo(e)}
+                    placeholder="정보를 입력해주세요"
                     readOnly
                   />
                   {inputModify.hp ? (
@@ -315,7 +425,11 @@ const MyProfile = () => {
                     />
                   )}
                 </label>
-
+                {hpValid != null && !hpValid && (
+                  <span className="validContext">
+                    -를 포함하여 작성해주세요.
+                  </span>
+                )}
                 <label htmlFor="">
                   <h3>활동지역 : </h3>
                   <input
@@ -324,6 +438,7 @@ const MyProfile = () => {
                     name="region"
                     value={information.region}
                     onChange={(e) => inputMyInfo(e)}
+                    placeholder="정보를 입력해주세요"
                     readOnly
                   />
                   {inputModify.region ? (
@@ -340,7 +455,7 @@ const MyProfile = () => {
                       size="lg"
                       color="#7b7b7b"
                       data-target-id="region"
-                      onClick={(e) => changeMyInfo(e)}
+                      onClick={(e) => changeMyRegion(e)}
                     />
                   )}
                 </label>
