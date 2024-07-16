@@ -294,6 +294,14 @@
           cursor: pointer;
         }
       }
+      .validContext {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        color: red;
+        letter-spacing: -0.001em;
+        font-size: 13px;
+      }
     }
   }
   > .mySkill {
@@ -425,6 +433,35 @@
       justify-content: center;
       font-size: 14px;
       margin-top: 10px;
+    }
+  }
+}
+
+#regionDiv {
+  border: 1px solid #e4e4e4;
+  padding: 10px;
+  width: 360px;
+  height: auto;
+  .regionLabel {
+    display: inline-flex;
+    flex-wrap: wrap;
+    margin: 5px;
+    cursor: pointer;
+    font-family: "Pretendard", "Malgun Gothic", dotum, gulim, sans-serif;
+    color: #7b7b7b;
+    .region-checkbox {
+      //appearance: none;
+      //-webkit-appearance: none;
+      -moz-appearance: none;
+      outline: none;
+      border: none;
+      width: 20px;
+      height: 20px;
+      position: relative;
+      cursor: pointer;
+      margin-right: 8px;
+      align-items: center;
+      justify-content: center;
     }
   }
 }
