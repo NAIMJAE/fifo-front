@@ -102,3 +102,102 @@
 
     }
 }
+
+// 임재 왔다감
+// grade 메인
+#gradeIndex {
+
+    display: flex;
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+    padding: 10px;
+
+    .gradeAd {
+        display: flex;
+        width: 100%;
+        height: 300px;
+        background-image: url(../../public/images/grade/adad.png);
+    }
+
+    section {
+        display: flex;
+        width: 100%;
+
+        .aside { 
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+            align-items: center;
+
+            > img {
+                width: 200px;
+                height: 200px;
+                border-radius: 50%;
+            }
+            > h3 {
+                font-size: 18px;
+            }
+        }
+
+        .gradeCnt {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 880px;
+
+            > .gradeBack {
+                border: 1px solid #7b7b7b;
+                border-radius: 20px;
+                padding: 10px;
+                > p {
+                    font-size: 20px;
+                    margin: 4px 0 20px 4px;
+                    align-self: flex-start;
+                }
+            }
+
+            > .gradeChart {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                > a {
+                    align-self: flex-end;
+                }
+            }
+            
+            > .gradeTable {
+                display: flex;
+                width: 800px;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                box-sizing: content-box;
+                margin-top: 20px;
+                > table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    tr {
+                        > td {
+                            font-size: 16px;
+                            border-top: 1px solid #9f9f9f;
+                            border-bottom: 1px solid #9f9f9f;
+                            text-align: center;
+                            padding: 4px 10px;
+                            > a {
+                                font-size: 16px;
+                            }
+                        }
+                        > td:nth-child(3) {
+                            text-align: left;
+                        }
+                    }
+                    tr:nth-child(1) > td {
+                        text-align: center;
+                    }
+                }
+            }
+        }
+    }
+}
