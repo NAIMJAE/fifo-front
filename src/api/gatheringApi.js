@@ -59,3 +59,9 @@ export const acceptRecruitApi = async (recruitno, state) => {
     });
     return response.data;
 };
+
+/** 모임 신청 모달 정보 불러오는 API */
+export const applicationApi = async (userno) => {
+    const response = await axios.get(`${rootURL}/userInfo/${userno}`);
+    return response.data;
+};

@@ -138,6 +138,8 @@ const ModifyPage = () => {
             }
         }
 
+        console.log(formData.images)
+
         // 서버 전송
         try {
             const response = await articleModifyApi(formData);
