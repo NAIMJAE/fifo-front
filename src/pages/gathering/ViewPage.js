@@ -8,15 +8,14 @@ import { faSquareCaretDown, faTrashCan } from '@fortawesome/free-regular-svg-ico
 import GathCommentListComponent from '../../components/gathering/GathCommentListComponent';
 import CommentWriteComponent from '../../components/article/CommentWriteComponent';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { FrontUrl, RootUrl } from '../../api/RootUrl';
 import Moment from 'moment';
 import { useSelector } from 'react-redux';
-import { gathCommentInsertApi, gatheringViewApi, recruitApi } from '../../api/gatheringApi';
+import { gathCommentInsertApi, gatheringDeleteApi, gatheringViewApi, recruitApi } from '../../api/gatheringApi';
 import { Alert } from '@mui/material';
 import RecruitModal from '../../components/gathering/modal/RecruitModal';
 import ApplicationModal from '../../components/gathering/modal/ApplicationModal';
-import { el } from 'date-fns/locale';
 
 const ViewPage = () => {
 
@@ -39,6 +38,7 @@ const ViewPage = () => {
     const [comState, setComState] = useState(false);
     /** 댓글 개수 관리 */
     const [comNum, setComNum] = useState("");
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (gathno === '') {
@@ -77,6 +77,31 @@ const ViewPage = () => {
     const copyUrl = () => {
         navigator.clipboard.writeText(shareURL);
     }
+
+    /** 게시글 수정 */
+    const modifyGathering = (gathno) => {
+        let result = window.confirm("게시글을 수정하시겠습니까?");
+        if (result) {
+            navigate(`/gathering/modify?gathno=${gathno}`)
+        }
+    }
+
+    /** 게시글 삭제 */
+    const deleteGathering = async (gathno) => {
+        let result = window.confirm("게시글을 삭제하시겠습니까?");
+        if (result) {
+            try {
+                const response = await gatheringDeleteApi(gathno);
+                if (response > 0) {
+                    alert("게시글이 삭제되었습니다.");
+                    navigate("/");
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
+
     /** 댓글 작성 */
     const insertComment = async (comment) => {
 
@@ -225,7 +250,7 @@ const ViewPage = () => {
                             <span className='gathCate'>지원 현황</span>
                             <span className='gathCateValue'>{recruitList.length}명 <span onClick={handleModal}>상세 <FontAwesomeIcon icon={faSquareCaretDown} size='lg' color='#4169e1' /></span></span>
                             {/** 모임 참가 신청 현황 모달 */}
-                            {recruitState && <RecruitModal recruitList={recruitList} handleModal={handleModal} lender={lender} setLender={setLender}/>}
+                            {recruitState && <RecruitModal recruitList={recruitList} handleModal={handleModal} lender={lender} setLender={setLender} />}
                         </div>
                     ) : (
                         <div className='cntRow'>
@@ -249,32 +274,35 @@ const ViewPage = () => {
                 {gatheringView.gathdetail ? <Viewer initialValue={gatheringView.gathdetail} /> : <p>Loading...</p>}
             </div>
 
-            <div className='cntRow viewModify'>
-                <button>
-                    <FontAwesomeIcon icon={faPen} color='#1e1e1e' size='lg' />
-                    수정
-                </button>
-                <button>
-                    <FontAwesomeIcon icon={faTrashCan} color='#1e1e1e' size='lg' />
-                    삭제
-                </button>
-            </div>
+            {loginSlice.userno == gatheringView.userno &&
+                <div className='cntRow viewModify'>
+                    <button onClick={() => modifyGathering(gatheringView.gathno)}>
+                        <FontAwesomeIcon icon={faPen} color='#1e1e1e' size='lg' />
+                        수정
+                    </button>
+                    <button onClick={() => deleteGathering(gatheringView.gathno)}>
+                        <FontAwesomeIcon icon={faTrashCan} color='#1e1e1e' size='lg' />
+                        삭제
+                    </button>
+                </div >
+            }
+
             <div className='cntColumn writeComment'>
-            {loginSlice.userno !== undefined ? (
-                <>
-                {gatheringView.gathno > 0 && <CommentWriteComponent comNum={comNum} insertComment={insertComment} loginSlice={loginSlice} />}
-                </>
-            ) : (
-                <p>댓글을 작성하시려면 로그인이 필요합니다.</p>
-            )}
-        </div>
+                {loginSlice.userno !== undefined ? (
+                    <>
+                        {gatheringView.gathno > 0 && <CommentWriteComponent comNum={comNum} insertComment={insertComment} loginSlice={loginSlice} />}
+                    </>
+                ) : (
+                    <p>댓글을 작성하시려면 로그인이 필요합니다.</p>
+                )}
+            </div>
             <div className='cntColumn viewComment'>
                 {gatheringView.gathno > 0 && <GathCommentListComponent gathno={gatheringView.gathno} comState={comState} setComState={setComState} loginSlice={loginSlice} />}
             </div>
 
-            {/** 모임 참가 신청 모달 */}
-            {appState && <ApplicationModal handleAppModal={handleAppModal} handleApplication={handleApplication} />}
-        </MainLayout>
+{/** 모임 참가 신청 모달 */ }
+{ appState && <ApplicationModal handleAppModal={handleAppModal} handleApplication={handleApplication} /> }
+        </MainLayout >
     )
 }
 

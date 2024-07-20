@@ -110,6 +110,7 @@ const ModifyPage = () => {
 
         // 게시글 내용 속 이미지 변환 (changeImages 컴포넌트화 시킴)
         const resultData = await changeImages(contents);
+        
         if (resultData !== null) {
             // null 체크 안하면 에러
             resultData.imageList.forEach((image, i) => {
@@ -137,8 +138,6 @@ const ModifyPage = () => {
                 formData.append('images', resultData.imageList[i]);
             }
         }
-
-        console.log(formData.images)
 
         // 서버 전송
         try {

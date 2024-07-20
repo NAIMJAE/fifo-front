@@ -2,12 +2,11 @@ import { faFloppyDisk, faHeart, faMessage, faTrashCan } from '@fortawesome/free-
 import { faPen, faReply, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useCallback, useEffect, useState } from 'react'
-import { commentHeartApi, commentModifyApi, deleteCommentApi, selectCommentApi } from '../../api/articleApi'
 import PageingComponent from '../common/paging/PageingComponent'
 import { RootUrl } from '../../api/RootUrl'
 import Moment from 'moment';
 import 'moment/locale/ko'; // 한글 번역 파일을 추가
-import { gathCommentsSelectApi } from '../../api/gatheringApi'
+import { gathCommentDeleteApi, gathCommentModifyApi, gathCommentsSelectApi } from '../../api/gatheringApi'
 
 const CommentListComponent = ({ gathno, comState, setComState, loginSlice }) => {
     /** Moment 라이브러리 한글 설정 */
@@ -107,7 +106,7 @@ const CommentListComponent = ({ gathno, comState, setComState, loginSlice }) => 
         console.log("댓글수정 : ",data)
 
         try {
-            const response = await commentModifyApi(data);
+            const response = await gathCommentModifyApi(data);
             if (response > 0) {
                 alert("댓글이 수정되었습니다.");
             }
@@ -132,10 +131,9 @@ const CommentListComponent = ({ gathno, comState, setComState, loginSlice }) => 
 
         if (result) {
             try {
-                const response = await deleteCommentApi(commentno);
+                const response = await gathCommentDeleteApi(commentno);
                 if (response > 0) {
                     alert("댓글이 삭제되었습니다.");
-                    
                     setComState(!comState);
                 }
             } catch (error) {
@@ -202,7 +200,7 @@ const CommentListComponent = ({ gathno, comState, setComState, loginSlice }) => 
                         </>
                         }
 
-                        {(loginSlice.userno === comment.userNo) &&
+                        {(loginSlice.userno === comment.userno) &&
                         <>
                             {commentStates.find(state => state.id === comment.commentno && state.isEditing) ? (
                                 <button onClick={(e) => cancelComment(e, comment.commentno)}>

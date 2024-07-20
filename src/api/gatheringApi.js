@@ -4,38 +4,70 @@ const rootURL = RootUrl();
 
 /** 모임글 작성 API */
 export const gatheringWriteApi = async (formData) => {
-    const response = await axios.post(`${rootURL}/gathering`, formData ,{
+    const response = await axios.post(`${rootURL}/gathering`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },
     });
     return response.data;
 };
+
 /** 모임글 목록 API */
 export const gatheringListApi = async (data) => {
     const response = await axios.post(`${rootURL}/gatherings`, data);
     return response.data;
 };
+
 /** 모임글 보기 API */
 export const gatheringViewApi = async (gathno) => {
     const response = await axios.get(`${rootURL}/gathering/${gathno}`);
     return response.data;
 };
+
+/** 모임글 수정 API */
+export const gatheringModifyApi = async (formData) => {
+    const response = await axios.put(`${rootURL}/gathering`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+    return response.data;
+};
+
+/** 모임글 삭제 API */
+export const gatheringDeleteApi = async (gathno) => {
+    const response = await axios.delete(`${rootURL}/gathering/${gathno}`);
+    return response.data;
+};
+
 /** 나의 모임글 목록 API */
 export const myGatheringListApi = async (data) => {
     const response = await axios.post(`${rootURL}/my/gatherings`, data);
     return response.data;
 };
+
 /** 댓글 작성 API */
 export const gathCommentInsertApi = async (comment) => {
     const response = await axios.post(`${rootURL}/gathcomment`, comment);
     return response.data;
 };
 
+/** 댓글 수정 API */
+export const gathCommentModifyApi = async (data) => {
+    const response = await axios.patch(`${rootURL}/gathcomment`, data);
+    return response.data;
+};
+
+/** 댓글 삭제 API */
+export const gathCommentDeleteApi = async (commentno) => {
+    const response = await axios.delete(`${rootURL}/gathcomment/${commentno}`);
+    return response.data;
+};
+
 /** 댓글 불러오기 API */
 export const gathCommentsSelectApi = async (data) => {
     const response = await axios.get(`${rootURL}/gathcomment`, {
-        params :{
+        params: {
             pg: data.pg,
             gathno: data.gathno,
         }
@@ -49,10 +81,10 @@ export const recruitApi = async (data) => {
     return response.data;
 };
 
-/** 모인 신청 수락 API */
+/** 모임 신청 수락 API */
 export const acceptRecruitApi = async (recruitno, state) => {
     const response = await axios.get(`${rootURL}/gathRecruit`, {
-        params :{
+        params: {
             recruitno: recruitno,
             state: state,
         }
