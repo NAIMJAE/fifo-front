@@ -68,21 +68,42 @@ const RecruitModal = ({ recruitList, handleModal, lender, setLender }) => {
   return (
     <div className='recruitModalBox' onClick={handleModal}>
         <div className='recruitModal' onClick={bubblingBlock}>
+            <h1>모임 지원자 정보</h1>
             {recruitList && recruitList.map((each) => (
-                <>
                 <div className='userInfo' key={each.recruitno}>
                     <div className='infoNick'>
                         <div>
                             <img src={`${RootUrl()}/uploads/user/${each.thumb}`} alt="profile" />
                             <div>
-                                <p>{each.nick} ({each.recruitstate})</p>
                                 <div className='infoRegion'>
+                                    <p>{each.nick}</p>
+                                    <img src="../../images/user/stack_icon.png" alt="profile" />
+                                    <h3>{each.stack}</h3>
+                                    <span>[</span>
                                     {each.userRegions.length > 0 ? (each.userRegions.map((region, index) => (
-                                        <h4 key={index}>{region.regionname}</h4>
+                                        <span key={index}>{region.regionname}</span>
                                     ))) : (
-                                        <h4>없음</h4>
+                                        <span>없음</span>
+                                    )}
+                                    <span>]</span>
+
+                                </div>
+                                <div className='modalSkill'>
+                                    {each.skill.length > 0 ? (each.skill.map((skill, index) => (
+                                        <div key={index}>
+                                            <SkillIcon skill={skill.languagename} classType='skillImg'/>
+                                            <span>{skill.languagename}</span>
+                                        </div>
+                                    ))) : (
+                                        <>
+                                        </>
                                     )}
                                 </div>
+
+                                <div className='modalSkill'>
+                                    <p>한줄 소개 : {each.intro}</p>
+                                </div>
+
                             </div>
                         </div>
                         {each.recruitstate === "수락 대기" ? (
@@ -94,23 +115,7 @@ const RecruitModal = ({ recruitList, handleModal, lender, setLender }) => {
                             <h3>{each.recruitstate}</h3>
                         )}
                     </div>
-
-                    <div className='modalSkill'>
-                        <FontAwesomeIcon icon={faReply} flip="both" size='2xl' color='#7b7b7b'/>
-                        {each.skill.length > 0 ? (each.skill.map((skill, index) => (
-                            <div key={index}>
-                                <SkillIcon skill={skill.languagename} classType='skillImg'/>
-                                <span>{skill.languagename}</span>
-                            </div>
-                        ))) : (
-                            <h4>없음</h4>
-                        )}
-                    </div>
-                    
                 </div>
-
-                
-                </>
             ))}
         </div>
     </div>
