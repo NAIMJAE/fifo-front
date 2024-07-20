@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { acceptRecruitApi } from '../../../api/gatheringApi';
 
 const RecruitModal = ({ recruitList, handleModal, lender, setLender }) => {
