@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { acceptRecruitApi } from '../../../api/gatheringApi';
+import SkillIcon from '../SkillIcon';
+import { RootUrl } from '../../../api/RootUrl';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faReply } from '@fortawesome/free-solid-svg-icons';
 
 const RecruitModal = ({ recruitList, handleModal, lender, setLender }) => {
+
+    console.log(recruitList);
 
     /** 모모달 띄우는 상태 */ 
     const [popState, setPopState] = useState(false);
@@ -63,30 +69,50 @@ const RecruitModal = ({ recruitList, handleModal, lender, setLender }) => {
     <div className='recruitModalBox' onClick={handleModal}>
         <div className='recruitModal' onClick={bubblingBlock}>
             {recruitList && recruitList.map((each) => (
-                <div className='cntRow' key={each.recruitno} style={{justifyContent:"space-between"}} 
-                    onMouseOver={() => overMouse(each.recruitno)}>
-                    <p>{each.nick}</p>
-                    <h3>{each.recruitstate}</h3>
+                <>
+                <div className='userInfo' key={each.recruitno}>
+                    <div className='infoNick'>
+                        <div>
+                            <img src={`${RootUrl()}/uploads/user/${each.thumb}`} alt="profile" />
+                            <div>
+                                <p>{each.nick} ({each.recruitstate})</p>
+                                <div className='infoRegion'>
+                                    {each.userRegions.length > 0 ? (each.userRegions.map((region, index) => (
+                                        <h4 key={index}>{region.regionname}</h4>
+                                    ))) : (
+                                        <h4>없음</h4>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                        {each.recruitstate === "수락 대기" ? (
+                            <div className='cntRow recruitBtn'>
+                                <button onClick={() => acceptRecruit(each.nick, each.recruitno)}>수락</button>
+                                <button onClick={() => refuseRecruit(each.nick, each.recruitno)}>거절</button>
+                            </div>
+                        ) : (
+                            <h3>{each.recruitstate}</h3>
+                        )}
+                    </div>
+
+                    <div className='modalSkill'>
+                        <FontAwesomeIcon icon={faReply} flip="both" size='2xl' color='#7b7b7b'/>
+                        {each.skill.length > 0 ? (each.skill.map((skill, index) => (
+                            <div key={index}>
+                                <SkillIcon skill={skill.languagename} classType='skillImg'/>
+                                <span>{skill.languagename}</span>
+                            </div>
+                        ))) : (
+                            <h4>없음</h4>
+                        )}
+                    </div>
+                    
                 </div>
+
+                
+                </>
             ))}
         </div>
-
-        {(popState && recruit) &&
-            <div className='recruitInfoModal' onClick={bubblingBlock}>
-                <div className='cntColumn'>
-                    <p>{recruit.nick}</p>
-                    <h3>{recruit.recruitstate}</h3>
-                    <h3>{recruit.region}</h3>
-                    <h3>{recruit.intro}</h3>
-                </div>
-                {recruit.recruitstate === "수락 대기" && 
-                    <div className='cntRow recruitBtn'>
-                        <button onClick={() => acceptRecruit(recruit.nick, recruit.recruitno)}>수락</button>
-                        <button onClick={() => refuseRecruit(recruit.nick, recruit.recruitno)}>거절</button>
-                    </div>
-                }
-            </div>
-        }  
     </div>
   )
 }
