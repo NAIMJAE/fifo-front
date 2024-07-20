@@ -190,7 +190,7 @@ const ViewPage = () => {
                     </div>
                 </div>
                 <div>
-                    <h1>{gatheringView.title}</h1>
+                    <h1>{gatheringView.gathtitle}</h1>
                     <div className='dateBox'>
                         <h2>조회수 : {gatheringView.hit}</h2>
                     </div>
