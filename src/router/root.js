@@ -10,6 +10,7 @@ import ArticleModifyPage from "../pages/article/ModifyPage";
 import GatheringListPage from "../pages/gathering/ListPage";
 import GatheringWritePage from "../pages/gathering/WritePage";
 import GatheringViewPage from "../pages/gathering/ViewPage";
+import GatheringModifyPage from "../pages/gathering/ModifyPage";
 
 import RegisterPage from "../pages/user/RegisterPage";
 import MyPage from "../pages/user/MyPage";
@@ -37,6 +38,7 @@ const root = createBrowserRouter([
   { path: "/gathering/list", element: <GatheringListPage /> },
   { path: "/gathering/write", element: <GatheringWritePage /> },
   { path: "/gathering/view", element: <GatheringViewPage /> },
+  { path: "/gathering/modify", element: <GatheringModifyPage /> },
 
   /** 회원 */
 

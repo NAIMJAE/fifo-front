@@ -21,6 +21,21 @@ export const gatheringViewApi = async (gathno) => {
     const response = await axios.get(`${rootURL}/gathering/${gathno}`);
     return response.data;
 };
+/** 모임글 수정 API */
+export const gatheringModifyApi = async (formData) => {
+    const response = await axios.put(`${rootURL}/gathering`, formData ,{
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+    return response.data;
+};
+/** 모임글 삭제 API */
+export const gatheringDeleteApi = async (gathno) => {
+    const response = await axios.delete(`${rootURL}/gathering/${gathno}`);
+    return response.data;
+};
+
 /** 나의 모임글 목록 API */
 export const myGatheringListApi = async (data) => {
     const response = await axios.post(`${rootURL}/my/gatherings`, data);
@@ -31,7 +46,16 @@ export const gathCommentInsertApi = async (comment) => {
     const response = await axios.post(`${rootURL}/gathcomment`, comment);
     return response.data;
 };
-
+/** 댓글 수정 API */
+export const gathCommentModifyApi = async (data) => {
+    const response = await axios.patch(`${rootURL}/gathcomment`, data);
+    return response.data;
+};
+/** 댓글 삭제 API */
+export const gathCommentDeleteApi = async (commentno) => {
+    const response = await axios.delete(`${rootURL}/gathcomment/${commentno}`);
+    return response.data;
+};
 /** 댓글 불러오기 API */
 export const gathCommentsSelectApi = async (data) => {
     const response = await axios.get(`${rootURL}/gathcomment`, {
