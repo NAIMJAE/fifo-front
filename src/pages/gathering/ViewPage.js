@@ -34,6 +34,8 @@ const ViewPage = () => {
     const [recruitList, setRecruitList] = useState([]);
     /** 해당 사용자 참여 신청 여부 */
     const [recruitTF, setRecruitTF] = useState(false);
+    /** 해당 사용자 참여 신청 상태 */
+    const [recruitText, setRecruitText] = useState("");
     /** 댓글 상태 관리 useState */
     const [comState, setComState] = useState(false);
     /** 댓글 개수 관리 */
@@ -60,6 +62,7 @@ const ViewPage = () => {
                     const isUserInRecruitList = response.recruitList.some(recruit => {
                         if (recruit.userno == loginSlice.userno) {
                             setRecruitTF(true);
+                            setRecruitText(recruit.recruitstate);
                             return true; // 조건을 만족하면 true 반환
                         }
                         return false; // 조건을 만족하지 않으면 false 반환
@@ -258,9 +261,17 @@ const ViewPage = () => {
                                 <button className="hvMdBtn maR10" onClick={() => setAppState(true)}>참여신청</button>
                             }
                             {loginSlice.userno !== undefined && recruitTF &&
-                                <button className="hvMdBtn maR10" onClick={cancelRecruit}>신청취소</button>
+                                <>
+                                {recruitText === "수락 대기" && 
+                                    <>
+                                        <p>{recruitText} 중 입니다.</p>
+                                        <button className="hvMdBtn maR10" onClick={cancelRecruit}>신청취소</button>
+                                    </>
+                                }
+                                {recruitText === "신청 거절" && <p>{recruitText}되었습니다.</p>}
+                                </>
                             }
-                            {loginSlice.userno == undefined &&
+                            {loginSlice.userno === undefined &&
                                 <span>신청할거면 로그인해</span>
                             }
                         </div>
@@ -274,7 +285,7 @@ const ViewPage = () => {
                 {gatheringView.gathdetail ? <Viewer initialValue={gatheringView.gathdetail} /> : <p>Loading...</p>}
             </div>
 
-            {loginSlice.userno == gatheringView.userno &&
+            {loginSlice.userno === gatheringView.userno &&
                 <div className='cntRow viewModify'>
                     <button onClick={() => modifyGathering(gatheringView.gathno)}>
                         <FontAwesomeIcon icon={faPen} color='#1e1e1e' size='lg' />
