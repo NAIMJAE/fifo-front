@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { globalPath } from "../../globalPaths";
 import moment from "moment/moment";
 import axios from "axios";
-import { differenceInYears } from "date-fns";
+import { differenceInYears, set } from "date-fns";
 
 const MyProfile = () => {
   // 스킬 추가 트리거
@@ -54,21 +54,10 @@ const MyProfile = () => {
   };
   const age = calcAge();
 
-  /**유저 정보 가져오기 */
+  /**정보 변경 했을 때 바로 반영 */
   useEffect(() => {
     axios
-      .get(`${url}/user/getProfile?userno=${userno}`)
-      .then((response) => {
-        setInformation(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
-  useEffect(() => {
-    axios
-      .get(`${url}/user/getProfile?userno=${userno}`)
+      .get(`${url}/profile/select?userno=${userno}`)
       .then((response) => {
         setInformation(response.data);
       })
@@ -95,7 +84,7 @@ const MyProfile = () => {
 
   useEffect(() => {
     axios
-      .get(`${url}/user/distinctLanguage?userno=${authSlice.userno}`)
+      .get(`${url}/profile/distinctLanguage?userno=${authSlice.userno}`)
       .then((response) => {
         console.log(response.data);
         setSkillList(response.data);
@@ -128,6 +117,24 @@ const MyProfile = () => {
     setInputModify((prev) => ({ ...prev, [targetId]: true }));
   };
 
+  /**지역들을 담을 state */
+  const [regionOptions, setRegionOptions] = useState([]);
+
+  /**지역들 가져오기 */
+
+  useEffect(() => {
+    axios
+      .get(`${url}/profile/selectRegion`)
+      .then((response) => {
+        console.log(response.data);
+        setRegionOptions(response.data.map((region) => region.regionname));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  /**내 지역 select 활성 */
   const changeMyRegion = (e) => {
     const targetId = e.currentTarget.getAttribute("data-target-id");
     const input = document.getElementById(targetId);
@@ -136,28 +143,7 @@ const MyProfile = () => {
     const div = document.createElement("div");
     div.id = targetId + "Div";
 
-    // checkbox 생성
-    const options = [
-      "서울 (125)",
-      "경기 (15)",
-      "인천 (13)",
-      "부산 (20)",
-      "대구 (19)",
-      "대전 (15)",
-      "광주 (8)",
-      "울산 (11)",
-      "세종 (9)",
-      "강원 (8)",
-      "경남 (7)",
-      "경북 (6)",
-      "전남 (5)",
-      "전북 (9)",
-      "충남 (10)",
-      "충북 (9)",
-      "제주 (5)",
-      "전국 (300)",
-    ];
-    options.forEach((optionText) => {
+    regionOptions.forEach((optionText) => {
       const label = document.createElement("label");
       label.classList.add("regionLabel");
 
@@ -177,6 +163,59 @@ const MyProfile = () => {
     input.parentNode.replaceChild(div, input);
 
     setInputModify((prev) => ({ ...prev, [targetId]: true }));
+  };
+
+  /** 내 지역 정보 수정 저장 */
+  const saveMyRegion = async (e) => {
+    const targetId = e.currentTarget.getAttribute("data-target-id");
+    const option = document.getElementsByClassName(targetId + "-checkbox");
+    const div = document.getElementById(targetId + "Div");
+
+    console.log(option.value);
+    console.log(targetId + "-checkbox");
+    console.log(div);
+
+    checkRegion(e);
+    // div를 다시 input으로 교체
+    //div.parentNode.replaceChild(input, div);
+
+    // try {
+    //   const response = await axios.post(
+    //     `${url}/profile/updateRegion?userno=${authSlice.userno}`,
+    //     {
+    //       type: targetId,
+    //       information: input.value,
+    //     }
+    //   );
+
+    //   if (response.data) {
+    //     SetSkillTriger(!skillTriger);
+    //     input.style.border = "1px solid white";
+    //     input.readOnly = true;
+    //     alert("수정되었습니다.");
+    //   } else {
+    //     alert("수정에 실패했습니다.");
+    //   }
+
+    //   setInputModify((prev) => ({ ...prev, [targetId]: false }));
+    // } catch (error) {
+    //   console.log(error);
+    // }
+  };
+
+  const [regionArr, setRegionArr] = useState([]);
+
+  const checkRegion = (e) => {
+    const targetId = e.currentTarget.getAttribute("data-target-id");
+    const option = document.getElementsByClassName(targetId + "-checkbox");
+
+    Array.from(option).forEach((each) => {
+      if (each.checked) {
+        console.log(each);
+        setRegionArr((prev) => [...prev, each.value]);
+      }
+    });
+    console.log(regionArr);
   };
 
   /** 기본 정보 수정 */
@@ -220,13 +259,15 @@ const MyProfile = () => {
 
     try {
       const response = await axios.post(
-        `${url}/user/update?userno=${authSlice.userno}`,
+        `${url}/profile/update?userno=${authSlice.userno}`,
         {
           type: targetId,
           information: input.value,
         }
       );
+
       if (response.data) {
+        SetSkillTriger(!skillTriger);
         input.style.border = "1px solid white";
         input.readOnly = true;
         alert("수정되었습니다.");
@@ -262,7 +303,7 @@ const MyProfile = () => {
     e.preventDefault();
 
     axios
-      .post(`${url}/user/addSkill?userno=${authSlice.userno}`, inputSkill)
+      .post(`${url}/profile/addSkill?userno=${authSlice.userno}`, inputSkill)
       .then((response) => {
         console.log(response.data);
         alert("추가 되었습니다.");
@@ -447,7 +488,7 @@ const MyProfile = () => {
                       size="lg"
                       color="#7b7b7b"
                       data-target-id="region"
-                      onClick={(e) => saveMyinfo(e)}
+                      onClick={(e) => saveMyRegion(e)}
                     />
                   ) : (
                     <FontAwesomeIcon
