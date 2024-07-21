@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquareCaretDown, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import GathCommentListComponent from '../../components/gathering/GathCommentListComponent';
 import CommentWriteComponent from '../../components/article/CommentWriteComponent';
-import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FrontUrl, RootUrl } from '../../api/RootUrl';
 import Moment from 'moment';
@@ -16,6 +16,7 @@ import { gathCommentInsertApi, gatheringDeleteApi, gatheringViewApi, recruitApi 
 import { Alert } from '@mui/material';
 import RecruitModal from '../../components/gathering/modal/RecruitModal';
 import ApplicationModal from '../../components/gathering/modal/ApplicationModal';
+import GathStartModal from '../../components/gathering/modal/GathStartModal';
 
 const ViewPage = () => {
 
@@ -177,7 +178,9 @@ const ViewPage = () => {
         }
     }
 
-
+    /** 모임 시작하기 */
+    const [gathStart, setGathStart] = useState(false);
+    const handleStartModal = () => setGathStart(!gathStart);
 
     return (
         <MainLayout>
@@ -269,6 +272,7 @@ const ViewPage = () => {
                                     </>
                                 }
                                 {recruitText === "신청 거절" && <p>{recruitText}되었습니다.</p>}
+                                {recruitText === "신청 수락" && <p>{recruitText}되었습니다.</p>}
                                 </>
                             }
                             {loginSlice.userno === undefined &&
@@ -277,8 +281,13 @@ const ViewPage = () => {
                         </div>
                     )}
                 </div>
+
+                <div className='gathStart'>
+                    <button onClick={handleStartModal}><FontAwesomeIcon icon={faPlus} size='1x'/>모임 시작하기</button>
+                </div>
+
                 <div className='alertBox'>
-                    <Alert className='alert' severity="info">참여를 신청하면, 내 언어 레벨과 매너 온도 등의 정보가 모임 호스트에게 전달됩니다.</Alert>
+                    <Alert className='alert' severity="info">참여를 신청하면, 내 언어 레벨과 매너 스택 등의 정보가 모임 호스트에게 전달됩니다.</Alert>
                 </div>
             </div>
             <div className='cntRow viewContents'>
@@ -311,8 +320,11 @@ const ViewPage = () => {
                 {gatheringView.gathno > 0 && <GathCommentListComponent gathno={gatheringView.gathno} comState={comState} setComState={setComState} loginSlice={loginSlice} />}
             </div>
 
-{/** 모임 참가 신청 모달 */ }
-{ appState && <ApplicationModal handleAppModal={handleAppModal} handleApplication={handleApplication} /> }
+            {/** 모임 참가 신청 모달 */ }
+            { appState && <ApplicationModal handleAppModal={handleAppModal} handleApplication={handleApplication} /> }
+
+            {/** 모임 시작 모달 */ }
+            { gathStart && <GathStartModal gathno={gatheringView.gathno} handleStartModal={handleStartModal}/>}
         </MainLayout >
     )
 }

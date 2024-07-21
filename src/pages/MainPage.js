@@ -81,7 +81,7 @@ const MainPage = () => {
             )}
           </div>
           {/** 햄버거 사이드 */}
-          <div className={`sidebar-wrapper ${sideBar ? 'open' : ''}`}>
+          <div className="sidebar-wrapper">
             <div
               className={`hamburger-trigger ${sideBar ? 'active-4' : ''}`}
               onClick={toggleSideBar}
@@ -89,6 +89,9 @@ const MainPage = () => {
               <span></span>
               <span></span>
               <span></span>
+            </div>
+            <div className='hamburgerBack'>
+
             </div>
             <div className={`searchGathAside ${sideBar ? 'open' : ''}`}>
               <SearchAside setPageRequest={setPageRequest} />
