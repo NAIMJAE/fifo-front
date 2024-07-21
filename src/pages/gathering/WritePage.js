@@ -23,7 +23,6 @@ const Write = () => {
     const loginSlice = useSelector((state) => state.authSlice) || {};
     const navigate = useNavigate();
     const [modalOpen, setModalOpen] = useState(false);
-    const [modalOpen2, setModalOpen2] = useState(false);
 
     /** 모임 Data */
     const [gathering, setGathering] = useState({
@@ -38,8 +37,7 @@ const Write = () => {
         gathlanguage: "",  // 모집 언어
         recruitstart: "",  // 모집 시작일
         recruitend: "",  // 모집 종료일
-        projectstart: "",  // 프로젝트 시작일
-        projectend: "",  // 프로젝트 종료일
+        mooimperiod: "2주",  // 모임 기간
         gathstate: "1"  // 모집 상태
     });
 
@@ -109,8 +107,7 @@ const Write = () => {
             { field: 'gathlanguage', name: '모집 언어' },
             { field: 'recruitstart', name: '모집 시작일' },
             { field: 'recruitend', name: '모집 종료일' },
-            { field: 'projectstart', name: '프로젝트 시작일' },
-            { field: 'projectend', name: '프로젝트 종료일' }
+            { field: 'mooimperiod', name: '모임 기간' }
         ];
 
         for (let { field, name } of requiredFields) {
@@ -159,25 +156,18 @@ const Write = () => {
             console.log(err);
         }
     }
-    /** 날짜 */
+
+    /** 날짜 초기화 */
     const initializeRecruit = () => {
         const startDate = new Date();
         const endDate = addDays(startDate, 7); // startDate의 1주일 후
         return [{ startDate, endDate, key: 'selection' }];
     };
 
-    const initializeMooim = (recruitEndDate) => {
-        const startDate = recruitEndDate ? addDays(recruitEndDate, 1) : new Date();
-        const endDate = addDays(startDate, 30);
-        return [{ startDate, endDate, key: 'selection' }];
-    };
-
     const [recruit, setRecruit] = useState(initializeRecruit);
-    const [mooim, setMooim] = useState(initializeMooim(recruit.endDate));
 
     /** 날짜 형태 바꾸기 */
     const changeDateType = (date) => {
-
         // 년, 월, 일 추출
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1 필요
@@ -202,24 +192,9 @@ const Write = () => {
                 recruitend: recruitend,
             });
         }
-
     };
-    const handleModal2 = () => {
-        setModalOpen2(!modalOpen2);
-        if (modalOpen2) {
-            // 날짜 정보 입력
-            const projectstart = changeDateType(mooim[0].startDate);
-            const projectend = changeDateType(mooim[0].endDate);
 
-            setGathering({
-                ...gathering,
-                projectstart: projectstart,
-                projectend: projectend
-            });
-        }
-    };
     return (
-
         <MainLayout>
             <div className='cntRow gatheringTitle'>
                 모임 생성
@@ -286,9 +261,14 @@ const Write = () => {
                     <p>{gathering.recruitstart} ~ {gathering.recruitend}</p>
                 </div>
 
-                <div className='cntRow cntSelectDate'>
-                    <button className="hvMdBtn maR10" onClick={handleModal2}>진행 기간</button>
-                    <p>{gathering.projectstart} ~ {gathering.projectend}</p>
+                <div className='cntRow'>
+                    <span>모임 기간</span>
+                    <select name="mooimperiod" onChange={handleInputChange}>
+                        <option value="2주">2주</option>
+                        <option value="1개월">1개월</option>
+                        <option value="2개월">2개월</option>
+                        <option value="3개월 이상">3개월 이상</option>
+                    </select>
                 </div>
             </div>
             <div className='cntRow detail'>
@@ -306,7 +286,6 @@ const Write = () => {
                 <button className='blue' onClick={handleSubmit}>작성</button>
             </div>
             {modalOpen && <DateModal date={recruit} setDate={setRecruit} handleModal={handleModal} />}
-            {modalOpen2 && <DateModal date={mooim} setDate={setMooim} handleModal={handleModal2} />}
         </MainLayout>
     );
 }
