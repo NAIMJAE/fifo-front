@@ -51,7 +51,7 @@ const ApplicationModal = ({ handleAppModal, handleApplication }) => {
         <div className='applicationModal' onClick={bubblingBlock}>
             <p>참여 신청</p>
 
-            <h3>닉 네 임 : 삐뽀삐</h3>
+            <h3>닉 네 임 : {loginSlice.nick}</h3>
             <h3>활동지역 :&nbsp;
                 {userRegion && userRegion.map((region, index) => (region.regionname + " "))}
             </h3>

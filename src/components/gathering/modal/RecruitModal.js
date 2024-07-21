@@ -1,26 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { acceptRecruitApi } from '../../../api/gatheringApi';
 import SkillIcon from '../SkillIcon';
 import { RootUrl } from '../../../api/RootUrl';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faReply } from '@fortawesome/free-solid-svg-icons';
 
 const RecruitModal = ({ recruitList, handleModal, lender, setLender }) => {
-
-    console.log(recruitList);
-
-    /** 모모달 띄우는 상태 */ 
-    const [popState, setPopState] = useState(false);
-
-    /** 모모달에 출력할 정보 */ 
-    const [recruit, setRecruit] = useState("");
-    
-    /** 모달에서 모모달 띄우는 함수 */
-    const overMouse = (recruitno) => {
-        const foundData = recruitList.find(info => info.recruitno === recruitno);
-        setRecruit(foundData);
-        setPopState(true);
-    }
 
     /** 신청 수락 */
     const acceptRecruit = async (nick, recruitno) => {
@@ -112,7 +95,11 @@ const RecruitModal = ({ recruitList, handleModal, lender, setLender }) => {
                                 <button onClick={() => refuseRecruit(each.nick, each.recruitno)}>거절</button>
                             </div>
                         ) : (
-                            <h3>{each.recruitstate}</h3>
+                            <>
+                                {each.recruitstate === "수락 대기" && <h3>{each.recruitstate}</h3>}
+                                {each.recruitstate === "신청 수락" && <h3 style={{color:"green"}}>{each.recruitstate}</h3>}
+                                {each.recruitstate === "신청 거절" && <h3 style={{color:"#FF0000"}}>{each.recruitstate}</h3>}
+                            </>
                         )}
                     </div>
                 </div>

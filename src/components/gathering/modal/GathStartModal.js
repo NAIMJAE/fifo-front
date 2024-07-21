@@ -3,7 +3,7 @@ import SkillIcon from '../SkillIcon'
 import { selectGathStartApi } from '../../../api/gatheringApi';
 import { RootUrl } from '../../../api/RootUrl';
 
-const GathStartModal = ({ gathno, handleStartModal }) => {
+const GathStartModal = ({ modalData, handleStartModal }) => {
 
     /** 버블링 막는 함수 */
     function bubblingBlock(event) {
@@ -20,7 +20,7 @@ const GathStartModal = ({ gathno, handleStartModal }) => {
     useEffect(() => {
         const selectGathStart = async () => {
             try {
-                const response = await selectGathStartApi(gathno);
+                const response = await selectGathStartApi(modalData.gathno);
                 console.log("모임시작모달 : ",response);
                 setRecruitMember(response);
             } catch (error) {
@@ -39,11 +39,15 @@ const GathStartModal = ({ gathno, handleStartModal }) => {
                 <div className='gathType'>
                     <div>
                         <span>모임 유형</span>
-                        <span>프로젝트</span>
+                        <span>
+                            {modalData.gathcate === 1 ? '프로젝트' :
+                                modalData.gathcate === 2 ? '스터디' :
+                                    modalData.gathcate === 3 ? '모임' : '알 수 없음'}
+                        </span>
                     </div>
                     <div>
                         <span>모임 방식</span>
-                        <span>온라인</span>
+                        <span>{modalData.gathmode}</span>
                     </div>
                 </div>
 

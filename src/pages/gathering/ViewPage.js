@@ -181,6 +181,11 @@ const ViewPage = () => {
     /** 모임 시작하기 */
     const [gathStart, setGathStart] = useState(false);
     const handleStartModal = () => setGathStart(!gathStart);
+    const modalData = {
+        gathno : gatheringView.gathno,
+        gathcate : gatheringView.gathcate,
+        gathmode : gatheringView.gathmode,
+    }
 
     return (
         <MainLayout>
@@ -255,8 +260,6 @@ const ViewPage = () => {
                         <div className='cntRow gathRecruit'>
                             <span className='gathCate'>지원 현황</span>
                             <span className='gathCateValue'>{recruitList.length}명 <span onClick={handleModal}>상세 <FontAwesomeIcon icon={faSquareCaretDown} size='lg' color='#4169e1' /></span></span>
-                            {/** 모임 참가 신청 현황 모달 */}
-                            {recruitState && <RecruitModal recruitList={recruitList} handleModal={handleModal} lender={lender} setLender={setLender} />}
                         </div>
                     ) : (
                         <div className='cntRow'>
@@ -276,7 +279,7 @@ const ViewPage = () => {
                                 </>
                             }
                             {loginSlice.userno === undefined &&
-                                <span>신청할거면 로그인해</span>
+                                <span>로그인 하시면 참가 신청 가능</span>
                             }
                         </div>
                     )}
@@ -320,11 +323,14 @@ const ViewPage = () => {
                 {gatheringView.gathno > 0 && <GathCommentListComponent gathno={gatheringView.gathno} comState={comState} setComState={setComState} loginSlice={loginSlice} />}
             </div>
 
+            {/** 모임 참가 신청 현황 모달 */}
+            {recruitState && <RecruitModal recruitList={recruitList} handleModal={handleModal} lender={lender} setLender={setLender} />}
+
             {/** 모임 참가 신청 모달 */ }
             { appState && <ApplicationModal handleAppModal={handleAppModal} handleApplication={handleApplication} /> }
 
             {/** 모임 시작 모달 */ }
-            { gathStart && <GathStartModal gathno={gatheringView.gathno} handleStartModal={handleStartModal}/>}
+            { gathStart && <GathStartModal modalData={modalData} handleStartModal={handleStartModal}/>}
         </MainLayout >
     )
 }
