@@ -242,8 +242,8 @@ const ViewPage = () => {
                         <span className='gathCateValue'>{gatheringView.gathrecruitfield}</span>
                     </div>
                     <div className='cntRow'>
-                        <span className='gathCate'>진행 기간</span>
-                        <span className='gathCateValue'>{gatheringView.projectstart} ~ {gatheringView.projectend}</span>
+                        <span className='gathCate'>예상 기간</span>
+                        <span className='gathCateValue'>{gatheringView.mooimperiod}</span>
                     </div>
                 </div>
                 <div className='cntRow gathCategory'>
