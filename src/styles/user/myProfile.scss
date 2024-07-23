@@ -435,6 +435,34 @@
       margin-top: 10px;
     }
   }
+  .myExperience {
+    display: flex;
+    border: #6f4e37 solid 1px;
+    padding: 15px;
+
+    .MuiFormControl-fullWidth {
+      display: flex;
+      flex-direction: row;
+      .wirtePeriod {
+        margin-right: 15px;
+        width: 15%;
+        margin-bottom: 10px;
+
+        .MuiInputBase-root {
+          width: 100%;
+        }
+      }
+      .writeJob {
+        margin-right: 15px;
+        width: 30%;
+        margin-bottom: 10px;
+
+        .MuiInputBase-root {
+          width: 100%;
+        }
+      }
+    }
+  }
 }
 
 #regionDiv {

@@ -1,6 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import "../../styles/user/myProfile.scss";
-import { Button } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 import { RootUrl } from "../../api/RootUrl";
 import { useSelector } from "react-redux";
 import SkillIcon from "../gathering/SkillIcon";
@@ -42,11 +50,25 @@ const MyProfile = () => {
     languagename: [],
     levels: [],
   });
+  /**유저 지역 정보 */
+  const [userRegion, setUserRegion] = useState([]);
 
-  // useEffect(() => {
-  //   console.log(information);
-  // }, [information]);
+  /**유저 지역 정보 가져오기 */
+  useEffect(() => {
+    axios
+      .get(`${url}/profile/selectMyRegion?userno=${authSlice.userno}`)
+      .then((response) => {
+        console.log(response.data);
+        setUserRegion(response.data.map((data) => data.regionname));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
+  useEffect(() => {
+    console.log(userRegion);
+  }, [userRegion]);
   /**나이 계산하기 */
   const calcAge = () => {
     const date = new Date();
@@ -54,7 +76,7 @@ const MyProfile = () => {
   };
   const age = calcAge();
 
-  /**정보 변경 했을 때 바로 반영 */
+  /**내 정보 가져오기 */
   useEffect(() => {
     axios
       .get(`${url}/profile/select?userno=${userno}`)
@@ -66,8 +88,6 @@ const MyProfile = () => {
       });
   }, [skillTriger]);
 
-  /**스킬 추가할 때 바로 반영 */
-  //useEffect(() => {}, []);
   /** input 입력 활성화 상태 관리 useState */
   const [inputModify, setInputModify] = useState({
     name: false,
@@ -121,7 +141,6 @@ const MyProfile = () => {
   const [regionOptions, setRegionOptions] = useState([]);
 
   /**지역들 가져오기 */
-
   useEffect(() => {
     axios
       .get(`${url}/profile/selectRegion`)
@@ -165,45 +184,9 @@ const MyProfile = () => {
     setInputModify((prev) => ({ ...prev, [targetId]: true }));
   };
 
-  /** 내 지역 정보 수정 저장 */
-  const saveMyRegion = async (e) => {
-    const targetId = e.currentTarget.getAttribute("data-target-id");
-    const option = document.getElementsByClassName(targetId + "-checkbox");
-    const div = document.getElementById(targetId + "Div");
-
-    console.log(option.value);
-    console.log(targetId + "-checkbox");
-    console.log(div);
-
-    checkRegion(e);
-    // div를 다시 input으로 교체
-    //div.parentNode.replaceChild(input, div);
-
-    // try {
-    //   const response = await axios.post(
-    //     `${url}/profile/updateRegion?userno=${authSlice.userno}`,
-    //     {
-    //       type: targetId,
-    //       information: input.value,
-    //     }
-    //   );
-
-    //   if (response.data) {
-    //     SetSkillTriger(!skillTriger);
-    //     input.style.border = "1px solid white";
-    //     input.readOnly = true;
-    //     alert("수정되었습니다.");
-    //   } else {
-    //     alert("수정에 실패했습니다.");
-    //   }
-
-    //   setInputModify((prev) => ({ ...prev, [targetId]: false }));
-    // } catch (error) {
-    //   console.log(error);
-    // }
-  };
-
+  // 선택한 지역 배열에 넣기
   const [regionArr, setRegionArr] = useState([]);
+  const [regionTrigger, setRegionTrigger] = useState(false); // 업데이트를 트리거하기 위한 상태
 
   const checkRegion = (e) => {
     const targetId = e.currentTarget.getAttribute("data-target-id");
@@ -211,11 +194,52 @@ const MyProfile = () => {
 
     Array.from(option).forEach((each) => {
       if (each.checked) {
-        console.log(each);
         setRegionArr((prev) => [...prev, each.value]);
+        setRegionTrigger(true);
       }
     });
-    console.log(regionArr);
+  };
+
+  /** 내 지역 정보 수정 저장 */
+  const saveMyRegion = async (e) => {
+    checkRegion(e);
+
+    const targetId = e.currentTarget.getAttribute("data-target-id");
+    const option = document.getElementsByClassName(targetId + "-checkbox");
+    const div = document.getElementById(targetId + "Div");
+
+    const input = document.createElement("input");
+    input.type = "text";
+    input.id = targetId;
+    input.readOnly = true;
+    input.value = userRegion;
+
+    console.log(targetId + "-checkbox");
+    console.log(div);
+
+    if (regionTrigger) {
+      try {
+        const response = await axios.post(
+          `${url}/profile/updateRegion?userno=${authSlice.userno}`,
+          regionArr
+        );
+        if (response.data) {
+          SetSkillTriger(!skillTriger);
+
+          //div를 다시 input으로 교체
+          div.parentNode.replaceChild(input, div);
+          // 아이콘도 다시 연필
+          setInputModify((prev) => ({ ...prev, [targetId]: false }));
+          setRegionTrigger(false);
+
+          alert("수정되었습니다.");
+        } else {
+          alert("수정에 실패했습니다.");
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
   };
 
   /** 기본 정보 수정 */
@@ -339,6 +363,12 @@ const MyProfile = () => {
     console.log(inputSkill);
   }, [inputSkill]);
 
+  /**경력 기입 */
+  const [period, setPeriod] = React.useState("");
+
+  const handleChange = (event) => {
+    setPeriod(event.target.value);
+  };
   return (
     <>
       <main>
@@ -477,7 +507,7 @@ const MyProfile = () => {
                     type="text"
                     id="region"
                     name="region"
-                    value={information.region}
+                    value={userRegion}
                     onChange={(e) => inputMyInfo(e)}
                     placeholder="정보를 입력해주세요"
                     readOnly
@@ -503,7 +533,7 @@ const MyProfile = () => {
               </div>
             </div>
 
-            <h2>내 스킬</h2>
+            <h2>나의 스킬</h2>
             <div className="mySkill">
               <div className="inputSkill">
                 {inputModify.skill ? (
@@ -570,7 +600,30 @@ const MyProfile = () => {
                   ))}
               </div>
             </div>
-            <h2>내 경력</h2>
+            <h2>나의 경력</h2>
+            <div className="myExperience">
+              <FormControl fullWidth>
+                <div className="wirtePeriod">
+                  <InputLabel style={{ cursor: "pointer" }}>
+                    재직기간
+                  </InputLabel>
+                  <Select
+                    value={period}
+                    label="재직 기간"
+                    onChange={handleChange}
+                  >
+                    <MenuItem value={"1년 이하"}>1년 이하</MenuItem>
+                    <MenuItem value={"1~3년"}>1~3년</MenuItem>
+                    <MenuItem value={"4~5년"}>4~5년</MenuItem>
+                    <MenuItem value={"5년이상"}>5년 이상</MenuItem>
+                    <MenuItem value={"10년이상"}>10년 이상</MenuItem>
+                  </Select>
+                </div>
+                <div className="writeJob">
+                  <TextField label="직무" variant="outlined" />
+                </div>
+              </FormControl>
+            </div>
           </div>
         </div>
       </main>
