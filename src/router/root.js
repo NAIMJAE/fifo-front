@@ -19,6 +19,7 @@ import LanguageListPage from "../pages/grade/LanguageListPage"
 import QuestionListPage from "../pages/grade/QuestionListPage"
 import QuestionViewPage from "../pages/grade/QuestionViewPage"
 import GradePage from "../pages/grade/GradePage";
+import MooimPage from "../pages/mooim/MooimPage";
 
 const root = createBrowserRouter([
   /** 메인 페이지 */
@@ -41,7 +42,8 @@ const root = createBrowserRouter([
   { path: "/gathering/view", element: <GatheringViewPage /> },
   { path: "/gathering/modify", element: <GatheringModifyPage /> },
 
-  /** 회원 */
+  /** 모임 시작 */
+  { path: "/mooim", element: <MooimPage /> },
 
   /** 등급 */
   { path: "/grade/language", element: <LanguageListPage /> },
