@@ -35,7 +35,7 @@ const MooimPage = () => {
                 <h2>쇼핑몰과 게시판 기능을 합친 간단한 웹사이트 구축 프로젝트</h2>
 
                 <div>
-                  <h2>프로젝트</h2>
+                  <h2>프로젝트 |</h2>
                   <h2>온라인</h2>
                 </div>
 
@@ -48,7 +48,9 @@ const MooimPage = () => {
             
             <div className='mooimProgress'>
               <div>
-                <div id='bar'>40</div>
+                <div id='bar'>40
+                  <img src="../../../../images/mooim/ppoppi_bar.png" alt="" />
+                </div>
               </div>
             </div>
 
@@ -58,6 +60,7 @@ const MooimPage = () => {
           <div className='function'>
             <Link to={"/"}>정보</Link>
             <Link to={"/"}>채팅</Link>
+            <Link to={"/"}>캘린더</Link>
             <Link to={"/"}>칸반</Link>
             <Link to={"/"}>문서</Link>
           </div>
