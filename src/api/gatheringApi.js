@@ -103,3 +103,9 @@ export const selectGathStartApi = async (gathno) => {
     const response = await axios.get(`${rootURL}/gathStart/${gathno}`);
     return response.data;
 };
+
+/** 모임 시작 API */
+export const startMooimApi = async (data) => {
+    const response = await axios.post(`${rootURL}/mooim`, data);
+    return response.data;
+};
