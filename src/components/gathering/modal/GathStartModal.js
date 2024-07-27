@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import SkillIcon from '../SkillIcon'
-import { selectGathStartApi } from '../../../api/gatheringApi';
+import { selectGathStartApi, startMooimApi } from '../../../api/gatheringApi';
 import { RootUrl } from '../../../api/RootUrl';
 
 const GathStartModal = ({ modalData, handleStartModal }) => {
@@ -14,14 +14,13 @@ const GathStartModal = ({ modalData, handleStartModal }) => {
     const [recruitMember, setRecruitMember] = useState([]);
 
     /** 모임 제목 */
-    const [gathTitle, setGathTitle] = useState("");
+    const [mooimtitle, setMooimTitle] = useState("");
 
     /** 모임 신청 정보 불러오기 */
     useEffect(() => {
         const selectGathStart = async () => {
             try {
                 const response = await selectGathStartApi(modalData.gathno);
-                console.log("모임시작모달 : ",response);
                 setRecruitMember(response);
             } catch (error) {
                 console.log(error);
@@ -30,6 +29,30 @@ const GathStartModal = ({ modalData, handleStartModal }) => {
         selectGathStart();
     },[])
 
+    /** 모임 시작 */
+    const handleStartMooim = async () => {
+
+        if(mooimtitle != "") {
+
+            const data = {
+                mooimtitle: mooimtitle,
+                gathno: recruitMember[0].gathno,
+                recruitMember: recruitMember
+            };
+
+            try {
+                const response = await startMooimApi(data);
+                console.log("모임 번호 : ",  response);
+            } catch (error) {
+                console.log(error);
+            }
+        }else {
+            alert('모임명 입력은 필수입니다.');
+            return;
+        }
+
+    } 
+    
   return (
     <div className='gathStartModalBox' onClick={handleStartModal}>
         <div className='gathStartModal' onClick={bubblingBlock}>
@@ -80,7 +103,7 @@ const GathStartModal = ({ modalData, handleStartModal }) => {
 
                 <div className='gathTitle'>
                     <p>모임명</p>
-                    <input type="text" value={gathTitle} onChange={(e) => setGathTitle(e.target.value)}/>
+                    <input type="text" value={mooimtitle} onChange={(e) => setMooimTitle(e.target.value)}/>
                 </div>
 
                 <div className='warning'>
@@ -88,7 +111,7 @@ const GathStartModal = ({ modalData, handleStartModal }) => {
                 </div>
 
                 <div className='gathBtn'>
-                    <button>시작</button>
+                    <button onClick={handleStartMooim}>시작</button>
                     <button onClick={handleStartModal}>취소</button>
                 </div>
             </div>
