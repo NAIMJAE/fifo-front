@@ -437,26 +437,42 @@
   }
   .myExperience {
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     border: #6f4e37 solid 1px;
     padding: 15px;
 
-    .MuiFormControl-fullWidth {
+    > label {
+      display: flex;
+      justify-content: center;
+      cursor: pointer;
+      > p {
+        font-size: 14px;
+        margin-right: 5px;
+      }
+    }
+
+    .jobForm {
       display: flex;
       flex-direction: row;
-      .wirtePeriod {
-        margin-right: 15px;
-        width: 15%;
-        margin-bottom: 10px;
-        .MuiInputBase-root {
-          width: 100%;
+      padding: 15px;
+      border-radius: 10px;
+      border: #7b7b7b solid 1px;
+      .MuiFormControl-fullWidth {
+        display: flex;
+        .wirtePeriod {
+          margin-right: 15px;
+          width: 35%;
+          .MuiInputBase-root {
+            width: 100%;
+          }
         }
-      }
-      .writeJob {
-        margin-right: 15px;
-        width: 30%;
-        margin-bottom: 10px;
-        .MuiInputBase-root {
-          width: 100%;
+        .writeJob {
+          margin-right: 15px;
+          width: 45%;
+          .MuiInputBase-root {
+            width: 100%;
+          }
         }
       }
     }

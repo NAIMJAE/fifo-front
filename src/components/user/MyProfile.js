@@ -3,7 +3,10 @@ import "../../styles/user/myProfile.scss";
 import {
   Box,
   Button,
+  Checkbox,
   FormControl,
+  FormControlLabel,
+  FormGroup,
   InputLabel,
   MenuItem,
   Select,
@@ -50,6 +53,7 @@ const MyProfile = () => {
     languagename: [],
     levels: [],
   });
+
   /**유저 지역 정보 */
   const [userRegion, setUserRegion] = useState([]);
 
@@ -69,6 +73,7 @@ const MyProfile = () => {
   useEffect(() => {
     console.log(userRegion);
   }, [userRegion]);
+
   /**나이 계산하기 */
   const calcAge = () => {
     const date = new Date();
@@ -96,6 +101,7 @@ const MyProfile = () => {
     hp: false,
     region: false,
     skill: false,
+    experience: false,
   });
 
   /**스킬 리스트 가져오기 */
@@ -365,10 +371,43 @@ const MyProfile = () => {
 
   /**경력 기입 */
   const [period, setPeriod] = React.useState("");
+  const [job, setJob] = useState("");
+
+  /** 내 경력 편집 input 활성화 */
+  const changeMyExe = (e) => {
+    const targetId = e.currentTarget.getAttribute("data-target-id");
+    setInputModify((prev) => ({ ...prev, [targetId]: true }));
+  };
 
   const handleChange = (event) => {
     setPeriod(event.target.value);
   };
+
+  /**추가 클릭시 선택한 경력 추가 */
+  const clickAddExe = (e) => {
+    e.preventDefault();
+
+    // axios
+    //   .post(`${url}/profile/addSkill?userno=${authSlice.userno}`, inputSkill)
+    //   .then((response) => {
+    //     console.log(response.data);
+    //     alert("추가 되었습니다.");
+    //     SetSkillTriger(!skillTriger);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+  };
+
+  const clickCancleExe = (e) => {
+    e.preventDefault();
+
+    setInputModify((prev) => ({
+      ...prev,
+      experience: false,
+    }));
+  };
+
   return (
     <>
       <main>
@@ -602,27 +641,65 @@ const MyProfile = () => {
             </div>
             <h2>나의 경력</h2>
             <div className="myExperience">
-              <FormControl fullWidth>
-                <div className="wirtePeriod">
-                  <InputLabel style={{ cursor: "pointer" }}>
-                    재직기간
-                  </InputLabel>
-                  <Select
-                    value={period}
-                    label="재직 기간"
-                    onChange={handleChange}
-                  >
-                    <MenuItem value={"1년 이하"}>1년 이하</MenuItem>
-                    <MenuItem value={"1~3년"}>1~3년</MenuItem>
-                    <MenuItem value={"4~5년"}>4~5년</MenuItem>
-                    <MenuItem value={"5년이상"}>5년 이상</MenuItem>
-                    <MenuItem value={"10년이상"}>10년 이상</MenuItem>
-                  </Select>
+              {inputModify.experience ? (
+                <div className="jobForm">
+                  <FormControl fullWidth>
+                    <div className="wirtePeriod">
+                      <InputLabel style={{ cursor: "pointer" }}>
+                        재직기간
+                      </InputLabel>
+                      <Select
+                        value={period}
+                        label="재직 기간"
+                        onChange={handleChange}
+                      >
+                        <MenuItem value={"1년 이하"}>1년 이하</MenuItem>
+                        <MenuItem value={"1~3년"}>1~3년</MenuItem>
+                        <MenuItem value={"4~5년"}>4~5년</MenuItem>
+                        <MenuItem value={"5년이상"}>5년 이상</MenuItem>
+                        <MenuItem value={"10년이상"}>10년 이상</MenuItem>
+                      </Select>
+                    </div>
+                  </FormControl>
+                  <FormControl fullWidth>
+                    <div className="writeJob">
+                      <InputLabel style={{ cursor: "pointer" }}>
+                        직무
+                      </InputLabel>
+                      <Select value={job} label="직무" onChange={handleChange}>
+                        <MenuItem value={"1년 이하"}>1년 이하</MenuItem>
+                      </Select>
+                    </div>
+                  </FormControl>
+                  <FormGroup>
+                    <label>
+                      <p>사용 기술스텍</p>
+                      {skillList.map((skill, index) => (
+                        <FormControlLabel
+                          key={index}
+                          control={<Checkbox />}
+                          label={skill}
+                        />
+                      ))}
+                    </label>
+                  </FormGroup>
+                  <button className="btn add-btn" onClick={clickAddExe}>
+                    추가
+                  </button>
+                  <button className="btn cancel-btn" onClick={clickCancleExe}>
+                    취소
+                  </button>
                 </div>
-                <div className="writeJob">
-                  <TextField label="직무" variant="outlined" />
-                </div>
-              </FormControl>
+              ) : (
+                <label onClick={changeMyExe} data-target-id="experience">
+                  <p>내 경력 추가</p>
+                  <FontAwesomeIcon
+                    icon={faPlusCircle}
+                    size="lg"
+                    color="#7b7b7b"
+                  />
+                </label>
+              )}
             </div>
           </div>
         </div>

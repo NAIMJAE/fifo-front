@@ -32,10 +32,6 @@ const Header = () => {
     pass: "",
   });
 
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
-
   const [err, setError] = useState("");
 
   /** 로그인값 입력  */
