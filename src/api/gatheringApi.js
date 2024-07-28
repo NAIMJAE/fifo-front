@@ -109,3 +109,9 @@ export const startMooimApi = async (data) => {
     const response = await axios.post(`${rootURL}/mooim`, data);
     return response.data;
 };
+
+/** 모임 데이터 불러오기 API */
+export const selectMooimApi = async (mooimno) => {
+    const response = await axios.get(`${rootURL}/mooim/${mooimno}`);
+    return response.data;
+};

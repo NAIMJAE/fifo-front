@@ -9,9 +9,9 @@ const MyGatherBoxComponent = ({ mooimList, mooimcate }) => {
       {mooimList && mooimList.length > 0 ? (
         mooimList
         .filter(mooim => mooim.mooimcate === mooimcate).map((mooim, index) => (
-            <div className='gathCard'>
+            <Link to={`/mooim?mooimno=${mooim.mooimno}`} className='gathCard'>
               <div className='cntColumn'>
-                <h4>{mooim.gathtitle}</h4>
+                <h4>{mooim.mooimtitle}</h4>
               </div>
 
               <div className='gathCardContent cntRow'>
@@ -29,7 +29,7 @@ const MyGatherBoxComponent = ({ mooimList, mooimcate }) => {
                   <Link to={`mooim/doc/${mooim.mooimno}`} className='gathLink'>게시판</Link>
                 </div>
               </div>
-            </div>
+            </Link>
         ))
       ) : (
         <>
