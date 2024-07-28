@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 import SkillIcon from '../SkillIcon'
 import { selectGathStartApi, startMooimApi } from '../../../api/gatheringApi';
 import { RootUrl } from '../../../api/RootUrl';
+import { useNavigate } from 'react-router-dom';
 
 const GathStartModal = ({ modalData, handleStartModal }) => {
-
+    const navigate = useNavigate();
     /** 버블링 막는 함수 */
     function bubblingBlock(event) {
         event.stopPropagation();
@@ -42,7 +43,7 @@ const GathStartModal = ({ modalData, handleStartModal }) => {
 
             try {
                 const response = await startMooimApi(data);
-                console.log("모임 번호 : ",  response);
+                navigate(`/mooim?mooimno=${response}`);
             } catch (error) {
                 console.log(error);
             }
