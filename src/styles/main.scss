@@ -258,3 +258,17 @@ footer {
     border: 1px solid #d1d1d1;
     border-radius: 10px;
 }
+
+/** 토스트 에디터 */
+.toastui-editor-tooltip {
+    background-color: #caccd1;
+
+    > .arrow {
+        background-color: #caccd1;
+
+    }
+
+    > .text {
+        color: #3a3a3c;
+    }
+}
