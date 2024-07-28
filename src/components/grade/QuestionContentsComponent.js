@@ -16,13 +16,20 @@ const QuestionContentsComponent = (props) => {
     }
 
     return (
-        <button className='questionContent cntWrapRow' onClick={questionViewHandler} value={props.question.questionno}>
+        <div className='questionContent' onClick={questionViewHandler} value={props.question.questionno}>
+            
+            <div className='questionNo'>{props.question.questionno}</div>
+            
+            <div className='questionTitle'>{props.question.title}</div>
+
             {/** 문제별 테그 출력 */}
-            <p className='questionTag'>
+            <div className='questionTag'>
                 <Chip
                     label={props.question.languagename + " Lv" + props.question.level}
                     sx={{ backgroundColor: getSkillColor(props.question.languagename), color: 'white', marginRight: '5px', marginBottom: '5px' }}
                 />
+            </div>
+            <div className='questionTag'>
                 {/** 컴파일러가 필요한 문제 테그 */}
                 {props.question.compiler ?
                     <Chip
@@ -30,14 +37,8 @@ const QuestionContentsComponent = (props) => {
                         sx={{ backgroundColor: '#4B0082', color: 'white', marginRight: '5px', marginBottom: '5px' }}
                     /> : null
                 }
-            </p>
-            <p className='questionNo'>
-                {props.question.questionno}
-            </p>
-            <p className='questionTitle'>
-                {props.question.title}
-            </p>
-        </button>
+            </div>
+        </div>
     )
 }
 

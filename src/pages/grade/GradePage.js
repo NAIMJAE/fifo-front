@@ -64,13 +64,14 @@ const GradePage = () => {
                     <img src="../../images/ppoppi.png" alt="" />
 
                     <h3>홍길동</h3>
+
+                    <button>문제 풀기</button>
                 </div>
 
                 <div className='gradeCnt'>
                     <div className='gradeChart gradeBack'>
                         <p>내 등급 차트</p>
                         <BarChart data={data} options={options} type="bar"/>
-                        <Link to="">문제 풀러가기 ☞</Link>
                     </div>
 
 
