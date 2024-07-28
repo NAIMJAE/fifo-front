@@ -1187,3 +1187,40 @@
     }
   }
 }
+/** 메인페이지 모집 중만 보기 버튼 */
+.btnGathState {
+  width: 171px;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  height: 38px;
+  padding: 0px 22px;
+  -webkit-box-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  align-items: center;
+  border-radius: 36px;
+  background: rgb(255, 255, 255);
+  cursor: pointer;
+
+  &:hover {
+    border-color: #4169e1;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+    color: #4169e1;
+  }
+}
+.stateGathering {
+  display: flex;
+  height: 38px;
+  padding: 0px 22px;
+  -webkit-box-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  align-items: center;
+  background-color: #e1f5fe;
+  border-radius: 36px;
+  border-color: #4169e1;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+  color: #4169e1;
+  cursor: pointer;
+}
