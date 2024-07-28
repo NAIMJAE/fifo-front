@@ -70,6 +70,7 @@ const MainPage = () => {
             ) : (
               <>
                 {/** 모임 글 목록 */}
+                <div className="btnGathState stateGathering"> ✔️ 모집 중만 보기</div>
                 <div className="cntWrapRow gatherList">
                   <GatherBoxComponent gathList={gathList} />
                 </div>
