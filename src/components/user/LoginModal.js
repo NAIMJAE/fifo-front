@@ -27,9 +27,9 @@ const LoginComponent = ({
             <p>&times;</p>
           </span>
           <img src="../../../../images/ppoppi_in_my_house.png" alt="" />
-          <div>
-            <h1>FIFO에 오신것을 환영합니다!</h1>
-            <h3>FIFO에서 모임을 만들어 프로젝트에 참여해보세요 </h3>
+          <div className="text">
+            <p>FIFO에 오신것을 환영합니다!</p>
+            <p>FIFO에서 모임을 만들어 프로젝트에 참여해보세요 </p>
           </div>
           <form className="loginForm">
             <span className="idSpan">아이디</span>
@@ -65,10 +65,10 @@ const LoginComponent = ({
             </button>
           </form>
 
-          <button className="btnFindId" onClick={handlerLogin}>
+          <button className="btnFind id" onClick={handlerLogin}>
             아이디 찾기
           </button>
-          <button className="btnFindPass" onClick={handlerLogin}>
+          <button className="btnFind pass" onClick={handlerLogin}>
             비밀번호 찾기
           </button>
         </Box>
