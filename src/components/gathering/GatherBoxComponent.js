@@ -23,8 +23,6 @@ const GatherBoxComponent = ({ gathList }) => {
     }
   };
 
-  console.log("뭐야");
-  console.log(gathList);
   return (
     <>
       {gathList && gathList.length > 0 ? (

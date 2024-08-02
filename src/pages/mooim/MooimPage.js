@@ -11,6 +11,7 @@ import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import { faSave } from '@fortawesome/free-regular-svg-icons';
 import MemberList from '../../components/mooim/MemberList';
 import Chatting from '../../components/mooim/Chatting';
+import MooimCalendar from '../../components/mooim/MooimCalendar';
 
 const MooimPage = () => {
 
@@ -234,6 +235,7 @@ const MooimPage = () => {
         <div className='components'>
           {mooimMenu.memberList && <MemberList mooim={mooim} />}
           {mooimMenu.chatting && <Chatting mooim={mooim} />}
+          {mooimMenu.calendar && <MooimCalendar mooimno={mooimno} />}
 
         </div>
       </div>
