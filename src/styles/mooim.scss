@@ -125,23 +125,28 @@
         padding: 20px 0;
         border-bottom: 3px solid #f6f5f5;
 
-        > a {
+        > button {
             display: flex;
             width: 200px;
             height: 80px;
             border: 1px solid #111;
             border-radius: 20px;
+            background-color: transparent;
             font-size: 20px;
             font-weight: bolder;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
         }
 
-        > a:hover {
+        > button:hover {
             background-color: #4169e1;
             color: white;
         }
     }
+}
+
+.components {
 
     > .memberList {
         display: flex;
