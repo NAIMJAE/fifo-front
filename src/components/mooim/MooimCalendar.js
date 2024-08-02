@@ -11,9 +11,9 @@ import { useSelector } from "react-redux";
 
 import Moment from "moment";
 import "moment/locale/ko";
-import { createCalendarEventApi, deleteCalendarEventApi, modifyCalendarEventApi, selectCalendarApi } from "../../api/articleApi";
+import { createCalendarEventApi, deleteCalendarEventApi, modifyCalendarEventApi, selectCalendarApi } from "../../api/gatheringApi";
 
-const MooimCalendar = ({mooimno}) => {
+const MooimCalendar = ({ mooimno }) => {
   const calendarRef = useRef(null);
   const calendarInstance = useRef(null);
   const [currentMonth, setCurrentMonth] = useState("");
@@ -21,14 +21,11 @@ const MooimCalendar = ({mooimno}) => {
   const [error, setError] = useState("");
   const authSlice = useSelector((state) => state.authSlice);
 
-  useEffect(async () => {
-    console.log("여기다!!!")
+  useEffect(() => {
     const container = calendarRef.current;
     const options = {
       defaultView: "month",
-
       isReadOnly: false,
-
       // 시간대 설정
       timezone: {
         zones: [
@@ -39,30 +36,12 @@ const MooimCalendar = ({mooimno}) => {
         ],
       },
       calendars: [
-        {
-          id: "1",
-          name: "업무",
-          backgroundColor: "#ff4040",
-        },
-        {
-          id: "2",
-          name: "미팅",
-          backgroundColor: "#4040ff",
-        },
-        {
-          id: "3",
-          name: "회의",
-          backgroundColor: "#40ff40",
-        },
-        {
-          id: "4",
-          name: "미정",
-          backgroundColor: "#FF9900",
-        },
+        { id: "1", name: "업무", backgroundColor: "#ff4040" },
+        { id: "2", name: "미팅", backgroundColor: "#4040ff" },
+        { id: "3", name: "회의", backgroundColor: "#40ff40" },
+        { id: "4", name: "미정", backgroundColor: "#FF9900" },
       ],
-
       useDetailPopup: true,
-
       useFormPopup: true,
     };
 
@@ -82,42 +61,39 @@ const MooimCalendar = ({mooimno}) => {
     console.log(eventId);
 
     /** 일정 불러오기 */
-    try {
-      const events = await selectCalendarApi(mooimno);
+    const fetchEvents = async () => {
+      try {
+        const events = await selectCalendarApi(mooimno);
+        events.forEach((event) => {
+          const isReadOnly = event.isReadOnly === "false" ? false : true;
+          const isAllDay = event.isAllDay === "false" ? false : true;
+          const selectedCalendar = options.calendars.find(
+            (cal) => cal.id === event.calendarId
+          );
 
-      events.forEach((event) => {
-        const isReadOnly = event.isReadOnly === "false" ? false : true;
-        const isAllDay = event.isAllDay === "false" ? false : true;
-        const selectedCalendar = options.calendars.find(
-          (cal) => cal.id === event.calendarId
-        );
-        const newEvent = {
-          id: event.id,
-          calendarId: event.calendarId,
-          title: event.title,
-          start: Moment(event.start)
-            .subtract(1, "months")
-            .format("YYYY-MM-DD[T]HH:mm:ss"),
-          end: Moment(event.end)
-            .subtract(1, "months")
-            .format("YYYY-MM-DD[T]HH:mm:ss"),
-          location: event.location,
-          state: event.state,
-          isReadOnly: isReadOnly,
-          isAllDay: isAllDay,
-          backgroundColor: selectedCalendar
-            ? selectedCalendar.backgroundColor
-            : "#000000",
-          color: event.color,
-        };
+          const newEvent = {
+            id: event.id,
+            calendarId: event.calendarId,
+            title: event.title,
+            start: Moment(event.start).subtract("months").format("YYYY-MM-DD[T]HH:mm:ss"),
+            end: Moment(event.end).subtract("months").format("YYYY-MM-DD[T]HH:mm:ss"),
+            location: event.location,
+            state: event.state,
+            isReadOnly: isReadOnly,
+            isAllDay: isAllDay,
+            backgroundColor: event.bgcolor,
+            color: event.color,
+          };
 
-        calendar.createEvents([newEvent]);
-      });
-    } catch (err) {
-      console.log(err);
-      setError("일정을 불러오지 못했습니다.");
-
+          calendar.createEvents([newEvent]);
+        });
+      } catch (err) {
+        console.log(err);
+        setError("일정을 불러오지 못했습니다.");
+      }
     };
+
+    fetchEvents();
 
     /** 일정을 생성 */
     calendar.on("beforeCreateEvent", (event) => {
@@ -147,7 +123,7 @@ const MooimCalendar = ({mooimno}) => {
       };
       calendar.createEvents([newEvent]);
       calendar.setOptions({});
-      
+
       createCalendarEventApi(newEvent);
     });
 
@@ -225,7 +201,10 @@ const MooimCalendar = ({mooimno}) => {
     setCurrentMonth(calendar.getDate().getMonth() + 1);
     setCurrentYear(calendar.getDate().getFullYear());
 
+    console.log("ggggg")
+    console.log(calendar)
     return () => {
+      console.log("언마운트!!")
       // unmount
       if (calendar) {
         calendar.destroy();
@@ -297,7 +276,6 @@ const MooimCalendar = ({mooimno}) => {
   };
   return (
     <div>
-      <p>ㅗ아다다다다다다다다다다다다도아오다ㅗ타ㅗ아</p>
       <span style={dateSpan}>
         {currentYear}.{currentMonth}
       </span>

@@ -235,7 +235,7 @@ const MooimPage = () => {
         <div className='components'>
           {mooimMenu.memberList && <MemberList mooim={mooim} />}
           {mooimMenu.chatting && <Chatting mooim={mooim} />}
-          {mooimMenu.calender && <MooimCalendar mooimno={mooimno} />}
+          {mooimMenu.calendar && <MooimCalendar mooimno={mooimno} />}
 
         </div>
       </div>

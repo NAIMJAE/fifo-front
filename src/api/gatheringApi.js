@@ -132,3 +132,28 @@ export const updateMooimthumbApi = async (formData) => {
     return response.data;
 };
 
+/** 캘린더 조회 API */
+export const selectCalendarApi = async (mooimno) => {
+    const response = await axios.get(`${rootURL}/calendar/${mooimno}`);
+    console.log("API 임");
+    console.log(response.data);
+    return response.data;
+};
+
+/** 캘린더 이벤트 생성 API */
+export const createCalendarEventApi = async (newEvent) => {
+    const response = axios.post(`${rootURL}/calendar/create`, newEvent);
+    return response.data;
+};
+
+/** 캘린더 이벤트 수정 API */
+export const modifyCalendarEventApi = (eventId, changes) => {
+    const response = axios.put(`${rootURL}/calendar/${eventId}`, changes);
+    return response.data;
+};
+
+/** 캘린더 이벤트 삭제 API */
+export const deleteCalendarEventApi = (eventId) => {
+    const response = axios.delete(`${rootURL}/calendar/${eventId}`);
+    return response.data;
+};

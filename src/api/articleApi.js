@@ -95,33 +95,3 @@ export const replyInsertApi = async (comment) => {
     const response = await axios.post(`${rootURL}/reply`, comment);
     return response.data;
 };
-
-/** 캘린더 조회 API */
-export const selectCalendarApi = async (mooimno) => {
-    const response = await axios.get(`${rootURL}/calendar/${mooimno}`);
-    return response.data;
-};
-
-/** 캘린더 이벤트 생성 API */
-export const createCalendarEventApi = async (newEvent) => {
-    const response = axios.post(`${rootURL}/calendar/create`, newEvent)
-    .then(response => response.data)
-    .catch(error => { throw error });
-    return response.data;
-};
-
-/** 캘린더 이벤트 수정 API */
-export const modifyCalendarEventApi = (eventId, changes) => {
-    const response = axios.put(`${rootURL}/calendar/${eventId}`, changes)
-    .then(response => response.data)
-    .catch(error => { throw error });
-    return response.data;
-};
-
-/** 캘린더 이벤트 삭제 API */
-export const deleteCalendarEventApi = (eventId) => {
-    const response = axios.delete(`${rootURL}/calendar/${eventId}`)
-    .then(response => response.data)
-    .catch(error => { throw error });
-    return response.data;
-};
