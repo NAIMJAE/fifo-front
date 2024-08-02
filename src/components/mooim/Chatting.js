@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { RootUrl } from '../../api/RootUrl';
 import { getCurrentDateTime } from '../common/helper/ChangeDate';
+import { selectChatApi, sendMsgApi } from '../../api/chatApi';
 
 const Chatting = ({ mooim }) => {
 
@@ -55,10 +56,22 @@ const Chatting = ({ mooim }) => {
         };
     }, []);
 
-    /** 메세지 전송 함수 */
-    const sendMessage = () => {
-        console.log(111);
+    /** 랜더링시 채팅 내역 불러오기 */
+    useEffect(() => {
+        const selectChat = async () => {
+            try {
+                const response = await selectChatApi(mooim.mooimno);
+                console.log("불러온채팅 : ",response);
+                setMessages(response);
+            } catch (error) {
+                
+            }
+        }
+        selectChat();
+    },[]);
 
+    /** 메세지 전송 함수 */
+    const sendMessage = async () => {
         if (inputMsg && webSocket.current.readyState === WebSocket.OPEN) {
 
             const socketMsg = {
@@ -77,22 +90,20 @@ const Chatting = ({ mooim }) => {
                 thumb: loginSlice.thumb,
             }
 
-            console.log("과연? ",saveMsg)
-
-            // 소켓으로 메세지 전송
-            webSocket.current.send(JSON.stringify(socketMsg));
-            setInputMsg('');
-
             // DB로 메세지 전송
             try {
-                
+                const response = await sendMsgApi(saveMsg);
+                console.log("확인 : ", response)
+                if (response > 0) {
+                    // 소켓으로 메세지 전송
+                    webSocket.current.send(JSON.stringify(socketMsg));
+                    setInputMsg('');
+                }
             } catch (error) {
                 console.log(error);
             }
-
         }
     };
-    
 
     /** 엔터 키 감지 핸들러 */
     const keyDown = (e) => {
@@ -110,12 +121,13 @@ const Chatting = ({ mooim }) => {
 
             <div className='chatCnt'>
                 <div className='chatMsg'>
-                    
                     {messages.map((msg, index) => (
                         <div key={index} className='msg'>
-                            <h1>{msg.nick}</h1>
-                            <h2>{msg.message}</h2>
-                            <h3>{msg.chatdate}</h3>
+                            <img src={`${RootUrl()}/uploads/user/${msg.thumb}`} alt="profile" />
+                            <div>
+                                <h1>{msg.nick} <span>{msg.chatdate}</span></h1>
+                                <h2>{msg.message}</h2>
+                            </div>
                         </div>
                     ))}
                 </div>
