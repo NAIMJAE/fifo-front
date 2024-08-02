@@ -10,8 +10,17 @@
         border-bottom: 3px solid #f6f5f5;
 
         > .mooimInfo {
+            position: relative;
             display: flex;
             padding-top: 20px;
+
+            /* 모임 프사 변경 버튼 */
+            > svg {
+                position: absolute;
+                left: 200px;
+                top: 30px;
+                cursor: pointer;
+            }
 
             > img {
                 display: flex;
@@ -34,10 +43,19 @@
                     }
                 }
 
-                > h2 {
-                    font-size: 20px;
+                > label {
+                    display: flex;
+                    align-items: center;
                     margin-bottom: 20px;
-                    color: #7b7b7b;
+                    > input {
+                        font-size: 20px;
+                        color: #7b7b7b;
+                        border: 1px solid white;
+                    }
+                    > svg {
+                        margin-left: 10px;
+                        cursor: pointer;
+                    }
                 }
 
                 > div {
