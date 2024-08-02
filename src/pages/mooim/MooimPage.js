@@ -4,7 +4,7 @@ import Breadcrumb from '../../components/common/main/Breadcrumb';
 import '../../styles/mooim.scss';
 import { Link, useLocation } from 'react-router-dom';
 import SkillIcon from '../../components/gathering/SkillIcon';
-import { selectMooimApi } from '../../api/gatheringApi';
+import { selectMooimApi, updateMooimintroApi, updateMooimthumbApi } from '../../api/gatheringApi';
 import { RootUrl } from '../../api/RootUrl';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
@@ -39,7 +39,10 @@ const MooimPage = () => {
       try {
         const response = await selectMooimApi(mooimno);
         setMooim(response);
-        console.log(response);
+        setMooimIntro({
+          state: false,
+          value: response.mooimintro || "우리 모임을 소개해주세요!",
+        });
       } catch (error) {
         console.log(error);
         alert("모임을 찾을 수 없습니다.");
@@ -52,8 +55,7 @@ const MooimPage = () => {
   const [mooimIntro, setMooimIntro] = useState(
     {
       state: false,
-      // value는 모임 메인 페이지 조회할때 db 조회해온 내용 넣어주면됨
-      value: "간단한 웹사이트를 만드는 프로젝트입니다.",
+      value: " ",
     }
   );
 
@@ -62,16 +64,16 @@ const MooimPage = () => {
     if (mooimIntro.state) {
       try {
 
-        // 여기에 변경된 모임 소개글 DB에 저장하는 Api
-        // const response = await Api();
+        const response = await updateMooimintroApi({
+          mooimno: mooim.mooimno,
+          mooimintro: mooimIntro.value,
+        });
 
-        /* respone 성공한 이후에 Mooim state의 intro 부분 변경
+        /** Mooim state의 intro 부분 변경 */
         setMooim((prevMooim) => ({
           ...prevMooim,
-          intro: mooimIntro.value,
+          mooimintro: mooimIntro.value,
         }));
-        */
-        alert("모임 소개글이 변경되었습니다.");
 
       } catch (error) {
         console.log(error);
@@ -122,20 +124,23 @@ const MooimPage = () => {
   const saveThumb = async (e) => {
     const file = e.target.files[0];
     if (file) {
+      console.log("file : ", file);
       const formData = new FormData();
-      formData.append('thumb', file);
+      formData.append('thumbnail', file);
+      formData.append('mooimno', mooimno);
+
       try {
         // 이미지 업로드 API
-        // const response = await Api(formData);
-        
-        /* 업로드된 이미지 URL을 응답에서 받아와서 상태 업데이트
+        const response = await updateMooimthumbApi(formData);
+
+        /* 업로드된 이미지 URL을 응답에서 받아와서 상태 업데이트 */
         if (response) {
           setMooim((prevMooim) => ({
             ...prevMooim,
-            thumb: response.thumb,
+            thumb: response,
           }));
         }
-        */
+        
         alert("모임 대표사진이 변경되었습니다.");
       } catch (error) {
         console.error(error);
@@ -146,13 +151,13 @@ const MooimPage = () => {
   /** 메뉴 변경 */
   const [mooimMenu, setMooimMenu] = useState(
     {
-      memberList : true,
-      chatting : false,
-      calender : false,
-      canban : false,
-      document : false,
+      memberList: true,
+      chatting: false,
+      calender: false,
+      canban: false,
+      document: false,
     }
-  );
+  ); 
 
   const changeMenu = (menu) => {
     setMooimMenu({
@@ -172,18 +177,21 @@ const MooimPage = () => {
         <div className='Info'>
           <div className='mooimInfo'>
             {mooim.thumb && mooim.thumb.trim() ? (
-              <img src={`${RootUrl()}/uploads/mooim/thumb/${mooim.thumb}`} alt="thumb" />
+              <img src={`${RootUrl()}/uploads/mooim/${mooim.mooimno}/thumb/${mooim.thumb}`} alt="thumb" />
             ) : (
               <img src="../../images/sample/ppoppi_angry.png" alt="sample" />
             )}
             <FontAwesomeIcon icon={faPencil} size="lg" color="#7b7b7b" onClick={changeThumb} />
-            <input type="file" id="thumbInput" style={{ display: 'none' }} onChange={saveThumb} />
-
+            <input type="file" id="thumbInput" accept="image/*" style={{ display: 'none' }} onChange={saveThumb} />
             <div>
               <h1>{mooim.mooimtitle}<span>[{mooim.mooimstate === 1 ? '진행중' : mooim.mooimstate === 2 ? '완료' : ''}]</span></h1>
 
               <label htmlFor="">
-                <input type='text' id='intro' readOnly value={mooimIntro.value} 
+                <input
+                  type='text'
+                  id='intro'
+                  readOnly
+                  value={mooimIntro.value}
                   onChange={(e) => {
                     setMooimIntro({ ...mooimIntro, value: e.target.value });
                     adjustInputWidth();
@@ -193,9 +201,9 @@ const MooimPage = () => {
                 />
 
                 {mooimIntro.state ? (
-                  <FontAwesomeIcon onClick={modifyIntro} icon={faSave} size="lg" color="#7b7b7b"/>
+                  <FontAwesomeIcon onClick={modifyIntro} icon={faSave} size="lg" color="#7b7b7b" />
                 ) : (
-                  <FontAwesomeIcon onClick={modifyIntro} icon={faPencil} size="lg" color="#7b7b7b"/>
+                  <FontAwesomeIcon onClick={modifyIntro} icon={faPencil} size="lg" color="#7b7b7b" />
                 )}
               </label>
 
@@ -226,7 +234,7 @@ const MooimPage = () => {
         <div className='components'>
           {mooimMenu.memberList && <MemberList mooim={mooim} />}
           {mooimMenu.chatting && <Chatting mooim={mooim} />}
-          
+
         </div>
       </div>
     </MainLayout>
