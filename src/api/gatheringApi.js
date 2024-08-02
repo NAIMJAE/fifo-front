@@ -115,3 +115,20 @@ export const selectMooimApi = async (mooimno) => {
     const response = await axios.get(`${rootURL}/mooim/${mooimno}`);
     return response.data;
 };
+
+/** 모임 소개글 수정 API */
+export const updateMooimintroApi = async (data) => {
+    const response = await axios.put(`${rootURL}/mooimintro`, data);
+    return response.data;
+};
+
+/** 모임 이미지 수정 API */
+export const updateMooimthumbApi = async (formData) => {
+    const response = await axios.put(`${rootURL}/mooimthumb`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+    return response.data;
+};
+
