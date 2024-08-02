@@ -14,12 +14,15 @@ const MainPage = () => {
   const [sideBar, setSideBar] = useState(false);
   const toggleSideBar = () => setSideBar(!sideBar);
   const navigate = useNavigate();
+  /** 모집 중만 보기 상태 */
+  const [gathState, setGathState] = useState(true);
   /** 검색 카테고리 useState */
   const [pageRequest, setPageRequest] = useState({
     no: 1,
     pg: 1,
     size: 16,
     sort: 'gathno',
+    gathState: gathState,
     gatheringDTO: {}
   });
 
@@ -48,12 +51,16 @@ const MainPage = () => {
     setPageRequest(prev => ({ ...prev, pg: newPg }));
   };
 
+  /** gathState가 변경될 때 pageRequest 업데이트 */
+  useEffect(() => {
+    setPageRequest(prev => ({ ...prev, gathState }));
+  }, [gathState]);
   const loginSlice = useSelector((state) => state.authSlice) || {};
 
   const writeHandler = () => {
-    if(loginSlice.userno != null){
+    if (loginSlice.userno != null) {
       navigate('/gathering/write');
-    }else {
+    } else {
       alert("로그인이 필요한 서비스입니다.");
     }
   }
@@ -63,14 +70,16 @@ const MainPage = () => {
       <div className="container">
         <div className="content sideHide">
           <div className="cntColumn sideHide2">
-          <div className="cntRow adBox">광고 박스</div>
-            
+            <div className="cntRow adBox">광고 박스</div>
+
             {loading ? (
               <div>로딩 중...</div>
             ) : (
               <>
                 {/** 모임 글 목록 */}
-                <div className="btnGathState stateGathering"> ✔️ 모집 중만 보기</div>
+                <div className={`btnGathState ${gathState ? 'stateGathering' : ''}`} onClick={() => setGathState(!gathState)}>
+                  ✔️ 모집 중만 보기
+                </div>
                 <div className="cntWrapRow gatherList">
                   <GatherBoxComponent gathList={gathList} />
                 </div>
