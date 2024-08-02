@@ -9,6 +9,8 @@ import { RootUrl } from '../../api/RootUrl';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import { faSave } from '@fortawesome/free-regular-svg-icons';
+import MemberList from '../../components/mooim/MemberList';
+import Chatting from '../../components/mooim/Chatting';
 
 const MooimPage = () => {
 
@@ -141,6 +143,27 @@ const MooimPage = () => {
     }
   };
 
+  /** 메뉴 변경 */
+  const [mooimMenu, setMooimMenu] = useState(
+    {
+      memberList : true,
+      chatting : false,
+      calender : false,
+      canban : false,
+      document : false,
+    }
+  );
+
+  const changeMenu = (menu) => {
+    setMooimMenu({
+      memberList: false,
+      chatting: false,
+      calendar: false,
+      kanban: false,
+      document: false,
+      [menu]: true,
+    });
+  };
 
   return (
     <MainLayout>
@@ -193,30 +216,17 @@ const MooimPage = () => {
           </div>
         </div>
         <div className='function'>
-          <Link to={"/"}>정보</Link>
-          <Link to={"/"}>채팅</Link>
-          <Link to={"/"}>캘린더</Link>
-          <Link to={"/"}>칸반</Link>
-          <Link to={"/"}>문서</Link>
+          <button className='memberList' onClick={() => changeMenu('memberList')}>정보</button>
+          <button className='chatting' onClick={() => changeMenu('chatting')}>채팅</button>
+          <button className='calendar' onClick={() => changeMenu('calendar')}>캘린더</button>
+          <button className='kanban' onClick={() => changeMenu('kanban')}>칸반</button>
+          <button className='document' onClick={() => changeMenu('document')}>문서</button>
         </div>
-        <div className='memberList'>
-          {mooim.memberList && mooim.memberList.map((member, index) => (
-            <div className='member' key={index}>
-              <img src={`${RootUrl()}/uploads/user/${member.usersDTO.thumb}`} alt="profile" />
-              <div>
-                <h1>{member.usersDTO.nick}</h1>
-                <div className='skill'>
-                  {member.usersDTO.skillList && member.usersDTO.skillList.map((skill, skillIndex) => (
-                    <div key={skillIndex}>
-                      <SkillIcon skill={skill.languagename} classType='skillImg' />
-                      <span>{skill.languagename}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              {mooim.userno === member.userno ? (<span className='badge'>팀장</span>) : null}
-            </div>
-          ))}
+
+        <div className='components'>
+          {mooimMenu.memberList && <MemberList mooim={mooim} />}
+          {mooimMenu.chatting && <Chatting mooim={mooim} />}
+          
         </div>
       </div>
     </MainLayout>
