@@ -12,7 +12,8 @@ const QuestionContentsComponent = (props) => {
     const navigate = useNavigate();
 
     const questionViewHandler = (e) => {
-        navigate('/grade/question/view?no=' + e.target.value)
+                
+        navigate('/grade/question/view?no=' + e.currentTarget.firstChild.textContent)
     }
 
     return (
