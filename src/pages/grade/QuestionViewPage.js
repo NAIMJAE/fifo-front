@@ -2,16 +2,17 @@ import React, { useEffect, useRef, useState } from 'react'
 import MainLayout from '../../layout/MainLayout'
 import '../../styles/grade.scss'
 import EditorComponent from '../../components/grade/EditorComponent'
-import MonacoEditor from 'react-monaco-editor';
 import axios from 'axios'
+import RecordComponent from '../../components/grade/RecordComponent';
 
 const QuestionViewPage = () => {
 
     const questionNo = useRef(parseInt(new URLSearchParams(window.location.search).get("no")));
     const [language, setLanguage] = useState('');
     const [questionInfo, setQuestionInfo] = useState({});
-    const [output, setOutput] = useState('출력');
     const [navigator, setNavigator] = useState('info');
+
+    const socketObj = useRef(null);
 
     /** 선택 언어 문제 리스트 조회 */
     useEffect(() => {
@@ -24,7 +25,7 @@ const QuestionViewPage = () => {
     }, [])
 
     useEffect(() => {
-
+        
     }, [navigator])
 
     const navHandle = (e) => {
@@ -56,7 +57,7 @@ const QuestionViewPage = () => {
                         </li>
                         <li
                             className={navigator === 'record' ? 'clicked' : null}
-                            id={'info'}
+                            id={'record'}
                             onClick={navHandle}
                         >
                             풀이기록
@@ -85,7 +86,20 @@ const QuestionViewPage = () => {
                         <h3>출력 예제</h3>
                         <p>{questionInfo.output}</p>
                     </div>}
-                {navigator === 'code' && <EditorComponent language={language} questionNo={questionInfo.questionno}/>}
+                {navigator === 'code' &&
+                    <EditorComponent
+                        language={language}
+                        questionNo={questionInfo.questionno}
+                        socketObj={socketObj}
+                        navigator={setNavigator}
+                    />}
+                {navigator === 'record' &&
+                    <RecordComponent
+                        language={language}
+                        questionNo={questionInfo.questionno}
+                        socketObj={socketObj}
+                        navigator={setNavigator}
+                    />}
             </div>
         </MainLayout>
     )
