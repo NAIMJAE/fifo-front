@@ -26,6 +26,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { globalPath } from "../../globalPaths";
+
 import moment from "moment/moment";
 import axios from "axios";
 import { differenceInYears, set } from "date-fns";
@@ -38,7 +39,7 @@ const MyProfile = () => {
 
   const userno = authSlice.userno;
 
-  const url = globalPath.path;
+  const url = RootUrl();
 
   /** 유저 정보 */
   const [information, setInformation] = useState({
@@ -50,6 +51,7 @@ const MyProfile = () => {
     birth: "",
     gender: "",
     rdate: "",
+    thumb: "",
     languagename: [],
     levels: [],
   });
@@ -128,11 +130,45 @@ const MyProfile = () => {
   }, [skillTriger]);
 
   const fileInputRef = useRef(null);
+
   /** 프로필 사진 수정 */
   const modifythumb = () => {
-    fileInputRef.current.click();
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
+  /** 프로필 사진 수정 */
+  const handlerFileChange = async (e) => {
+    const file = e.target.files[0];
+    console.log(file);
+    if (file) {
+      console.log("들어옴");
+      const fileName = file.name;
+      const fileData = new FormData();
 
+      fileData.append("file", file);
+      /**백에 파일 업로드 로직 */
+      try {
+        const response = await axios.post(
+          `${url}/profile/upload?userno=${authSlice.userno}`,
+          fileData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        if (response.data) {
+          alert("프로필 사진이 업데이트 되었습니다.");
+        } else {
+          alert("프로필 사진 업데이트에 실패했습니다.");
+        }
+      } catch (err) {
+        console.error("오류 발생", err);
+        alert("사진 업데이트 중 오류가 발생했습니다.");
+      }
+    }
+  };
   /** 기본 정보 편집 input 활성 */
   const changeMyInfo = (e) => {
     const targetId = e.currentTarget.getAttribute("data-target-id");
@@ -254,9 +290,21 @@ const MyProfile = () => {
     setInformation((prev) => ({ ...prev, [name]: value }));
     console.log("information : ", information);
 
+    console.log(name);
+    console.log(value);
     // 유효성 검사 넣어주세요
+    if (name === "nick") {
+      isValidNick(value);
+    }
+    if (name === "email") {
+      isValidEmail(value);
+    }
+    if (name === "hp") {
+      isValidHp(value);
+    }
   };
 
+  /**유효성 검사 */
   const [emailValid, setEmailValid] = useState(null);
   const [nickValid, setNickValid] = useState(null);
   const [hpValid, setHpValid] = useState(null);
@@ -272,11 +320,25 @@ const MyProfile = () => {
     const nickPattern =
       /^(?=.*[가-힣]{2,})(?!.*[^\가-힣a-zA-Z0-9]).{2,10}$|^(?=.*[a-zA-Z]{4,})(?!.*[^\가-힣a-zA-Z0-9]).{4,10}$/;
     setNickValid(nickPattern.test(nick));
+    console.log(nickValid);
   };
   /**연락처 검사 함수 */
   const isValidHp = (hp) => {
     const hpPattern = /^\d{3}-\d{3,4}-\d{4}$/;
     setHpValid(hpPattern.test(hp));
+  };
+
+  /**적기 시작할 때 유효성검사 */
+  const handlerNickInput = () => {
+    setNickValid(false);
+    //setDuplicateNick(null);
+  };
+  const handlerEmailInput = () => {
+    setEmailValid(false);
+    //setDuplicateEmial(null);
+  };
+  const handlerHpInput = () => {
+    setHpValid(false);
   };
 
   /** 기본 정보 수정 저장 */
@@ -287,27 +349,46 @@ const MyProfile = () => {
     console.log(input.value);
     console.log(targetId);
 
-    try {
-      const response = await axios.post(
-        `${url}/profile/update?userno=${authSlice.userno}`,
-        {
-          type: targetId,
-          information: input.value,
+    let isValid = true;
+
+    if (targetId === "nick" && nickValid != null && !nickValid) {
+      alert("올바르지 않은 닉네임입니다.");
+      isValid = false;
+      return;
+    }
+    if (targetId === "email" && emailValid != null && !emailValid) {
+      alert("올바르지 않은 이메일입니다.");
+      isValid = false;
+      return;
+    }
+    if (targetId === "hp" && hpValid != null && !hpValid) {
+      alert("올바르지 않은 휴대폰입니다.");
+      isValid = false;
+      return;
+    }
+    if (isValid) {
+      try {
+        const response = await axios.post(
+          `${url}/profile/update?userno=${authSlice.userno}`,
+          {
+            type: targetId,
+            information: input.value,
+          }
+        );
+
+        if (response.data) {
+          SetSkillTriger(!skillTriger);
+          input.style.border = "1px solid white";
+          input.readOnly = true;
+          alert("수정되었습니다.");
+        } else {
+          alert("수정에 실패했습니다.");
         }
-      );
 
-      if (response.data) {
-        SetSkillTriger(!skillTriger);
-        input.style.border = "1px solid white";
-        input.readOnly = true;
-        alert("수정되었습니다.");
-      } else {
-        alert("수정에 실패했습니다.");
+        setInputModify((prev) => ({ ...prev, [targetId]: false }));
+      } catch (error) {
+        console.log(error);
       }
-
-      setInputModify((prev) => ({ ...prev, [targetId]: false }));
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -419,7 +500,7 @@ const MyProfile = () => {
 
             <div className="basicInfo">
               <div className="myThumb">
-                <img src="../../images/ppoppi.png" alt="" />
+                <img src={`${url}/uploads/user/${information.thumb}`} alt="" />
 
                 <label htmlFor="thumb">
                   <FontAwesomeIcon
@@ -429,7 +510,11 @@ const MyProfile = () => {
                     onClick={modifythumb}
                   />
                 </label>
-                <input type="file" id="thumb" ref={fileInputRef} />
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handlerFileChange}
+                />
               </div>
 
               <div className="myInfo">
@@ -447,6 +532,7 @@ const MyProfile = () => {
                     id="nick"
                     name="nick"
                     value={information.nick}
+                    onInput={handlerNickInput}
                     onChange={(e) => inputMyInfo(e)}
                     readOnly
                   />
@@ -480,6 +566,7 @@ const MyProfile = () => {
                     id="email"
                     name="email"
                     value={information.email}
+                    onInput={handlerEmailInput}
                     onChange={(e) => inputMyInfo(e)}
                     readOnly
                   />
@@ -513,6 +600,7 @@ const MyProfile = () => {
                     id="hp"
                     name="hp"
                     value={information.hp}
+                    onInput={handlerHpInput}
                     onChange={(e) => inputMyInfo(e)}
                     placeholder="정보를 입력해주세요"
                     readOnly
