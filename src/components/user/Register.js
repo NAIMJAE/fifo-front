@@ -22,19 +22,16 @@ const Register = () => {
     nick: "",
     birth: "",
     gender: "",
+    hp: "",
     languagename: [],
   });
-
-  /**회원가입 로그보기 */
-  useEffect(() => {
-    console.log(register);
-  }, [register]);
 
   /**유효성 검사 */
   const [emailValid, setEmailValid] = useState(null); // 이메일 유효성 상태
   const [passValid, setPassValid] = useState(null); // 비밀번호 유효성 상태
   const [nameValid, setNameValid] = useState(null); // 이름 유효성 상태
   const [nickValid, setNickValid] = useState(null); // 닉네임 유효성 상태
+  const [hpValid, setHpValid] = useState(null); // 휴대폰 유효성 상태
 
   /**이메일 검사 함수 */
   const isValidEmail = (email) => {
@@ -58,6 +55,14 @@ const Register = () => {
       /^(?=.*[가-힣]{2,})(?!.*[^\가-힣a-zA-Z0-9]).{2,10}$|^(?=.*[a-zA-Z]{4,})(?!.*[^\가-힣a-zA-Z0-9]).{4,10}$/;
     setNickValid(nickPattern.test(nick));
   };
+  /**휴대폰 검사 함수 */
+  const isValidHp = (hp) => {
+    console.log(hp);
+    const hpPattern = /^01[016789]-?\d{3,4}-?\d{4}$/;
+
+    setHpValid(hpPattern.test(hp));
+    console.log(hpValid);
+  };
 
   /**적기 시작할 때 유효성검사 */
   const handlerEmailInput = () => {
@@ -73,6 +78,9 @@ const Register = () => {
   const handlerNickInput = () => {
     setNickValid(false);
     setDuplicateNick(null);
+  };
+  const handlerHpInput = () => {
+    setHpValid(false);
   };
 
   /**중복검사 */
@@ -233,6 +241,7 @@ const Register = () => {
       [name]: value,
     }));
 
+    console.log(name);
     if (name === "email") {
       isValidEmail(value);
     }
@@ -245,12 +254,15 @@ const Register = () => {
     if (name === "nick") {
       isValidNick(value);
     }
+    if (name === "hp") {
+      isValidHp(value);
+    }
   };
 
   /**회원가입 버튼 클릭 */
   const handlerSubmitClick = (e) => {
     e.preventDefault();
-    const { email, pass, name, nick, birth } = register;
+    const { email, pass, name, nick, birth, hp } = register;
 
     if (!email) {
       alert("이메일을 입력해주세요");
@@ -298,6 +310,14 @@ const Register = () => {
     }
     if (!birth) {
       alert("생년월일을 입력해주세요.");
+      return;
+    }
+    if (!hp) {
+      alert("휴대폰을 입력해주세요.");
+      return;
+    }
+    if (!hpValid) {
+      alert("휴대폰이 올바르지 않습니다.");
       return;
     }
     if (inputSkills.length === 0 || inputSkills === undefined) {
@@ -446,49 +466,6 @@ const Register = () => {
     "직접입력",
   ];
 
-  /**이메일 옵션 선택시 register.email뒤에 값 입력 */
-  const selectOptions = (e) => {
-    const selectedValue = e.target.value;
-    setSelectEmail(selectedValue);
-
-    if (selectedValue === "직접입력") {
-      console.log("직접입력");
-      setSelectEmail("");
-    } else {
-      setRegister((prevRegister) => ({
-        ...prevRegister,
-        email: prevRegister.email + selectedValue,
-      }));
-    }
-  };
-
-  /** 4글자 이상 입력 되었을 때 select 창 생성
-   * 셀렉트가 선택되면 select 창 없애기*/
-  const getEmailClassName = () => {
-    if (register.email.length >= 4 && selectEmail === "") {
-      return "afterEmail";
-    } else {
-      return "afterEmailNone";
-    }
-  };
-
-  /**적은거 사라지면 setSelectEmail에 값 비워줘서
-   * 다시 className변경 => select 보이게 하기
-   */
-  useEffect(() => {
-    if (register.email.length <= 2) {
-      console.log("셋셀렉트이메일 초기화!");
-      setSelectEmail("");
-    } else if (register.email.length > 8) {
-      setSelectEmail("");
-    }
-  }, [register.email]);
-
-  useEffect(() => {
-    console.log("셀렉트바뀜!");
-    console.log(selectEmail);
-  }, [selectEmail]);
-
   return (
     <div className="register">
       <Link to="/">
@@ -518,13 +495,7 @@ const Register = () => {
             type="text"
             placeholder="예시) example@fifo.com"
           ></input>
-          <select className={getEmailClassName()} onChange={selectOptions}>
-            {options.map((email, index) => (
-              <option key={index} value={email}>
-                {email}
-              </option>
-            ))}
-          </select>
+
           {emailValid != null && !emailValid && (
             <span className="validContext">올바르지 않은 이메일입니다.</span>
           )}
@@ -645,6 +616,20 @@ const Register = () => {
             <option value="M">남성</option>
             <option value="F">여성</option>
           </select>
+          <label className="textLabel">휴대폰</label>
+          <input
+            name="hp"
+            value={register.hp}
+            onChange={handlerRegister}
+            onInput={handlerHpInput}
+            placeholder="'-'를 포함하여 작성해주세요."
+            className="inputElement"
+            type="text"
+          ></input>
+          {hpValid != null && !hpValid && (
+            <span className="validContext">올바르지 않은 휴대폰입니다.</span>
+          )}
+
           <div className="skill">
             <label className="skillStack">기술 스택(업무 툴/ 스킬)</label>
             <label className="selectStack">
