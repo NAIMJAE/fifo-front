@@ -226,9 +226,35 @@
 
             > .chatSide {
                 display: flex;
+                flex-direction: column;
                 width: 250px;
                 border: 1px solid red;
+                padding: 10px;
 
+                > .chatMember {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 10px;
+
+                    > img {
+                        width: 50px;
+                        height: 50px;
+                        border: 1px solid #9f9f9f;
+                        border-radius: 50%;
+                    }
+
+                    > h1 {
+                        font-size: 18px;
+                        font-weight: bolder;
+                        margin: 0px 4px 0px 10px;
+                    }
+                    > span {
+                        width: 10px;
+                        height: 10px;
+                        border: 1px solid #9f9f9f;
+                        border-radius: 50%;
+                    }
+                }
             }
 
             > .chatCnt {
@@ -277,6 +303,40 @@
                                 display: flex;
                                 font-size: 16px;
                             }
+                            > img {
+                                max-width: 300px;
+                                max-height: 300px;
+                                width: auto;
+                                height: auto;
+                                object-fit: contain;
+                                cursor: zoom-in;
+                            }
+                            > .file {
+                                display: flex;
+                                border: 1px solid #9f9f9f;
+                                border-radius: 10px;
+                                background-color: white;
+                                padding: 6px 20px 6px 10px;
+                                align-items: center;
+                                cursor: pointer;
+
+                                > span {
+                                    display: flex;
+                                    background-color: #7b7b7b;
+                                    border-radius: 10px;
+                                    color: white;
+                                    padding: 10px;
+                                    margin-right: 10px;
+                                }
+                                > h1 {
+                                    font-size: 16px;
+                                    font-weight: bolder;
+                                }
+                            }
+                            > .file:hover {
+                                box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);;
+                                border: 1px solid #7b7b7b;
+                            }
                         }
                     }
                     > .msg:hover {
@@ -297,6 +357,10 @@
                         border-radius: 10px;
                         padding: 0 10px;
                         align-items: center;
+
+                        > svg {
+                            cursor: pointer;
+                        }
 
                         > input {
                             display: flex;

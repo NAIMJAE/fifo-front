@@ -50,7 +50,7 @@ export const deletePostApi = async (pno) => {
 export const postFileDownloadApi = async (pno) => {
     const response = await axios.get(`${rootURL}/post/download/${pno}`, {
         responseType: 'blob', // Blob 형태로 응답을 처리
-      });
+    });
     return response;
 };
 

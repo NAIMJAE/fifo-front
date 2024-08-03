@@ -13,7 +13,6 @@ import { articleViewApi, commentInsertApi, deletePostApi, increaseHeartApi, post
 import { FrontUrl, RootUrl } from '../../api/RootUrl';
 import Moment from 'moment';
 import { useSelector } from 'react-redux';
-import { FileDownload } from '@mui/icons-material';
 
 const ViewPage = () => {
 
