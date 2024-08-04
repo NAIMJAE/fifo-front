@@ -1,0 +1,79 @@
+.findModal {
+  .modalBox {
+    display: flex;
+    flex-direction: column;
+
+    .close-btn {
+      position: relative;
+      height: 37px;
+      width: 34px;
+      cursor: pointer;
+      border: 1px solid #4169e1 !important;
+      border-radius: 6px;
+      color: #4169e1 !important;
+      margin-left: 320px;
+
+      .close-btn :hover {
+        background-color: #000;
+      }
+    }
+    .close-btn p {
+      position: absolute;
+      font-weight: bold;
+      font-size: 20px;
+      padding: 3px 10px;
+      margin-bottom: 2px;
+    }
+    > h1 {
+      display: flex;
+      justify-content: center;
+      font-size: 1.875rem;
+      line-height: 2.5rem;
+      font-weight: 700;
+    }
+    > h2 {
+      display: flex;
+      justify-content: center;
+      --tw-text-opacity: 1;
+      color: rgb(75 85 99 / var(--tw-text-opacity));
+    }
+    .inputArea {
+      display: flex;
+      flex-direction: column;
+      margin-top: 15px;
+      padding: 10px;
+
+      .area {
+        display: flex;
+        margin-bottom: 5px;
+        > span {
+          display: flex;
+          align-items: center;
+          margin-right: 6px;
+          color: rgb(55 65 81 / var(--tw-text-opacity));
+          font-weight: 500;
+          font-size: 1rem;
+          line-height: 1.25rem;
+        }
+        .name {
+          margin-right: 20px;
+        }
+        > input {
+          border: 1px solid #908e8e;
+          border-radius: 5px;
+          padding: 5px;
+          width: 86%;
+        }
+      }
+      .spanBtn {
+        display: flex;
+        justify-content: end;
+        > button {
+          cursor: pointer;
+          padding: 5px;
+          border-radius: 5px;
+        }
+      }
+    }
+  }
+}

@@ -3,7 +3,8 @@ import "../../styles/user/login.scss";
 import { Box, Modal } from "@mui/material";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-
+import FindId from "./FindId";
+import FindPass from "./FindPass";
 const LoginComponent = ({
   setModalOpen,
   handleClose,
@@ -19,6 +20,28 @@ const LoginComponent = ({
     setShowPassword(!showPassword);
   };
 
+  /**아이디, 비밀번호 찾기 */
+  const [findHandler, setFindHandler] = useState(null); // 아이디(true), 비밀번호(false) 찾기 상태
+
+  /**아이디 찾기 */
+  const findIdHandleClose = () => setFindIdModalOpen(false); //아이디 찾기 모달 끄기 관리
+  const [findIdModalOpen, setFindIdModalOpen] = useState(false); // 아이디 찾기 모달 상태 State
+
+  /**비밀번호 찾기 */
+  const findPassHandleClose = () => setFindPassModalOpen(false); //비밀번호 찾기 모달 끄기 관리
+  const [findPassModalOpen, setFindPassModalOpen] = useState(false); // 비밀번호 찾기 모달 상태 State
+
+  const handlerFind = (e) => {
+    e.preventDefault();
+    const name = e.target.name;
+    console.log(name);
+    if (name === "findId") {
+      setFindIdModalOpen(true);
+    }
+    if (name === "findPass") {
+      setFindPassModalOpen(true);
+    }
+  };
   return (
     <div className="login">
       <Modal className="loginModal" open={modalOpen} onClose={handleClose}>
@@ -65,14 +88,30 @@ const LoginComponent = ({
             </button>
           </form>
 
-          <button className="btnFind id" onClick={handlerLogin}>
+          <button name="findId" className="btnFind id" onClick={handlerFind}>
             아이디 찾기
           </button>
-          <button className="btnFind pass" onClick={handlerLogin}>
+          <button
+            name="findPass"
+            className="btnFind pass"
+            onClick={handlerFind}
+          >
             비밀번호 찾기
           </button>
         </Box>
       </Modal>
+      {findIdModalOpen && (
+        <FindId
+          findIdModalOpen={findIdModalOpen}
+          findIdHandleClose={findIdHandleClose}
+        />
+      )}
+      {findPassModalOpen && (
+        <FindPass
+          findPassModalOpen={findPassModalOpen}
+          findPassHandleClose={findPassHandleClose}
+        />
+      )}
     </div>
   );
 };
