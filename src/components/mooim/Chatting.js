@@ -5,6 +5,11 @@ import { useSelector } from 'react-redux';
 import { RootUrl } from '../../api/RootUrl';
 import { getCurrentDateTime } from '../common/helper/ChangeDate';
 import { DownloadFileApi, selectChatApi, sendFileApi, sendMsgApi } from '../../api/chatApi';
+import ImageModal from './modal/ImageModal';
+import Moment from 'moment';
+import EmojiModal from './modal/EmojiModal';
+import { faCirclePlay, faFaceSmile } from '@fortawesome/free-regular-svg-icons';
+import GifModal from './modal/GifModal';
 
 const Chatting = ({ mooim }) => {
 
@@ -99,19 +104,25 @@ const Chatting = ({ mooim }) => {
 
     /** 엔터 키 감지 핸들러 */
     const keyDown = (e) => {
-        if (e.key === "Enter") {
-        sendMessage();
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault(); // 기본 Enter 키 동작(줄바꿈) 방지
+            makeMsg();
         }
     };
 
-    /** 메세지 전송 함수 */
-    const sendMessage = async () => {
-        if (inputMsg && webSocket.current.readyState === WebSocket.OPEN) {
-
+    const makeMsg = () => {
+        if (inputMsg) {
             const msgData = {
                 type: "msg",
                 data: inputMsg,
             }
+            sendMessage(msgData);
+        }
+    }
+
+    /** 메세지 전송 함수 */
+    const sendMessage = async (msgData) => {
+        if (webSocket.current.readyState === WebSocket.OPEN) {
 
             const socketMsg = {
                 mooimno: mooim.mooimno,
@@ -119,6 +130,7 @@ const Chatting = ({ mooim }) => {
                 msgData: msgData,
                 chatdate: getCurrentDateTime(),
                 thumb: loginSlice.thumb,
+                userno: userno,
             }
 
             const saveMsg = {
@@ -176,6 +188,7 @@ const Chatting = ({ mooim }) => {
                         msgData: msgData,
                         chatdate: getCurrentDateTime(),
                         thumb: loginSlice.thumb,
+                        userno: userno,
                     }
                     webSocket.current.send(JSON.stringify(socketMsg));
                 }
@@ -214,7 +227,50 @@ const Chatting = ({ mooim }) => {
         }
     }
 
-    // 남은거 : 디자인, 이미지 크게 보는 모달, 이미지 전송 스크롤, 스크롤 디테일, 이모지, 채팅 삭제, 채팅 접근 제한
+    /** 이미지 크게 보기 */
+    const [zoomImgUrl, setZoomImgUrl] = useState("");
+    const [zoomImgModal, setZoomImgModal] = useState(false);
+
+    const zoomImg = (msg) => {
+        const url = RootUrl()+"/uploads/chat/files/"+msg.mooimno+"/"+msg.msgData.data;
+        setZoomImgUrl(url);
+        zoomModal();
+    }
+
+    const zoomModal = () => {
+        setZoomImgModal(!zoomImgModal);
+    }
+
+    /** 이모지 박스 */
+    const [emojiBox, setEmojiBox] = useState(false);
+
+    const openEmoji = () => {
+        setEmojiBox(!emojiBox);
+        setGifBox(false);
+    }
+
+    const inputEmoji = (Emoji) => {
+        setInputMsg(prevMsg => prevMsg + Emoji);
+    }
+    
+    /** 이모지 박스 */
+    const [gifBox, setGifBox] = useState(false);
+
+    const openGif = () => {
+        setGifBox(!gifBox);
+        setEmojiBox(false);
+    }
+
+    const inputGif = (gif) => {
+        setGifBox(!gifBox);
+        const msgData = {
+            type: "gif",
+            data: gif,
+        }
+        sendMessage(msgData);
+    }
+
+    // 남은거 : 디자인, 이미지 전송 스크롤, 스크롤 디테일, 이모지, 채팅 삭제, 채팅 접근 제한
 
   return (
     <div className='chatting'>
@@ -225,9 +281,9 @@ const Chatting = ({ mooim }) => {
                         <img src={`${RootUrl()}/uploads/user/${member.usersDTO.thumb}`} alt="profile" />
                         <h1>{member.usersDTO.nick}</h1>
                         {connUsers.includes(String(member.usersDTO.userno)) ? (
-                            <span style={{backgroundColor:"#90EE90"}}></span>
+                            <span style={{border:"4px solid #16FF00"}}></span>
                         ) : (
-                            <span style={{backgroundColor:"#FF0000"}}></span>
+                            <span style={{border:"4px solid #FF0000"}}></span>
                         )}
                     </div>
                 ))}
@@ -236,19 +292,24 @@ const Chatting = ({ mooim }) => {
             <div className='chatCnt'>
                 <div className='chatMsg'>
                     {messages.map((msg, index) => (
-                        <div key={index} className='msg'>
+                        <div key={index} className={msg.userno === userno ? 'myMsg' : 'msg'}>
                             <img src={`${RootUrl()}/uploads/user/${msg.thumb}`} alt="profile" />
                             <div>
-                                <h1>{msg.nick} <span>{msg.chatdate}</span></h1>
+                                <h1>{msg.nick} <span>{Moment(msg.chatdate).format('MM.DD HH:mm')}</span></h1>
                                 {msg.msgData.type === "msg" && <h2>{msg.msgData.data}</h2>}
                                 {msg.msgData.type === "image" &&
-                                    <img src={`${RootUrl()}/uploads/chat/files/${msg.mooimno}/${msg.msgData.data}`} alt="file" />
+                                    <img className='normalImg'
+                                        src={`${RootUrl()}/uploads/chat/files/${msg.mooimno}/${msg.msgData.data}`} alt="file" 
+                                        onClick={() => zoomImg(msg)}/>
                                 }
-                                {msg.msgData.type !== "image" && msg.msgData.type !== "msg" &&
+                                {msg.msgData.type !== "image" && msg.msgData.type !== "msg" && msg.msgData.type !== "gif" &&
                                     <div className='file' onClick={() => downloadFile(msg.msgData)}>
                                         <span>{msg.msgData.name.split(".")[1]}</span>
                                         <h1>{msg.msgData.name}</h1>
                                     </div>
+                                }
+                                {msg.msgData.type === "gif" &&
+                                    <img src={`../../../../images/mooim/chat/${msg.msgData.data}`} alt="gif"/>
                                 }
                             </div>
                         </div>
@@ -257,19 +318,26 @@ const Chatting = ({ mooim }) => {
                 </div>
 
                 <div className='chatInput'>
-                    <div>
-                        <FontAwesomeIcon icon={faPlus} size="lg" color="#7b7b7b" onClick={selectFile}/>
-                        <input type="file" id="fileInput" style={{ display: 'none' }} onChange={saveFile} />
-
-                        <input type="text" value={inputMsg} 
+                    {emojiBox && <EmojiModal inputEmoji={inputEmoji}/>}
+                    {gifBox && <GifModal inputGif={inputGif}/>}
+                    <div className='inputBox'>
+                        <div className='chatTool'>
+                            <FontAwesomeIcon icon={faPlus} size="lg" color="#606060" onClick={selectFile}/>
+                            <input type="file" id="fileInput" style={{ display: 'none' }} onChange={saveFile} />
+                            <FontAwesomeIcon icon={faFaceSmile} size="lg" color="#606060" onClick={openEmoji} />
+                            <FontAwesomeIcon icon={faCirclePlay} size="lg" color="#606060" onClick={openGif} />
+                        </div>
+                        
+                        <textarea value={inputMsg} 
                             onChange={(e) => {setInputMsg(e.target.value)}}
                             onKeyDown={keyDown}
-                            />
+                        />
 
                     </div>
                 </div>
             </div>
         </div>
+        {zoomImgModal && <ImageModal zoomImgUrl={zoomImgUrl} zoomModal={zoomModal}/>}
     </div>
   )
 }
