@@ -4,6 +4,7 @@ import '../../styles/grade.scss'
 import EditorComponent from '../../components/grade/EditorComponent'
 import axios from 'axios'
 import RecordComponent from '../../components/grade/RecordComponent';
+import { useSelector } from 'react-redux';
 
 const QuestionViewPage = () => {
 
@@ -11,6 +12,7 @@ const QuestionViewPage = () => {
     const [language, setLanguage] = useState('');
     const [questionInfo, setQuestionInfo] = useState({});
     const [navigator, setNavigator] = useState('info');
+    const loginSlice = useSelector((state) => state.authSlice) || {};
 
     const socketObj = useRef(null);
 
@@ -22,6 +24,7 @@ const QuestionViewPage = () => {
                 setQuestionInfo(res.data)
                 setLanguage(res.data.languagename)
             })
+            console.log(loginSlice)
     }, [])
 
     useEffect(() => {
@@ -92,6 +95,7 @@ const QuestionViewPage = () => {
                         questionNo={questionInfo.questionno}
                         socketObj={socketObj}
                         navigator={setNavigator}
+                        userno={loginSlice.userno}
                     />}
                 {navigator === 'record' &&
                     <RecordComponent
@@ -99,6 +103,7 @@ const QuestionViewPage = () => {
                         questionNo={questionInfo.questionno}
                         socketObj={socketObj}
                         navigator={setNavigator}
+                        loginSlice={loginSlice}
                     />}
             </div>
         </MainLayout>

@@ -1,20 +1,28 @@
-import axios from 'axios'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import MonacoEditor from 'react-monaco-editor';
 
 const EditorComponent = (questionInfo) => {
 
     const [code, setCode] = useState(`
-class Main {
-    public static void main(String args[]){
-            
-    }
+import java.util.Scanner;
+
+public class Main {
+	public static void main(String[] args) {
+		
+		Scanner sc = new Scanner(System.in);
+		
+		int a = sc.nextInt();
+		int b = sc.nextInt();
+		
+		System.out.println(a+b);
+	}
+
 }
 `);
 
     useEffect(() => {
         console.log(questionInfo.language.toLowerCase())
-
+        console.log(questionInfo.userno)
     }, [questionInfo])
 
     const handleExecute = async () => {
@@ -24,6 +32,7 @@ class Main {
             console.log("aa");
             const sendMessage = JSON.stringify({
                 questionNo: questionInfo.questionNo,
+                userno: questionInfo.userno,
                 language: questionInfo.language.toLowerCase(),
                 code: code
             })
