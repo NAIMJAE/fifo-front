@@ -1,0 +1,201 @@
+.findModal {
+  .modalBox {
+    display: flex;
+    flex-direction: column;
+    min-height: 470px;
+    .close-btn {
+      position: relative;
+      height: 37px;
+      width: 34px;
+      cursor: pointer;
+      border: 1px solid #4169e1 !important;
+      border-radius: 6px;
+      color: #4169e1 !important;
+      margin-left: 320px;
+
+      .close-btn :hover {
+        background-color: #000;
+      }
+    }
+    .close-btn p {
+      position: absolute;
+      font-weight: bold;
+      font-size: 20px;
+      padding: 3px 10px;
+      margin-bottom: 2px;
+    }
+    > h1 {
+      display: flex;
+      justify-content: center;
+      font-size: 1.875rem;
+      line-height: 2.5rem;
+      font-weight: 700;
+      margin: 10px 0px;
+    }
+    > h2 {
+      display: flex;
+      justify-content: center;
+      --tw-text-opacity: 1;
+      color: rgb(75 85 99 / var(--tw-text-opacity));
+      margin-bottom: 2px;
+    }
+    .inputArea {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-top: 15px;
+      padding: 10px;
+
+      .area {
+        display: flex;
+        margin-bottom: 5px;
+        > span {
+          display: flex;
+          align-items: center;
+          margin-right: 6px;
+          color: rgb(55 65 81 / var(--tw-text-opacity));
+          font-weight: 500;
+          font-size: 1rem;
+          line-height: 1.25rem;
+        }
+        .email {
+          margin-right: 20px;
+        }
+        > input {
+          border: 1px solid #908e8e;
+          border-radius: 5px;
+          padding: 5px;
+          width: 82%;
+        }
+      }
+      .checkCode {
+        display: flex;
+        flex-direction: row;
+        margin-top: 8px;
+        > span {
+          display: flex;
+          align-items: center;
+          margin-right: 5px;
+        }
+        > input {
+          border: 1px solid #908e8e;
+          border-radius: 5px;
+          padding: 5px;
+          width: 33%;
+        }
+        #progrecss {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .progrecss2 {
+            margin-left: 5px;
+          }
+        }
+        #check {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          > p {
+            font-size: 25px;
+          }
+        }
+        > button {
+          margin-left: 8px;
+          border: none;
+          cursor: pointer;
+          background-color: dodgerblue;
+          color: aliceblue;
+          border-radius: 5px;
+          padding: 6px;
+        }
+        > button:hover {
+          background-color: rgb(30, 134, 238);
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+      }
+    }
+    .spanBtn {
+      display: flex;
+      justify-content: end;
+      > button {
+        cursor: pointer;
+        border: none;
+        border-radius: 8px;
+        background-color: #4169e1;
+        border: 5px solid transparent;
+        color: white;
+        padding: 5px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        margin: 8px 0;
+      }
+      > button:hover {
+        background-color: #3c60cd;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    .changePass {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+
+      .changeDiv1 {
+        display: flex;
+        margin-bottom: 10px;
+        align-items: center;
+        justify-content: start;
+        margin-left: 30px;
+        width: 368px;
+        > span {
+          margin-right: 10px;
+        }
+        > input {
+          border: 1px solid #908e8e;
+          border-radius: 5px;
+          padding: 5px;
+          width: 63%;
+        }
+      }
+      .changeDiv2 {
+        display: flex;
+        align-items: center;
+        margin-left: 30px;
+        width: 368px;
+        > span {
+          margin-right: 10px;
+        }
+        > input {
+          display: flex;
+          border: 1px solid #908e8e;
+          border-radius: 5px;
+          padding: 5px;
+          width: 63%;
+        }
+      }
+      > .btn {
+        display: flex;
+        justify-content: end;
+        width: 350px;
+        margin-right: 25px;
+        > button {
+          display: flex;
+          cursor: pointer;
+          justify-content: center;
+          align-items: center;
+          border: none;
+          border-radius: 5px;
+          padding: 8px;
+          margin-top: 20px;
+          color: aliceblue;
+          font-weight: bold;
+          background-color: dodgerblue;
+        }
+        > button:hover {
+        }
+      }
+    }
+  }
+}

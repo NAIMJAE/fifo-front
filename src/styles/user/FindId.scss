@@ -2,7 +2,7 @@
   .modalBox {
     display: flex;
     flex-direction: column;
-
+    min-height: 470px;
     .close-btn {
       position: relative;
       height: 37px;
@@ -30,16 +30,19 @@
       font-size: 1.875rem;
       line-height: 2.5rem;
       font-weight: 700;
+      margin: 10px 0px;
     }
     > h2 {
       display: flex;
       justify-content: center;
       --tw-text-opacity: 1;
       color: rgb(75 85 99 / var(--tw-text-opacity));
+      margin-bottom: 2px;
     }
     .inputArea {
       display: flex;
       flex-direction: column;
+      justify-content: center;
       margin-top: 15px;
       padding: 10px;
 
@@ -65,14 +68,71 @@
           width: 86%;
         }
       }
+      #progrecss {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .progrecss {
+          margin: 10px;
+        }
+      }
       .spanBtn {
         display: flex;
         justify-content: end;
         > button {
           cursor: pointer;
+          border: none;
+          border-radius: 8px;
+          background-color: #4169e1;
+          border: 5px solid transparent;
+          color: white;
           padding: 5px;
-          border-radius: 5px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          margin: 8px 0;
         }
+        > button:hover {
+          background-color: #3c60cd;
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+      }
+    }
+    .findDiv {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      > h1 {
+        margin-top: 20px;
+        font-size: 1.5em;
+        color: #333;
+        margin-bottom: 15px;
+      }
+      > h2 {
+        font-size: 1.2em;
+        color: dodgerblue;
+        font-weight: bolder;
+        border-bottom: 3px solid dodgerblue;
+        padding-bottom: 5px;
+      }
+      > h3 {
+        font-size: 1.5em;
+        color: #333;
+        margin-top: 15px;
+      }
+      > button {
+        cursor: pointer;
+        margin-top: 10px;
+        padding: 10px;
+        color: aliceblue;
+        border: none;
+        background-color: dodgerblue;
+        border-radius: 5px;
+      }
+      > button:hover {
+        background-color: rgb(26, 126, 226);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
       }
     }
   }
