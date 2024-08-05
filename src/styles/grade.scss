@@ -385,3 +385,20 @@
         }
     }
 }
+
+#record{
+    
+    table{
+        margin: 0 auto;
+        width: 80%;
+        border: #111 1px solid;
+        border-collapse: collapse;
+        th{
+            border: #111 1px solid;
+        }
+        td{
+            border: #111 1px solid;
+            text-align: center;
+        }
+    }
+}
