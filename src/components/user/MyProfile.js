@@ -26,7 +26,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { globalPath } from "../../globalPaths";
-
 import moment from "moment/moment";
 import axios from "axios";
 import { differenceInYears, set } from "date-fns";
@@ -47,7 +46,6 @@ const MyProfile = () => {
     nick: "",
     email: "",
     hp: "",
-    region: "",
     birth: "",
     gender: "",
     rdate: "",
@@ -70,11 +68,7 @@ const MyProfile = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
-
-  useEffect(() => {
-    console.log(userRegion);
-  }, [userRegion]);
+  }, [skillTriger]);
 
   /**나이 계산하기 */
   const calcAge = () => {
@@ -160,6 +154,7 @@ const MyProfile = () => {
         );
         if (response.data) {
           alert("프로필 사진이 업데이트 되었습니다.");
+          SetSkillTriger(!skillTriger);
         } else {
           alert("프로필 사진 업데이트에 실패했습니다.");
         }
@@ -195,7 +190,7 @@ const MyProfile = () => {
       });
   }, []);
 
-  /**내 지역 select 활성 */
+  /**내 지역 checkBox 활성 */
   const changeMyRegion = (e) => {
     const targetId = e.currentTarget.getAttribute("data-target-id");
     const input = document.getElementById(targetId);
@@ -214,6 +209,12 @@ const MyProfile = () => {
       checkbox.value = optionText;
       checkbox.classList.add("region-checkbox");
 
+      userRegion.forEach((users) => {
+        if (users === checkbox.value) {
+          checkbox.checked = users;
+        }
+      });
+
       label.appendChild(checkbox);
       label.appendChild(document.createTextNode(optionText));
 
@@ -228,60 +229,51 @@ const MyProfile = () => {
 
   // 선택한 지역 배열에 넣기
   const [regionArr, setRegionArr] = useState([]);
-  const [regionTrigger, setRegionTrigger] = useState(false); // 업데이트를 트리거하기 위한 상태
 
-  const checkRegion = (e) => {
+  const checkRegion = (e) => {};
+
+  useEffect(() => {
+    console.log(regionArr);
+    const targetId = "region";
+
+    const response = axios.post(
+      `${url}/profile/updateRegion?userno=${authSlice.userno}`,
+      regionArr
+    );
+    console.log(response.data);
+    if (response.data) {
+      SetSkillTriger(!skillTriger);
+
+      // input 생성
+      const input = document.createElement("input");
+      input.type = "text";
+      input.id = targetId;
+      input.readOnly = true;
+      input.value = userRegion;
+
+      //div를 다시 input으로 교체
+      const div = document.getElementById(targetId + "Div");
+      div.parentNode.replaceChild(input, div);
+
+      // 아이콘도 다시 연필
+      setInputModify((prev) => ({ ...prev, [targetId]: false }));
+
+      alert("수정되었습니다.");
+    }
+  }, [regionArr]);
+
+  /** 내 지역 정보 수정 저장 */
+  const saveMyRegion = async (e) => {
     const targetId = e.currentTarget.getAttribute("data-target-id");
     const option = document.getElementsByClassName(targetId + "-checkbox");
 
     Array.from(option).forEach((each) => {
       if (each.checked) {
         setRegionArr((prev) => [...prev, each.value]);
-        setRegionTrigger(true);
       }
     });
-  };
-
-  /** 내 지역 정보 수정 저장 */
-  const saveMyRegion = async (e) => {
-    checkRegion(e);
-
-    const targetId = e.currentTarget.getAttribute("data-target-id");
-    const option = document.getElementsByClassName(targetId + "-checkbox");
-    const div = document.getElementById(targetId + "Div");
-
-    const input = document.createElement("input");
-    input.type = "text";
-    input.id = targetId;
-    input.readOnly = true;
-    input.value = userRegion;
 
     console.log(targetId + "-checkbox");
-    console.log(div);
-
-    if (regionTrigger) {
-      try {
-        const response = await axios.post(
-          `${url}/profile/updateRegion?userno=${authSlice.userno}`,
-          regionArr
-        );
-        if (response.data) {
-          SetSkillTriger(!skillTriger);
-
-          //div를 다시 input으로 교체
-          div.parentNode.replaceChild(input, div);
-          // 아이콘도 다시 연필
-          setInputModify((prev) => ({ ...prev, [targetId]: false }));
-          setRegionTrigger(false);
-
-          alert("수정되었습니다.");
-        } else {
-          alert("수정에 실패했습니다.");
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    }
   };
 
   /** 기본 정보 수정 */
@@ -292,7 +284,7 @@ const MyProfile = () => {
 
     console.log(name);
     console.log(value);
-    // 유효성 검사 넣어주세요
+
     if (name === "nick") {
       isValidNick(value);
     }
@@ -425,6 +417,7 @@ const MyProfile = () => {
       });
   };
 
+  /**스킬 추가 취소버튼 */
   const clickCancle = (e) => {
     e.preventDefault();
 
@@ -631,7 +624,7 @@ const MyProfile = () => {
                 <label htmlFor="">
                   <h3>활동지역 : </h3>
                   <input
-                    type="text"
+                    type="textarea"
                     id="region"
                     name="region"
                     value={userRegion}

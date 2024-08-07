@@ -144,7 +144,6 @@
 
       .changeDiv1 {
         display: flex;
-        margin-bottom: 10px;
         align-items: center;
         justify-content: start;
         margin-left: 30px;
@@ -159,10 +158,19 @@
           width: 63%;
         }
       }
+      .validContext {
+        color: red;
+        letter-spacing: -0.05em;
+        font-size: 13px;
+        margin-left: 30px;
+        margin-top: 3px;
+      }
       .changeDiv2 {
         display: flex;
         align-items: center;
         margin-left: 30px;
+        margin-top: 10px;
+
         width: 368px;
         > span {
           margin-right: 10px;
@@ -195,6 +203,39 @@
         }
         > button:hover {
         }
+      }
+    }
+    .changeDiv {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      > h1 {
+        margin-top: 20px;
+        font-size: 1.5em;
+        color: dodgerblue;
+        font-weight: bolder;
+        border-bottom: 3px solid dodgerblue;
+        margin-bottom: 15px;
+      }
+      > h2 {
+        font-size: 1.2em;
+        color: #333;
+        padding-bottom: 5px;
+      }
+
+      > button {
+        cursor: pointer;
+        margin-top: 10px;
+        padding: 10px;
+        color: aliceblue;
+        border: none;
+        background-color: dodgerblue;
+        border-radius: 5px;
+      }
+      > button:hover {
+        background-color: rgb(26, 126, 226);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
       }
     }
   }
