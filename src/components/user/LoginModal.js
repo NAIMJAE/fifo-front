@@ -111,6 +111,7 @@ const LoginComponent = ({
         <FindPass
           findPassModalOpen={findPassModalOpen}
           findPassHandleClose={findPassHandleClose}
+          setFindPassModalOpen={setFindPassModalOpen}
         />
       )}
     </div>

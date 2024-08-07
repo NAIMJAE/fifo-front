@@ -4,7 +4,11 @@ import React, { useEffect, useState } from "react";
 import { Box, CircularProgress, Modal } from "@mui/material";
 import axios from "axios";
 
-const FindPass = ({ findPassModalOpen, findPassHandleClose }) => {
+const FindPass = ({
+  findPassModalOpen,
+  findPassHandleClose,
+  setFindPassModalOpen,
+}) => {
   /**입력한 이메일 저장 state */
   const [email, setEmail] = useState("");
   /** 확인할 코드 state*/
@@ -77,9 +81,60 @@ const FindPass = ({ findPassModalOpen, findPassHandleClose }) => {
         });
     }, 2000);
   };
+
+  /**변경할 비밀번호 */
+  const [pass, setPass] = useState({
+    pass1: "",
+    pass2: "",
+  });
+  const [userName, setUserName] = useState(""); // 리턴될 유저네임
+  const [passValid, setPassValid] = useState(null); // 비밀번호 유효성 검사
+  const inputPass = (e) => {
+    const { name, value } = e.target;
+    setPass((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    if (name === "pass1") {
+      console.log(name);
+
+      isValidPass(value);
+    }
+  };
+  useEffect(() => {
+    console.log(passValid);
+  }, [passValid]);
+  /**비밀번호 검사 함수 */
+  const isValidPass = (pass) => {
+    const passPattern =
+      /^(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$/;
+    setPassValid(passPattern.test(pass));
+  };
+
+  /**비밀번호 변경하기 버튼 */
   const chnageBtnHandler = (e) => {
     e.preventDefault();
-    alert("잉");
+
+    if (pass.pass1 !== pass.pass2) {
+      alert("비밀번호가 일치하지 않습니다.");
+      return;
+    } else {
+      axios
+        .post(`${RootUrl()}/user/findPass`, { email: email, pass: pass.pass2 })
+        .then((response) => {
+          setUserName(response.data);
+          setTriger2(false);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
+  /**다 됐다 */
+  const handlerBtn3 = (e) => {
+    e.preventDefault();
+    setFindPassModalOpen(false);
   };
   return (
     <div>
@@ -143,16 +198,39 @@ const FindPass = ({ findPassModalOpen, findPassHandleClose }) => {
             <form className="changePass">
               <div className="changeDiv1">
                 <span>비밀번호 변경</span>
-                <input type="password"></input>
+                <input
+                  type="password"
+                  name="pass1"
+                  value={pass.pass1}
+                  onChange={inputPass}
+                ></input>
               </div>
+
+              {passValid != null && !passValid && (
+                <span className="validContext">
+                  올바르지 않은 비밀번호입니다.
+                </span>
+              )}
               <div className="changeDiv2">
                 <span>비밀번호 확인</span>
-                <input type="password"></input>
+                <input
+                  type="password"
+                  name="pass2"
+                  value={pass.pass2}
+                  onChange={inputPass}
+                ></input>
               </div>
               <div className="btn">
                 <button onClick={chnageBtnHandler}>변경하기</button>
               </div>
             </form>
+          )}
+          {!triger2 && userName !== "" && (
+            <div className="changeDiv">
+              <h1>{userName}</h1>
+              <h2>님의 비밀번호가 변경되었습니다!</h2>
+              <button onClick={handlerBtn3}>로그인하기</button>
+            </div>
           )}
         </Box>
       </Modal>

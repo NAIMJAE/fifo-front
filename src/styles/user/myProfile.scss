@@ -284,7 +284,9 @@
         }
         > input {
           display: flex;
-          width: 240px;
+          max-width: 240px;
+          overflow: auto; /* 내용이 넘칠 경우 스크롤바 표시 */
+          height: auto;
           font-size: 20px;
           padding: 4px 10px;
           margin-right: 10px;
