@@ -446,35 +446,120 @@
 
     > label {
       display: flex;
+      flex-direction: row;
       justify-content: center;
+      align-items: center;
       cursor: pointer;
       > p {
         font-size: 14px;
         margin-right: 5px;
       }
+      > .myExp {
+        display: flex;
+        flex-direction: row;
+        justify-content: start;
+
+        .period {
+          display: flex;
+        }
+        .jobAndSkill {
+          display: flex;
+        }
+      }
     }
 
     .jobForm {
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       padding: 15px;
       border-radius: 10px;
       border: #7b7b7b solid 1px;
-      .MuiFormControl-fullWidth {
+      .periodAndJob {
         display: flex;
-        .wirtePeriod {
-          margin-right: 15px;
-          width: 35%;
-          .MuiInputBase-root {
-            width: 100%;
+        flex-direction: row;
+        width: 100%;
+        align-items: center;
+        .period {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          align-items: start;
+          margin-bottom: 20px;
+          > span {
+            margin: 5px 0px;
+            font-weight: bolder;
+            font-size: x-large;
+          }
+          > select {
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            border: #9f9f9f 1px solid;
+            height: 45px;
+            width: 157px;
           }
         }
-        .writeJob {
-          margin-right: 15px;
-          width: 45%;
-          .MuiInputBase-root {
-            width: 100%;
+        .job {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          align-items: start;
+          margin-bottom: 20px;
+          > span {
+            margin: 5px 0px;
+            font-weight: bolder;
+            font-size: x-large;
           }
+          > select {
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            border: #9f9f9f 1px solid;
+            height: 45px;
+            width: 170px;
+          }
+        }
+      }
+      .btnDiv {
+        display: flex;
+        margin-top: 10px;
+        .btn {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 15px;
+          font-weight: border;
+          color: #000000;
+          border-radius: 10px;
+          border: none;
+          padding: 10px;
+          cursor: pointer;
+          margin-left: 10px;
+        }
+        .add-btn {
+          background-color: #0090f9;
+          color: white;
+        }
+
+        .add-btn:hover {
+          background-color: #0285e2;
+        }
+
+        .cancel-btn {
+          background-color: #f44336;
+          color: white;
+        }
+
+        .cancel-btn:hover {
+          background-color: #da190b;
+        }
+      }
+      .skills {
+        > p {
+          font-weight: bolder;
+          font-size: x-large;
         }
       }
     }
@@ -487,6 +572,7 @@
   padding: 10px;
   width: 360px;
   height: auto;
+
   .regionLabel {
     display: inline-flex;
     flex-wrap: wrap;
