@@ -2,7 +2,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux';
-import { RootUrl } from '../../api/RootUrl';
+import { Host, RootUrl } from '../../api/RootUrl';
 import { getCurrentDateTime } from '../common/helper/ChangeDate';
 import { DownloadFileApi, selectChatApi, sendFileApi, sendMsgApi } from '../../api/chatApi';
 import ImageModal from './modal/ImageModal';
@@ -12,7 +12,6 @@ import { faCirclePlay, faFaceSmile } from '@fortawesome/free-regular-svg-icons';
 import GifModal from './modal/GifModal';
 
 const Chatting = ({ mooim }) => {
-
     const loginSlice = useSelector((state) => state.authSlice) || {};
     const userno = loginSlice.userno;
 
@@ -31,13 +30,13 @@ const Chatting = ({ mooim }) => {
     /** 새로운 메세지 수신시 화면 이동 */
     const messagesEndRef = useRef(null);
  
-    /** 소켓 연결 상태 */
+    /** 소켓 연결 상태 */ 
     const webSocket = useRef(null);
 
     /** 웹 소켓 연결 */
     useEffect(() => {
         // WebSocket 서버에 연결
-        webSocket.current = new WebSocket(`ws://localhost:8080/fifo-back/chat/${userno}/${roomId}`);
+        webSocket.current = new WebSocket(`ws://${Host}:8080/fifo-back/chat/${userno}/${roomId}`);
 
         // 연결이 성립되었을 때 실행
         webSocket.current.onopen = () => {
