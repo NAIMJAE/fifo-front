@@ -58,13 +58,7 @@ const Header = () => {
       .catch((err) => {
         console.log(err);
         // 서버에서 반환된 오류 메시지 확인
-        if (err.response && err.response.data) {
-          setError(err.response.data);
-          alert(err);
-        } else {
-          setError("아이디 또는 비밀번호가 틀렸습니다. 다시 확인해주세요.");
-          alert(err);
-        }
+        alert("아이디 또는 비밀번호를 다시 확인해주세요.");
       });
   };
 

@@ -21,10 +21,13 @@ const Register = () => {
     name: "",
     nick: "",
     birth: "",
-    gender: "",
+    gender: "M",
     hp: "",
     languagename: [],
   });
+  useEffect(() => {
+    console.log(register);
+  }, [register]);
 
   /**유효성 검사 */
   const [emailValid, setEmailValid] = useState(null); // 이메일 유효성 상태

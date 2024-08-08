@@ -142,7 +142,7 @@ export const selectCalendarApi = async (mooimno) => {
 
 /** 캘린더 이벤트 생성 API */
 export const createCalendarEventApi = async (newEvent) => {
-    const response = axios.post(`${rootURL}/calendar/create`, newEvent);
+    const response = axios.post(`${rootURL}/calendar`, newEvent);
     return response.data;
 };
 

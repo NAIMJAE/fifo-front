@@ -84,7 +84,7 @@ const LoginComponent = ({
               />
             )}
             <button className="btnLogin" onClick={handlerLogin}>
-              로그인하기
+              로그인
             </button>
           </form>
 
@@ -96,7 +96,7 @@ const LoginComponent = ({
             className="btnFind pass"
             onClick={handlerFind}
           >
-            비밀번호 찾기
+            비밀번호 변경
           </button>
         </Box>
       </Modal>
@@ -104,12 +104,14 @@ const LoginComponent = ({
         <FindId
           findIdModalOpen={findIdModalOpen}
           findIdHandleClose={findIdHandleClose}
+          setFindIdModalOpen={setFindIdModalOpen}
         />
       )}
       {findPassModalOpen && (
         <FindPass
           findPassModalOpen={findPassModalOpen}
           findPassHandleClose={findPassHandleClose}
+          setFindPassModalOpen={setFindPassModalOpen}
         />
       )}
     </div>

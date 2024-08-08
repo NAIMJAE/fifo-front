@@ -100,7 +100,7 @@
   .btnLogin {
     position: relative;
     cursor: pointer;
-    left: 220px;
+    left: 257px;
     margin-top: 5px;
     padding: 8px;
     border: none;
@@ -108,10 +108,10 @@
     font-size: 16px;
     text-align: center;
     color: #fff;
-    background-color: dodgerblue;
+    background-color: #4169e1;
   }
   .btnLogin:hover {
-    background-color: rgb(24, 139, 255);
+    background-color: #3c60cd;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   }
   .btnLogin:focus {
