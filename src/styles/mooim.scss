@@ -608,4 +608,19 @@
             }
         }
     }
+    .calendarContent{
+        .toastui-calendar-popup-container {
+            z-index: 220;
+        }
+        > .dateSpan {
+            font-size: 22px;
+            font-weight: 600;
+            margin: 20px;
+        }
+        .controllBtn {
+            margin: 10px;
+        }
+    }
+
 }
+
