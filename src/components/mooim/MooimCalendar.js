@@ -12,16 +12,27 @@ import { useSelector } from "react-redux";
 import Moment from "moment";
 import "moment/locale/ko";
 import { createCalendarEventApi, deleteCalendarEventApi, modifyCalendarEventApi, selectCalendarApi } from "../../api/gatheringApi";
+import { Host } from "../../api/RootUrl";
 
 const MooimCalendar = ({ mooimno }) => {
+
   const calendarRef = useRef(null);
   const calendarInstance = useRef(null);
   const [currentMonth, setCurrentMonth] = useState("");
   const [currentYear, setCurrentYear] = useState("");
   const [error, setError] = useState("");
   const authSlice = useSelector((state) => state.authSlice);
+  const userno = authSlice.userno;
 
+  let calendar;
+  /** 소켓 연결 상태 */
+  const webSocket = useRef(null);
+  /** 소켓방 번호 */
+  const roomId = "calendar" + mooimno;
+
+  /** 캘린더 생성 */
   useEffect(() => {
+
     const container = calendarRef.current;
     const options = {
       defaultView: "month",
@@ -45,7 +56,7 @@ const MooimCalendar = ({ mooimno }) => {
       useFormPopup: true,
     };
 
-    const calendar = new Calendar(container, options);
+    calendar = new Calendar(container, options);
 
     calendarInstance.current = calendar;
     console.log(calendarRef);
@@ -64,12 +75,15 @@ const MooimCalendar = ({ mooimno }) => {
     const fetchEvents = async () => {
       try {
         const events = await selectCalendarApi(mooimno);
+        
         events.forEach((event) => {
-          const isReadOnly = event.isReadOnly
-          const isAllDay = event.isAllDay;
+          const isReadOnly = event.isreadonly
+          const isAllDay = event.isallday;
           const selectedCalendar = options.calendars.find(
             (cal) => cal.id === event.calendarId
           );
+
+          console.log("event : ", event);
 
           const newEvent = {
             id: event.id,
@@ -84,7 +98,7 @@ const MooimCalendar = ({ mooimno }) => {
             backgroundColor: event.bgcolor,
             color: event.color,
           };
-
+          console.log("newEvent : ",newEvent);
           calendar.createEvents([newEvent]);
         });
       } catch (err) {
@@ -102,11 +116,11 @@ const MooimCalendar = ({ mooimno }) => {
       );
 
       // 서버 시간 형식으로 변환
-      const startFormatted = Moment(event.start.toDate()).format("YYYY-MM-DDTHH:mm:ss.SSS"); 
+      const startFormatted = Moment(event.start.toDate()).format("YYYY-MM-DDTHH:mm:ss.SSS");
       const endFormatted = Moment(event.end.toDate()).format("YYYY-MM-DDTHH:mm:ss.SSS");
 
       const backgroundColor = selectedCalendar ? selectedCalendar.backgroundColor : "#000000";
-      console.log(event.calendarId);
+      console.log("생성 : ", event);
 
       const newEvent = {
         mooimno: mooimno,
@@ -130,14 +144,13 @@ const MooimCalendar = ({ mooimno }) => {
       calendar.setOptions({});
 
       createCalendarEventApi(newEvent);
+      /** 소켓 전송 */
+      sendMessage(newEvent, "C", null);
     });
 
     /** 일정을 수정 */
     calendar.on("beforeUpdateEvent", ({ event, changes }) => {
       calendar.updateEvent(event.id, event.calendarId, changes);
-      console.log("HERE");
-      console.log(changes);
-      console.log(event);
       const start =
         changes.start === undefined
           ? null
@@ -148,8 +161,9 @@ const MooimCalendar = ({ mooimno }) => {
           : Moment(changes.end.toDate()).format("YYYY-MM-DDTHH:mm:ss.SSS");
 
       const updateData = {
-        id : event.id,
+        id: event.id,
         calendarid: changes.calendarId,
+        calendarId: changes.calendarId,
         title: changes.title,
         location: changes.location,
         start: start,
@@ -162,6 +176,10 @@ const MooimCalendar = ({ mooimno }) => {
 
       try {
         modifyCalendarEventApi(updateData);
+
+        /** 소켓 전송 */
+        sendMessage(updateData, "U", changes);
+
       } catch (err) {
         console.log(err);
       }
@@ -169,11 +187,12 @@ const MooimCalendar = ({ mooimno }) => {
 
     /** 일정을 삭제 */
     calendar.on("beforeDeleteEvent", (event) => {
-      console.log(event);
       calendar.deleteEvent(event.id, event.calendarId);
-      console.log(event.id);
       try {
         deleteCalendarEventApi(event.id);
+
+        /** 소켓 전송 */
+        sendMessage(event, "D", null);
       } catch (err) {
         console.log(err);
       }
@@ -219,7 +238,86 @@ const MooimCalendar = ({ mooimno }) => {
         calendar.destroy();
       }
     };
+  }, [mooimno]);
+
+
+  /** 웹 소켓 연결 */
+  useEffect(() => {
+    // WebSocket 서버에 연결
+    webSocket.current = new WebSocket(`ws://${Host}:8080/fifo-back/calendar/${userno}/${roomId}`);
+
+    // 연결이 성립되었을 때 실행
+    webSocket.current.onopen = () => {
+      console.log('WebSocket connection established');
+    };
+
+    // 메시지를 받았을 때 실행
+    webSocket.current.onmessage = (message) => {
+      const socketData = JSON.parse(message.data);
+      console.log("소켓으로 전달 받은 내용 : ", socketData);
+
+      if (socketData.type === 'message') {
+        const data = JSON.parse(socketData.payload);
+
+        console.log("socketData : ", socketData);
+
+        switch (data.state) {
+          case "C":
+            console.log("소켓으로 전달 생성");
+            calendar.createEvents(data.content);
+            break;
+          case "U":
+            console.log("소켓으로 전달 업데이트 : ", data.content);
+            calendar.updateEvent(data.content.id, data.content.calendarId, data.changes);
+            break;
+          case "D":
+            console.log("소켓으로 전달 삭제");
+            calendar.deleteEvent(data.content.id, data.content.calendarId);
+            break;
+
+          default:
+            break;
+        }
+      }
+
+
+    };
+
+    // 연결이 종료되었을 때 실행
+    webSocket.current.onclose = () => {
+      console.log('WebSocket connection closed');
+    };
+
+    // 오류가 발생했을 때 실행
+    webSocket.current.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    // 컴포넌트 언마운트 시 WebSocket 닫기
+    return () => {
+      if (webSocket.current) {
+        webSocket.current.close();
+      }
+    };
   }, []);
+
+  /** 메세지 전송 함수 */
+  const sendMessage = async (msgData, state, changes) => {
+    console.log("메세지 전송 함수 msgData :", msgData);
+    console.log("메세지 전송 함수 state :", state);
+    console.log("메세지 전송 함수 changes :", msgData);
+    if (webSocket.current.readyState === WebSocket.OPEN) {
+
+      const socketMsg = {
+        content: msgData,
+        changes: changes,
+        state: state,
+      }
+
+      // 소켓으로 메세지 전송
+      webSocket.current.send(JSON.stringify(socketMsg));
+    }
+  };
 
   /**  다음 달로 이동하는 버튼 */
   const handleClickNextButton = () => {

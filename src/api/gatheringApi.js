@@ -153,7 +153,7 @@ export const modifyCalendarEventApi = (updateData) => {
 };
 
 /** 캘린더 이벤트 삭제 API */
-export const deleteCalendarEventApi = (eventId) => {
-    const response = axios.delete(`${rootURL}/calendar/${eventId}`);
+export const deleteCalendarEventApi = (id) => {
+    const response = axios.delete(`${rootURL}/calendar/${id}`);
     return response.data;
 };
