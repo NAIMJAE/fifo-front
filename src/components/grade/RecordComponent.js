@@ -29,19 +29,14 @@ const RecordComponent = (props) => {
     }
 
     useEffect(() => {
+        console.log(props.questionInfo)
         console.log(props.socketObj.current)
         if (props.socketObj.current !== null) {
             console.log(props.socketObj.current)
             setIsSolved(true)
         }
 
-        const json = {
-            "hello": "hello",
-            "world": "world"
-        }
-        console.log(typeof json)
-
-        axios.get(`http://localhost:8080/fifo-back/solve/${props.questionNo}/${props.loginSlice.userno}`)
+        axios.get(`http://localhost:8080/fifo-back/solve/${props.questionInfo.questionno}/${props.loginSlice.userno}`)
             .then((res) => {
                 console.log(res.data)
                 setSolveList(res.data)
@@ -79,6 +74,15 @@ const RecordComponent = (props) => {
         }
     }
 
+    const rewriteCodeHandler = (e) => {
+        console.log(e.target.children[0].value)
+        props.setQuestionInfo({
+            ...props.questionInfo,
+            code:e.target.children[0].value
+        })
+        props.navigator("code")
+    }
+
     return (
         <div id='record'>
             <table>
@@ -98,7 +102,7 @@ const RecordComponent = (props) => {
                             <td>{solve.questionno}</td>
                             <td>{solveResult(solve.solved)}</td>
                             <td>{solve.solveddate}</td>
-                            <td>{solve.solveid}</td>
+                            <td><p onClick={rewriteCodeHandler}>수정하기<input type='hidden' value={solve.code}/></p></td>
                         </tr>
                     )
                 })}

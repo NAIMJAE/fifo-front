@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import MonacoEditor from 'react-monaco-editor';
 
-const EditorComponent = (questionInfo) => {
+const EditorComponent = (props) => {
 
     const [code, setCode] = useState(`
 import java.util.Scanner;
@@ -21,22 +21,32 @@ public class Main {
 `);
 
     useEffect(() => {
-        console.log(questionInfo.language.toLowerCase())
-        console.log(questionInfo.userno)
-    }, [questionInfo])
+        console.log(props.language.toLowerCase())
+        console.log(props.userno)
+        const checkCode = props.questionInfo.hasOwnProperty('code');
+        if(checkCode){
+            setCode(props.questionInfo.code)
+            const resetInfo = {
+                ...props.questionInfo
+            }
+            delete resetInfo['code']
+            console.log(resetInfo)
+            props.setQuestionInfo(resetInfo)
+        }
+    }, [props])
 
     const handleExecute = async () => {
 
-        questionInfo.socketObj.current = new WebSocket('ws://localhost:8080/fifo-back/question');
-        questionInfo.socketObj.current.onopen = () => {
+        props.socketObj.current = new WebSocket('ws://localhost:8080/fifo-back/question');
+        props.socketObj.current.onopen = () => {
             console.log("aa");
             const sendMessage = JSON.stringify({
-                questionNo: questionInfo.questionNo,
-                userno: questionInfo.userno,
-                language: questionInfo.language.toLowerCase(),
+                questionNo: props.questionInfo.questionNo,
+                userno: props.userno,
+                language: props.language.toLowerCase(),
                 code: code
             })
-            questionInfo.socketObj.current.send(sendMessage)
+            props.socketObj.current.send(sendMessage)
         }
 
         /*
@@ -44,7 +54,7 @@ public class Main {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                questionNo: questionInfo.questionNo,
+                questionNo: props.questionInfo.questionNo,
                 language: questionInfo.language.toLowerCase(),
                 code: code
             })
@@ -52,7 +62,7 @@ public class Main {
         const result = await response.json();
         console.log(result)
         */
-        questionInfo.navigator("record")
+        props.navigator("record")
 
     };
 
@@ -60,7 +70,7 @@ public class Main {
         <>
             <MonacoEditor
                 height="600"
-                language={questionInfo.language.toLowerCase()}
+                language={props.language.toLowerCase()}
                 theme="vs"
                 options={{
                     fontSize: 20,
