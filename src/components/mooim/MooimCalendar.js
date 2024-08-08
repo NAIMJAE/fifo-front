@@ -65,18 +65,18 @@ const MooimCalendar = ({ mooimno }) => {
       try {
         const events = await selectCalendarApi(mooimno);
         events.forEach((event) => {
-          const isReadOnly = event.isReadOnly === "false" ? false : true;
-          const isAllDay = event.isAllDay === "false" ? false : true;
+          const isReadOnly = event.isReadOnly
+          const isAllDay = event.isAllDay;
           const selectedCalendar = options.calendars.find(
             (cal) => cal.id === event.calendarId
           );
 
           const newEvent = {
             id: event.id,
-            calendarId: event.calendarId,
+            calendarId: event.calendarid,
             title: event.title,
             start: Moment(event.start).subtract("months").format("YYYY-MM-DD[T]HH:mm:ss"),
-            end: Moment(event.end).subtract("months").format("YYYY-MM-DD[T]HH:mm:ss"),
+            end: Moment(event.eventend).subtract("months").format("YYYY-MM-DD[T]HH:mm:ss"),
             location: event.location,
             state: event.state,
             isReadOnly: isReadOnly,
@@ -101,24 +101,29 @@ const MooimCalendar = ({ mooimno }) => {
         (cal) => cal.id === event.calendarId
       );
 
+      // 서버 시간 형식으로 변환
+      const startFormatted = Moment(event.start.toDate()).format("YYYY-MM-DDTHH:mm:ss.SSS"); 
+      const endFormatted = Moment(event.end.toDate()).format("YYYY-MM-DDTHH:mm:ss.SSS");
+
+      const backgroundColor = selectedCalendar ? selectedCalendar.backgroundColor : "#000000";
+      console.log(event.calendarId);
+
       const newEvent = {
+        mooimno: mooimno,
         id: eventId,
         uid: authSlice.uid,
-        calendarId: event.calendarId,
+        calendarId: event.calendarId, // Toast calendar용
+        calendarid: event.calendarId, // PostgreSQL DB용 (대문자 안됨)
         title: event.title,
-        start: Moment(event.start.toDate())
-          .utcOffset(9)
-          .format("YYYY-MM-DD[T]HH:mm:ss"),
-        end: Moment(event.end.toDate())
-          .utcOffset(9)
-          .format("YYYY-MM-DD[T]HH:mm:ss"),
+        start: startFormatted,
+        end: endFormatted,
+        eventend: endFormatted,
         location: event.location,
         state: event.state,
         isReadOnly: false,
         isAllDay: event.isAllday,
-        backgroundColor: selectedCalendar
-          ? selectedCalendar.backgroundColor
-          : "#000000",
+        backgroundColor: backgroundColor,
+        bgcolor: backgroundColor,
         color: "#FFFFFF",
       };
       calendar.createEvents([newEvent]);
@@ -130,22 +135,25 @@ const MooimCalendar = ({ mooimno }) => {
     /** 일정을 수정 */
     calendar.on("beforeUpdateEvent", ({ event, changes }) => {
       calendar.updateEvent(event.id, event.calendarId, changes);
+      console.log("HERE");
       console.log(changes);
+      console.log(event);
       const start =
         changes.start === undefined
           ? null
-          : Moment(changes.start.toDate()).format("YYYY-MM-DD[T]HH:mm:ss");
+          : Moment(changes.start.toDate()).format("YYYY-MM-DDTHH:mm:ss.SSS");
       const end =
         changes.end === undefined
           ? null
-          : Moment(changes.end.toDate()).format("YYYY-MM-DD[T]HH:mm:ss");
+          : Moment(changes.end.toDate()).format("YYYY-MM-DDTHH:mm:ss.SSS");
 
       const updateData = {
-        calendarId: changes.calendarId,
+        id : event.id,
+        calendarid: changes.calendarId,
         title: changes.title,
         location: changes.location,
         start: start,
-        end: end,
+        eventend: end,
         state: changes.state,
         isAllDay: changes.isAllday,
         isReadOnly: changes.isReadOnly,
@@ -153,7 +161,7 @@ const MooimCalendar = ({ mooimno }) => {
       console.log(updateData);
 
       try {
-        modifyCalendarEventApi(event.id, updateData);
+        modifyCalendarEventApi(updateData);
       } catch (err) {
         console.log(err);
       }
@@ -161,6 +169,7 @@ const MooimCalendar = ({ mooimno }) => {
 
     /** 일정을 삭제 */
     calendar.on("beforeDeleteEvent", (event) => {
+      console.log(event);
       calendar.deleteEvent(event.id, event.calendarId);
       console.log(event.id);
       try {
@@ -239,64 +248,27 @@ const MooimCalendar = ({ mooimno }) => {
     setCurrentMonth(calendarInstance.current.getDate().getMonth() + 1);
     setCurrentYear(calendarInstance.current.getDate().getFullYear());
   };
-
-  const buttonStyle = {
-    borderRadius: "25px",
-    border: "2px solid #ddd",
-    fontSize: "15px",
-    color: "#333",
-    marginRight: "5px",
-    cursor: "pointer",
-  };
-  const btnToday = {
-    borderRadius: "25px",
-    border: "2px solid #ddd",
-    padding: "0 16px",
-    lineHeight: "30px",
-    fontweight: "700",
-    fontSize: "15px",
-    color: "#333",
-    marginRight: "5px",
-  };
-
-  const btnMoveStyle = {
-    border: "1px solid #ddd",
-    borderRadius: "25px",
-    fontSize: "15px",
-    color: "#333",
-    marginRight: "5px",
-    cursor: "pointer",
-  };
-  const dateSpan = {
-    fontSize: "19px",
-    lineHeight: "30px",
-    verticalAlign: "bottom",
-    marginLeft: "7px",
-    cursor: "pointer",
-  };
   return (
-    <div>
-      <span style={dateSpan}>
-        {currentYear}.{currentMonth}
+    <div className="calendarContent">
+      <span className="dateSpan">
+        {currentYear}.{currentMonth < 10 ? '0' + currentMonth : currentMonth}
       </span>
-      <div style={{ marginBottom: "10px" }}>
-        <button style={buttonStyle} onClick={monthChangeButton}>
+      <div className="cntRow controllBtn" style={{ marginBottom: "10px" }}>
+        <button className="smBtn maR10" onClick={monthChangeButton}>
           <FaCalendarAlt style={{ marginRight: "5px" }} /> 월간 형식
         </button>
-        <button style={buttonStyle} onClick={weekChangeButton}>
+        <button className="smBtn maR10" onClick={weekChangeButton}>
           <FaCalendarWeek style={{ marginRight: "5px" }} /> 주간 형식
         </button>
-
-        <button style={btnMoveStyle} onClick={handleClickPrevButton}>
+        <button className="smBtn maR10" onClick={handleClickPrevButton}>
           <GrFormPrevious />
         </button>
-        <button style={btnMoveStyle} onClick={goToday}>
+        <button className="smBtn maR10" onClick={goToday}>
           today
         </button>
-        <button style={btnMoveStyle} onClick={handleClickNextButton}>
+        <button className="smBtn maR10" onClick={handleClickNextButton}>
           <MdNavigateNext />
         </button>
-        <div></div>
       </div>
       <div ref={calendarRef} style={{ width: "100%", height: "600px" }} />
     </div>

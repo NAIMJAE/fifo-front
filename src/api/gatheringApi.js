@@ -147,8 +147,8 @@ export const createCalendarEventApi = async (newEvent) => {
 };
 
 /** 캘린더 이벤트 수정 API */
-export const modifyCalendarEventApi = (eventId, changes) => {
-    const response = axios.put(`${rootURL}/calendar/${eventId}`, changes);
+export const modifyCalendarEventApi = (updateData) => {
+    const response = axios.put(`${rootURL}/calendar`, updateData);
     return response.data;
 };
 
