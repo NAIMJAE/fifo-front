@@ -608,4 +608,86 @@
             }
         }
     }
+
+    > .kanbanPage {
+        display: flex;
+        justify-content: center;
+        margin: 0 20px;
+        padding: 20px 0;
+
+        > .kanban {
+            display: flex;
+            justify-content: space-between;
+            width: 1150px;
+            height: 660px;
+
+            > .board {
+                display: flex;
+                flex-direction: column;
+                width: 370px;
+                padding: 10px;
+
+                background-color: #ebebeb;
+                border: 1px solid #b8b8b8;
+                border-radius: 10px;
+
+                > h1 {
+                    font-size: 20px;
+                    font-weight: bolder;
+                    padding-bottom: 10px;
+                }
+                > .itemBox {
+                    display: flex;
+                    height: 570px;
+                    flex-direction: column;
+                    overflow: scroll;
+                    scrollbar-width: none;
+
+                    > .item {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                        height: 80px;
+                        padding: 10px;
+                        margin-bottom: 10px;
+    
+                        background-color: white;
+                        border: 1px solid #b8b8b8;
+                        border-radius: 10px;
+                        cursor: grab;
+
+                        > label {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            > h2 {
+                                display: flex;
+                                font-size: 16px;
+                            }
+                            > img {
+                                display: flex;
+                                width: 25px;
+                                height: 25px;
+                                border: 1px solid #9f9f9f;
+                                border-radius: 50%;
+                            }
+                        }
+                        
+                        > h3 {
+                            display: flex;
+                            font-size: 18px;
+                        }
+                    }
+                }
+
+                > .add {
+                    display: flex;
+                    font-size: 16px;
+                    font-weight: bolder;
+                    padding-top: 10px;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
 }
