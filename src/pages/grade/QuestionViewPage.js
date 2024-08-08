@@ -16,7 +16,6 @@ const QuestionViewPage = () => {
 
     const socketObj = useRef(null);
 
-    /** 선택 언어 문제 리스트 조회 */
     useEffect(() => {
         axios.get(`http://localhost:8080/fifo-back/question/${questionNo.current}`)
             .then((res) => {
@@ -32,7 +31,6 @@ const QuestionViewPage = () => {
     }, [navigator])
 
     const navHandle = (e) => {
-        console.log(e)
         setNavigator(e.target.id)
     }
 
@@ -92,18 +90,20 @@ const QuestionViewPage = () => {
                 {navigator === 'code' &&
                     <EditorComponent
                         language={language}
-                        questionNo={questionInfo.questionno}
+                        questionInfo={questionInfo}
                         socketObj={socketObj}
                         navigator={setNavigator}
                         userno={loginSlice.userno}
+                        setQuestionInfo={setQuestionInfo}
                     />}
                 {navigator === 'record' &&
                     <RecordComponent
                         language={language}
-                        questionNo={questionInfo.questionno}
+                        questionInfo={questionInfo}
                         socketObj={socketObj}
                         navigator={setNavigator}
                         loginSlice={loginSlice}
+                        setQuestionInfo={setQuestionInfo}
                     />}
             </div>
         </MainLayout>
