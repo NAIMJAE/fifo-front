@@ -70,7 +70,9 @@ const MainPage = () => {
       <div className="container">
         <div className="content sideHide">
           <div className="cntColumn sideHide2">
-            <div className="cntRow adBox">광고 박스</div>
+            <div className="cntRow adBox">
+              <img src="../../../images/gwanggo.gif" alt=""/>
+            </div>
 
             {loading ? (
               <div>로딩 중...</div>

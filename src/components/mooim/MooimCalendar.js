@@ -244,7 +244,7 @@ const MooimCalendar = ({ mooimno }) => {
   /** 웹 소켓 연결 */
   useEffect(() => {
     // WebSocket 서버에 연결
-    webSocket.current = new WebSocket(`ws://${Host}:8080/fifo-back/calendar/${userno}/${roomId}`);
+    webSocket.current = new WebSocket(`ws://${Host}:8080/fifo-back/cal/${roomId}`);
 
     // 연결이 성립되었을 때 실행
     webSocket.current.onopen = () => {
