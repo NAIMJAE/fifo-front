@@ -183,7 +183,8 @@ const MyProfile = () => {
       .get(`${url}/profile/selectRegion`)
       .then((response) => {
         console.log(response.data);
-        setRegionOptions(response.data.map((region) => region.regionname));
+        const sortedData = response.data.sort((a, b) => a.rno - b.rno);
+        setRegionOptions(sortedData.map((region) => region.regionname));
       })
       .catch((err) => {
         console.log(err);
@@ -234,7 +235,18 @@ const MyProfile = () => {
 
   useEffect(() => {
     console.log(regionArr);
-    const targetId = "region";
+  }, [regionArr]);
+
+  /** 내 지역 정보 수정 저장 */
+  const saveMyRegion = async (e) => {
+    const targetId = e.currentTarget.getAttribute("data-target-id");
+    const option = document.getElementsByClassName(targetId + "-checkbox");
+
+    Array.from(option).forEach((each) => {
+      if (each.checked) {
+        setRegionArr((prev) => [...prev, each.value]);
+      }
+    });
 
     const response = axios.post(
       `${url}/profile/updateRegion?userno=${authSlice.userno}`,
@@ -260,19 +272,6 @@ const MyProfile = () => {
 
       alert("수정되었습니다.");
     }
-  }, [regionArr]);
-
-  /** 내 지역 정보 수정 저장 */
-  const saveMyRegion = async (e) => {
-    const targetId = e.currentTarget.getAttribute("data-target-id");
-    const option = document.getElementsByClassName(targetId + "-checkbox");
-
-    Array.from(option).forEach((each) => {
-      if (each.checked) {
-        setRegionArr((prev) => [...prev, each.value]);
-      }
-    });
-
     console.log(targetId + "-checkbox");
   };
 
@@ -444,7 +443,12 @@ const MyProfile = () => {
   }, [inputSkill]);
 
   /**경력 기입 */
-  const [period, setPeriod] = React.useState("");
+  const [exe, setExe] = useState({
+    userno: `${authSlice.userno}`,
+    period: "1년 이하",
+    job: "백엔드 개발",
+    skill: "",
+  });
   const [job, setJob] = useState("");
 
   /** 내 경력 편집 input 활성화 */
@@ -453,26 +457,88 @@ const MyProfile = () => {
     setInputModify((prev) => ({ ...prev, [targetId]: true }));
   };
 
-  const handleChange = (event) => {
-    setPeriod(event.target.value);
+  /**선택시 state에 넣기 */
+  const exeHandler = (e) => {
+    const { name, value, checked } = e.target;
+    console.log(checked);
+
+    if (name === "skill") {
+      const checkbox = document.getElementsByName(name);
+      let selected = [];
+      checkbox.forEach((checkbox) => {
+        if (checkbox.checked) {
+          selected.push(checkbox.value);
+        }
+      });
+      const selectedSkillsString = selected.join(",");
+      setExe((prev) => ({
+        ...prev,
+        [name]: selectedSkillsString,
+      }));
+    } else {
+      setExe((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
+
+  /**직무 종류 가져오기 */
+  useEffect(() => {
+    axios
+      .post(`${url}/profile/selectJob`)
+      .then((response) => {
+        console.log(response.data);
+        const sortedJob = response.data.sort((a, b) => a.rno - b.rno);
+        setJob(sortedJob.map((jobs) => jobs.jobname));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   /**추가 클릭시 선택한 경력 추가 */
   const clickAddExe = (e) => {
     e.preventDefault();
 
-    // axios
-    //   .post(`${url}/profile/addSkill?userno=${authSlice.userno}`, inputSkill)
-    //   .then((response) => {
-    //     console.log(response.data);
-    //     alert("추가 되었습니다.");
-    //     SetSkillTriger(!skillTriger);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    axios
+      .post(`${url}/profile/addExe`, exe)
+      .then((response) => {
+        console.log(response.data);
+        alert("추가 되었습니다.");
+        SetSkillTriger(!skillTriger);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
+  /**내 경력 가져오기 */
+  const [myExp, setMyExp] = useState({
+    job: "",
+    skill: "",
+    period: "",
+  });
+  useState(() => {
+    axios
+      .get(`${url}/profile/selectMyExp?userno=${authSlice.userno}`)
+      .then((response) => {
+        console.log(response.data);
+        // List형태의 response.data의 첫 번째 항목 추출
+        const [firstItem] = response.data;
+        setMyExp({
+          job: firstItem.job,
+          skill: firstItem.skill,
+          period: firstItem.period,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+  useEffect(() => {
+    console.log(myExp);
+  }, [myExp]);
   const clickCancleExe = (e) => {
     e.preventDefault();
 
@@ -722,58 +788,65 @@ const MyProfile = () => {
             </div>
             <h2>나의 경력</h2>
             <div className="myExperience">
+              <div className="myExp">
+                <div className="period">
+                  <p>{myExp.period}</p>
+                </div>
+                <div className="jobAndSkill">
+                  <h1>{myExp.job}</h1>
+                  <h2>{myExp.skill}</h2>
+                </div>
+              </div>
               {inputModify.experience ? (
                 <div className="jobForm">
-                  <FormControl fullWidth>
-                    <div className="wirtePeriod">
-                      <InputLabel style={{ cursor: "pointer" }}>
-                        재직기간
-                      </InputLabel>
-                      <Select
-                        value={period}
-                        label="재직 기간"
-                        onChange={handleChange}
-                      >
-                        <MenuItem value={"1년 이하"}>1년 이하</MenuItem>
-                        <MenuItem value={"1~3년"}>1~3년</MenuItem>
-                        <MenuItem value={"4~5년"}>4~5년</MenuItem>
-                        <MenuItem value={"5년이상"}>5년 이상</MenuItem>
-                        <MenuItem value={"10년이상"}>10년 이상</MenuItem>
-                      </Select>
+                  <div className="periodAndJob">
+                    <div className="period">
+                      <span>경력</span>
+                      <select name="period" onChange={exeHandler}>
+                        <option value={"1년 이하"}>1년 이하</option>
+                        <option value={"1년~3년"}>1년~3년</option>
+                        <option value={"3~4년"}>3~4년</option>
+                        <option value={"5년 이상"}>5년 이상</option>
+                        <option value={"10년 이상"}>10년 이상</option>
+                      </select>
                     </div>
-                  </FormControl>
-                  <FormControl fullWidth>
-                    <div className="writeJob">
-                      <InputLabel style={{ cursor: "pointer" }}>
-                        직무
-                      </InputLabel>
-                      <Select value={job} label="직무" onChange={handleChange}>
-                        <MenuItem value={"1년 이하"}>1년 이하</MenuItem>
-                      </Select>
+
+                    <div className="job">
+                      <span>직무</span>
+                      <select name="job" onChange={exeHandler}>
+                        {job.map((option, index) => (
+                          <option key={index} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
                     </div>
-                  </FormControl>
-                  <FormGroup>
-                    <label>
-                      <p>사용 기술스텍</p>
-                      {skillList.map((skill, index) => (
-                        <FormControlLabel
-                          key={index}
-                          control={<Checkbox />}
-                          label={skill}
-                        />
-                      ))}
-                    </label>
-                  </FormGroup>
-                  <button className="btn add-btn" onClick={clickAddExe}>
-                    추가
-                  </button>
-                  <button className="btn cancel-btn" onClick={clickCancleExe}>
-                    취소
-                  </button>
+                  </div>
+                  <div className="skill">
+                    <p>사용 기술스택</p>
+                    {skillList.map((skill, index) => (
+                      <FormControlLabel
+                        name="skill"
+                        key={index}
+                        control={<Checkbox />}
+                        label={skill}
+                        value={skill}
+                        onChange={exeHandler}
+                      />
+                    ))}
+                  </div>
+                  <div className="btnDiv">
+                    <button className="btn add-btn" onClick={clickAddExe}>
+                      추가
+                    </button>
+                    <button className="btn cancel-btn" onClick={clickCancleExe}>
+                      취소
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <label onClick={changeMyExe} data-target-id="experience">
-                  <p>내 경력 추가</p>
+                  <p>내 경력 수정</p>
                   <FontAwesomeIcon
                     icon={faPlusCircle}
                     size="lg"

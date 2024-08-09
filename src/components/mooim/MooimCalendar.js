@@ -12,16 +12,27 @@ import { useSelector } from "react-redux";
 import Moment from "moment";
 import "moment/locale/ko";
 import { createCalendarEventApi, deleteCalendarEventApi, modifyCalendarEventApi, selectCalendarApi } from "../../api/gatheringApi";
+import { Host } from "../../api/RootUrl";
 
 const MooimCalendar = ({ mooimno }) => {
+
   const calendarRef = useRef(null);
   const calendarInstance = useRef(null);
   const [currentMonth, setCurrentMonth] = useState("");
   const [currentYear, setCurrentYear] = useState("");
   const [error, setError] = useState("");
   const authSlice = useSelector((state) => state.authSlice);
+  const userno = authSlice.userno;
 
+  let calendar;
+  /** 소켓 연결 상태 */
+  const webSocket = useRef(null);
+  /** 소켓방 번호 */
+  const roomId = "calendar" + mooimno;
+
+  /** 캘린더 생성 */
   useEffect(() => {
+
     const container = calendarRef.current;
     const options = {
       defaultView: "month",
@@ -45,7 +56,7 @@ const MooimCalendar = ({ mooimno }) => {
       useFormPopup: true,
     };
 
-    const calendar = new Calendar(container, options);
+    calendar = new Calendar(container, options);
 
     calendarInstance.current = calendar;
     console.log(calendarRef);
@@ -64,19 +75,22 @@ const MooimCalendar = ({ mooimno }) => {
     const fetchEvents = async () => {
       try {
         const events = await selectCalendarApi(mooimno);
+        
         events.forEach((event) => {
-          const isReadOnly = event.isReadOnly === "false" ? false : true;
-          const isAllDay = event.isAllDay === "false" ? false : true;
+          const isReadOnly = event.isreadonly
+          const isAllDay = event.isallday;
           const selectedCalendar = options.calendars.find(
             (cal) => cal.id === event.calendarId
           );
 
+          console.log("event : ", event);
+
           const newEvent = {
             id: event.id,
-            calendarId: event.calendarId,
+            calendarId: event.calendarid,
             title: event.title,
             start: Moment(event.start).subtract("months").format("YYYY-MM-DD[T]HH:mm:ss"),
-            end: Moment(event.end).subtract("months").format("YYYY-MM-DD[T]HH:mm:ss"),
+            end: Moment(event.eventend).subtract("months").format("YYYY-MM-DD[T]HH:mm:ss"),
             location: event.location,
             state: event.state,
             isReadOnly: isReadOnly,
@@ -84,7 +98,7 @@ const MooimCalendar = ({ mooimno }) => {
             backgroundColor: event.bgcolor,
             color: event.color,
           };
-
+          console.log("newEvent : ",newEvent);
           calendar.createEvents([newEvent]);
         });
       } catch (err) {
@@ -101,51 +115,59 @@ const MooimCalendar = ({ mooimno }) => {
         (cal) => cal.id === event.calendarId
       );
 
+      // 서버 시간 형식으로 변환
+      const startFormatted = Moment(event.start.toDate()).format("YYYY-MM-DDTHH:mm:ss.SSS");
+      const endFormatted = Moment(event.end.toDate()).format("YYYY-MM-DDTHH:mm:ss.SSS");
+
+      const backgroundColor = selectedCalendar ? selectedCalendar.backgroundColor : "#000000";
+      console.log("생성 : ", event);
+
       const newEvent = {
+        mooimno: mooimno,
         id: eventId,
         uid: authSlice.uid,
-        calendarId: event.calendarId,
+        calendarId: event.calendarId, // Toast calendar용
+        calendarid: event.calendarId, // PostgreSQL DB용 (대문자 안됨)
         title: event.title,
-        start: Moment(event.start.toDate())
-          .utcOffset(9)
-          .format("YYYY-MM-DD[T]HH:mm:ss"),
-        end: Moment(event.end.toDate())
-          .utcOffset(9)
-          .format("YYYY-MM-DD[T]HH:mm:ss"),
+        start: startFormatted,
+        end: endFormatted,
+        eventend: endFormatted,
         location: event.location,
         state: event.state,
         isReadOnly: false,
         isAllDay: event.isAllday,
-        backgroundColor: selectedCalendar
-          ? selectedCalendar.backgroundColor
-          : "#000000",
+        backgroundColor: backgroundColor,
+        bgcolor: backgroundColor,
         color: "#FFFFFF",
       };
       calendar.createEvents([newEvent]);
       calendar.setOptions({});
 
       createCalendarEventApi(newEvent);
+      /** 소켓 전송 */
+      sendMessage(newEvent, "C", null);
     });
 
     /** 일정을 수정 */
     calendar.on("beforeUpdateEvent", ({ event, changes }) => {
       calendar.updateEvent(event.id, event.calendarId, changes);
-      console.log(changes);
       const start =
         changes.start === undefined
           ? null
-          : Moment(changes.start.toDate()).format("YYYY-MM-DD[T]HH:mm:ss");
+          : Moment(changes.start.toDate()).format("YYYY-MM-DDTHH:mm:ss.SSS");
       const end =
         changes.end === undefined
           ? null
-          : Moment(changes.end.toDate()).format("YYYY-MM-DD[T]HH:mm:ss");
+          : Moment(changes.end.toDate()).format("YYYY-MM-DDTHH:mm:ss.SSS");
 
       const updateData = {
+        id: event.id,
+        calendarid: changes.calendarId,
         calendarId: changes.calendarId,
         title: changes.title,
         location: changes.location,
         start: start,
-        end: end,
+        eventend: end,
         state: changes.state,
         isAllDay: changes.isAllday,
         isReadOnly: changes.isReadOnly,
@@ -153,7 +175,11 @@ const MooimCalendar = ({ mooimno }) => {
       console.log(updateData);
 
       try {
-        modifyCalendarEventApi(event.id, updateData);
+        modifyCalendarEventApi(updateData);
+
+        /** 소켓 전송 */
+        sendMessage(updateData, "U", changes);
+
       } catch (err) {
         console.log(err);
       }
@@ -162,9 +188,11 @@ const MooimCalendar = ({ mooimno }) => {
     /** 일정을 삭제 */
     calendar.on("beforeDeleteEvent", (event) => {
       calendar.deleteEvent(event.id, event.calendarId);
-      console.log(event.id);
       try {
         deleteCalendarEventApi(event.id);
+
+        /** 소켓 전송 */
+        sendMessage(event, "D", null);
       } catch (err) {
         console.log(err);
       }
@@ -210,7 +238,86 @@ const MooimCalendar = ({ mooimno }) => {
         calendar.destroy();
       }
     };
+  }, [mooimno]);
+
+
+  /** 웹 소켓 연결 */
+  useEffect(() => {
+    // WebSocket 서버에 연결
+    webSocket.current = new WebSocket(`ws://${Host}:8080/fifo-back/calendar/${userno}/${roomId}`);
+
+    // 연결이 성립되었을 때 실행
+    webSocket.current.onopen = () => {
+      console.log('WebSocket connection established');
+    };
+
+    // 메시지를 받았을 때 실행
+    webSocket.current.onmessage = (message) => {
+      const socketData = JSON.parse(message.data);
+      console.log("소켓으로 전달 받은 내용 : ", socketData);
+
+      if (socketData.type === 'message') {
+        const data = JSON.parse(socketData.payload);
+
+        console.log("socketData : ", socketData);
+
+        switch (data.state) {
+          case "C":
+            console.log("소켓으로 전달 생성");
+            calendar.createEvents(data.content);
+            break;
+          case "U":
+            console.log("소켓으로 전달 업데이트 : ", data.content);
+            calendar.updateEvent(data.content.id, data.content.calendarId, data.changes);
+            break;
+          case "D":
+            console.log("소켓으로 전달 삭제");
+            calendar.deleteEvent(data.content.id, data.content.calendarId);
+            break;
+
+          default:
+            break;
+        }
+      }
+
+
+    };
+
+    // 연결이 종료되었을 때 실행
+    webSocket.current.onclose = () => {
+      console.log('WebSocket connection closed');
+    };
+
+    // 오류가 발생했을 때 실행
+    webSocket.current.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    // 컴포넌트 언마운트 시 WebSocket 닫기
+    return () => {
+      if (webSocket.current) {
+        webSocket.current.close();
+      }
+    };
   }, []);
+
+  /** 메세지 전송 함수 */
+  const sendMessage = async (msgData, state, changes) => {
+    console.log("메세지 전송 함수 msgData :", msgData);
+    console.log("메세지 전송 함수 state :", state);
+    console.log("메세지 전송 함수 changes :", msgData);
+    if (webSocket.current.readyState === WebSocket.OPEN) {
+
+      const socketMsg = {
+        content: msgData,
+        changes: changes,
+        state: state,
+      }
+
+      // 소켓으로 메세지 전송
+      webSocket.current.send(JSON.stringify(socketMsg));
+    }
+  };
 
   /**  다음 달로 이동하는 버튼 */
   const handleClickNextButton = () => {
@@ -239,64 +346,27 @@ const MooimCalendar = ({ mooimno }) => {
     setCurrentMonth(calendarInstance.current.getDate().getMonth() + 1);
     setCurrentYear(calendarInstance.current.getDate().getFullYear());
   };
-
-  const buttonStyle = {
-    borderRadius: "25px",
-    border: "2px solid #ddd",
-    fontSize: "15px",
-    color: "#333",
-    marginRight: "5px",
-    cursor: "pointer",
-  };
-  const btnToday = {
-    borderRadius: "25px",
-    border: "2px solid #ddd",
-    padding: "0 16px",
-    lineHeight: "30px",
-    fontweight: "700",
-    fontSize: "15px",
-    color: "#333",
-    marginRight: "5px",
-  };
-
-  const btnMoveStyle = {
-    border: "1px solid #ddd",
-    borderRadius: "25px",
-    fontSize: "15px",
-    color: "#333",
-    marginRight: "5px",
-    cursor: "pointer",
-  };
-  const dateSpan = {
-    fontSize: "19px",
-    lineHeight: "30px",
-    verticalAlign: "bottom",
-    marginLeft: "7px",
-    cursor: "pointer",
-  };
   return (
-    <div>
-      <span style={dateSpan}>
-        {currentYear}.{currentMonth}
+    <div className="calendarContent">
+      <span className="dateSpan">
+        {currentYear}.{currentMonth < 10 ? '0' + currentMonth : currentMonth}
       </span>
-      <div style={{ marginBottom: "10px" }}>
-        <button style={buttonStyle} onClick={monthChangeButton}>
+      <div className="cntRow controllBtn" style={{ marginBottom: "10px" }}>
+        <button className="smBtn maR10" onClick={monthChangeButton}>
           <FaCalendarAlt style={{ marginRight: "5px" }} /> 월간 형식
         </button>
-        <button style={buttonStyle} onClick={weekChangeButton}>
+        <button className="smBtn maR10" onClick={weekChangeButton}>
           <FaCalendarWeek style={{ marginRight: "5px" }} /> 주간 형식
         </button>
-
-        <button style={btnMoveStyle} onClick={handleClickPrevButton}>
+        <button className="smBtn maR10" onClick={handleClickPrevButton}>
           <GrFormPrevious />
         </button>
-        <button style={btnMoveStyle} onClick={goToday}>
+        <button className="smBtn maR10" onClick={goToday}>
           today
         </button>
-        <button style={btnMoveStyle} onClick={handleClickNextButton}>
+        <button className="smBtn maR10" onClick={handleClickNextButton}>
           <MdNavigateNext />
         </button>
-        <div></div>
       </div>
       <div ref={calendarRef} style={{ width: "100%", height: "600px" }} />
     </div>
