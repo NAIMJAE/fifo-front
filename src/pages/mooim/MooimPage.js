@@ -12,6 +12,7 @@ import { faSave } from '@fortawesome/free-regular-svg-icons';
 import MemberList from '../../components/mooim/MemberList';
 import Chatting from '../../components/mooim/Chatting';
 import MooimCalendar from '../../components/mooim/MooimCalendar';
+import Kanban from '../../components/mooim/Kanban';
 
 const MooimPage = () => {
 
@@ -155,7 +156,7 @@ const MooimPage = () => {
       memberList: true,
       chatting: false,
       calender: false,
-      canban: false,
+      kanban: false,
       document: false,
     }
   ); 
@@ -236,6 +237,7 @@ const MooimPage = () => {
           {mooimMenu.memberList && <MemberList mooim={mooim} />}
           {mooimMenu.chatting && <Chatting mooim={mooim} />}
           {mooimMenu.calendar && <MooimCalendar mooimno={mooimno} />}
+          {mooimMenu.kanban && <Kanban mooimno={mooimno} />}
 
         </div>
       </div>
