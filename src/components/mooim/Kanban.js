@@ -1,119 +1,234 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import KanbanInfoModal from './modal/KanbanInfoModal';
 
 const Kanban = () => {
-    const [items, setItems] = useState(
-        {
-            ready: [
-                {
-                    index: 0,
-                    group: '디자인',
-                    title: '메인 페이지 디자인',
-                    content: [
-                        {
-                            index: 0,
-                            cnt: '헤더 디자인',
-                            state: false,
-                        },
-                        {
-                            index: 1,
-                            cnt: '푸터 디자인',
-                            state: false,
-                        },
-                    ],
-                    members: [2, 5],
-                    start: '2024-08-01',
-                    end: '2024-08-07',
+    const [items, setItems] = useState({
+        ready: [
+            {
+                id: "fifi0001",
+                group: '디자인',
+                title: '메인 페이지 디자인',
+                content: [
+                    { index: 0, type: 'check', cnt: '헤더 디자인', state: false },
+                    { index: 1, type: 'text', cnt: '네이게이션, 검색, 로고' },
+                    { index: 2, type: 'check', cnt: '푸터 디자인', state: false },
+                ],
+                members: [2, 5],
+                start: '2024-08-01',
+                end: '2024-08-07',
+                select: false,
+            },
+            {
+                id: "fifi0002",
+                group: '서버',
+                title: 'EC2 서버 구축',
+                content: [
+                    { index: 0, cnt: '서버 초기 설정', state: false },
+                    { index: 1, cnt: '서버 DB 설정', state: false },
+                ],
+                members: [2],
+                start: '2024-08-01',
+                end: '2024-08-09',
+                select: false,
+            },
+            {
+                id: "fifi0003",
+                group: '회원',
+                title: '회원 가입',
+                content: [
+                    { index: 0, cnt: '회원 정보 입력', state: false },
+                    { index: 1, cnt: '유효성 검사', state: false },
+                ],
+                members: [5],
+                start: '2024-08-01',
+                end: '2024-08-30',
+                select: false,
+            },
+        ],
+        doing: [],
+        complete: [],
+    });
+
+    // 드래그 중인 요소의 정보를 저장하는 상태
+    const [dragging, setDragging] = useState(null);
+
+    // 드래그를 시작할 때 실행
+    const handleDragStart = (task, fromColumn, event) => {
+        setDragging({ task, fromColumn });
+    };
+
+    // 드래그 오버 시 실행
+    const handleDragOver = (e) => {
+        e.preventDefault();
+    };
+
+    // 드롭 시 실행
+    const handleDrop = (toColumn, toIndex) => {
+        if (!dragging) return;
+
+        const { task, fromColumn } = dragging;
+        if (fromColumn === toColumn && toIndex === undefined) return;
+
+        setItems((prevItems) => {
+            const newItems = { ...prevItems };
+            const fromList = newItems[fromColumn];
+            const toList = newItems[toColumn];
+            const fromIndex = fromList.findIndex(item => item.id === task.id);
+            if (fromIndex === -1) return newItems;
+
+            // 같은 컬럼 내에서 순서 변경
+            if (fromColumn === toColumn) {
+                const [removed] = fromList.splice(fromIndex, 1);
+                toList.splice(toIndex, 0, removed);
+            } else {
+                // 다른 컬럼으로 이동
+                const [removed] = fromList.splice(fromIndex, 1);
+                toList.splice(toIndex !== undefined ? toIndex : toList.length, 0, removed);
+            }
+
+            return newItems;
+        });
+
+        setDragging(null);
+    };
+
+    // 아이템 상세 보기 모달
+    const [itemInfoModal, setItemInfoModal] = useState(false);
+    const [modalContent, setModalContent] = useState("")
+
+    const itemModal = (item) => {
+        setModalContent(item);
+        setItemInfoModal(!itemInfoModal);
+    }
+
+    // 아이템 선택시 테두리
+    const [selectedItemId, setSelectedItemId] = useState("");
+
+    const selectedItem = (toColumn, id) => {
+
+        setItems(prevItems => {
+            const newItems = { ...prevItems };
+
+            // 이전에 선택된 아이템의 select를 false로 변경
+            if (selectedItemId) {
+                Object.keys(newItems).forEach(column => {
+                    newItems[column] = newItems[column].map(item => {
+                        if (item.id === selectedItemId) {
+                            return { ...item, select: false };
+                        }
+                        return item;
+                    });
+                });
+            }
+
+            // 현재 선택된 아이템의 select를 true로 변경
+            newItems[toColumn] = newItems[toColumn].map(item => {
+                if (item.id === id) {
+                    return { ...item, select: true };
                 }
-            ],
-            doing: [
+                return item;
+            });
 
-            ],
-            complete: [
-                
-            ]
-        }
-    );
-    const [draggingIndex, setDraggingIndex] = useState(null);
+            return newItems;
+        });
 
-    // 드래그를 시작할때 실행
-    const handleDragStart = (index) => {
-        setDraggingIndex(index);
-    };
-
-    // 드래그를 통해 현재 요소가 다른 요소 위에 올라 갔을때 실행
-    const handleDragOver = (index) => {
-        if (index !== draggingIndex) {
-            // 기존의 콘텐츠 배열 요소를 복사
-            const updatedItems = [...items];
-
-            // 현재 이동 중인 요소를 복사한 배열에서 삭제
-            const draggedItem = updatedItems.splice(draggingIndex, 1)[0];
-
-            // 새롭게 이동한 위치에 이동한 요소를 삽입
-            updatedItems.splice(index, 0, draggedItem);
-
-            // 드래그 중인 요소의 위치가 계속 변하게 되므로 위치 업데이트
-            setDraggingIndex(index);
-
-            // 바뀐 배열 요소를 기존의 배열에 업데이트
-            setItems(updatedItems);
-        }
-    };
-
-    // 드롭시 실행
-    const handleDrop = () => {
-        setDraggingIndex(null);
-    };
+        setSelectedItemId(id);
+    }
 
     return (
-        <div className='kanbanPage'>
-            <div className='kanban'>
-                <div className='board'>
+        <div className="kanbanPage">
+            <div className="kanban">
+                {/* READY 컬럼 */}
+                <div className="board">
                     <h1>READY</h1>
-
-                    <div className='itemBox'>
-                        <div className='item' draggable>
-                            <label htmlFor="">
-                                <h2>분류</h2>
-                                <img src="../../../../images/ppoppi.png" alt="profile" />
-                            </label>
-                            <h3>제목</h3>
-                        </div>
-                        
-                        <div className='item' draggable>
-                            <label htmlFor="">
-                                <h2>분류</h2>
-                                <img src="../../../../images/ppoppi.png" alt="profile" />
-                            </label>
-                            <h3>제목</h3>
-                        </div>
+                    <div
+                        className="itemBox"
+                        onDragOver={handleDragOver}  // 컬럼에서도 onDragOver 처리 필요
+                        onDrop={(e) => handleDrop('ready')}  // 컬럼에 onDrop 처리 필요
+                    >
+                        {items.ready.length > 0 && items.ready.map((item, index) => (
+                            <div
+                                key={item.id}
+                                className={`item ${item.select ? 'selected' : ''}`}
+                                draggable
+                                onClick={() => selectedItem('ready', item.id)}
+                                onDoubleClick={() => itemModal(item)}
+                                onDragStart={(e) => handleDragStart(item, 'ready', e)}
+                                onDragOver={handleDragOver}
+                                onDrop={(e) => handleDrop('ready', index)}
+                            >
+                                <label>
+                                    <h2>{item.group}</h2>
+                                    <img src="../../../../images/ppoppi.png" alt="profile" />
+                                </label>
+                                <h3>{item.title}</h3>
+                            </div>
+                        ))}
                     </div>
-
-                    <div className='add'>+ Add</div>
+                    <div className="add">+ Add</div>
                 </div>
 
-                <div className='board'>
+                {/* DOING 컬럼 */}
+                <div className="board">
                     <h1>DOING</h1>
-
-                    <div className='itemBox'>
-
+                    <div
+                        className="itemBox"
+                        onDragOver={handleDragOver}  // 컬럼에서도 onDragOver 처리 필요
+                        onDrop={(e) => handleDrop('doing')}  // 컬럼에 onDrop 처리 필요
+                    >
+                        {items.doing.length > 0 && items.doing.map((item, index) => (
+                            <div
+                                key={item.id}
+                                className={`item ${item.select ? 'selected' : ''}`}
+                                draggable
+                                onClick={() => selectedItem('doing', item.id)}
+                                onDragStart={(e) => handleDragStart(item, 'doing', e)}
+                                onDragOver={handleDragOver}
+                                onDrop={(e) => handleDrop('doing', index)}
+                            >
+                                <label>
+                                    <h2>{item.group}</h2>
+                                    <img src="../../../../images/ppoppi.png" alt="profile" />
+                                </label>
+                                <h3>{item.title}</h3>
+                            </div>
+                        ))}
                     </div>
-
-                    <div className='add'>+ Add</div>
+                    <div className="add">+ Add</div>
                 </div>
 
-                <div className='board'>
+                {/* COMPLETE 컬럼 */}
+                <div className="board">
                     <h1>COMPLETE</h1>
-
-                    <div className='itemBox'>
-                        
+                    <div
+                        className="itemBox"
+                        onDragOver={handleDragOver}  // 컬럼에서도 onDragOver 처리 필요
+                        onDrop={(e) => handleDrop('complete')}  // 컬럼에 onDrop 처리 필요
+                    >
+                        {items.complete.length > 0 && items.complete.map((item, index) => (
+                            <div
+                                key={item.id}
+                                className={`item ${item.select ? 'selected' : ''}`}
+                                draggable
+                                onClick={() => selectedItem('complete', item.id)}
+                                onDragStart={(e) => handleDragStart(item, 'complete', e)}
+                                onDragOver={handleDragOver}
+                                onDrop={(e) => handleDrop('complete', index)}
+                            >
+                                <label>
+                                    <h2>{item.group}</h2>
+                                    <img src="../../../../images/ppoppi.png" alt="profile" />
+                                </label>
+                                <h3>{item.title}</h3>
+                            </div>
+                        ))}
                     </div>
-
-                    <div className='add'>+ Add</div>
+                    <div className="add">+ Add</div>
                 </div>
             </div>
+            {itemInfoModal && <KanbanInfoModal modalContent={modalContent} itemModal={itemModal}/>}
         </div>
     );
 };
 
-export default Kanban
+export default Kanban;

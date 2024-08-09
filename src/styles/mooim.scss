@@ -678,6 +678,9 @@
                             font-size: 18px;
                         }
                     }
+                    > .selected {
+                        border: 1px solid #4169e1;
+                    }
                 }
 
                 > .add {
@@ -686,6 +689,132 @@
                     font-weight: bolder;
                     padding-top: 10px;
                     cursor: pointer;
+                }
+            }
+        }
+        > .KanbanInfoModalBox {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 20;
+    
+            > .KanbanInfoModal {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                display: flex;
+                flex-direction: column;
+                width: 600px;
+                height: 600px;
+                background-color: white;
+                border: 1px solid #111;
+                border-radius: 10px;
+                z-index: 200;
+                overflow: hidden;
+                padding: 10px;
+                
+                > .infoHead {
+                    display: flex;
+                    flex-direction: column;
+                    border-bottom: 1px solid #111;
+
+                    > .infoTitle {
+                        display: flex;
+                        align-items: center;
+
+                        > h1 {
+                            font-size: 20px;
+                        }
+                        > h2 {
+                            font-size: 20px;
+                            margin-left: 10px;
+                        }
+                    }
+
+                    > .infoState {
+                        display: flex;
+                        align-items: center;
+                        margin-top: 10px;
+                        padding-bottom: 10px;
+
+                        > span {
+                            font-size: 16px;
+                            border: 1px solid #111;
+                            border-radius: 10px;
+                            padding: 4px 10px;
+                        }
+
+                        > div {
+                            display: flex;
+                            margin-left: 10px;
+
+                            > span {
+                                font-size: 18px;
+                                border: 1px solid #111;
+                                border-radius: 10px;
+                                padding: 4px 10px;
+                                margin-right: 10px;
+                            }
+                        }
+                    }
+                }
+
+                > .infoBody {
+                    display: flex;
+                    height: 100%;
+                    border: 1px solid #111;
+                    border-radius: 10px;
+                    margin-top: 20px;
+
+                    > .bodyCnt {
+                        display: flex;
+                        width: 100%;
+                        flex-direction: column;
+
+                        > .cntHead {
+                            display: flex;
+                            justify-content: space-between;
+                            height: 40px;
+                            border-bottom: 1px solid #111;
+                            align-items: center;
+                            padding: 10px;
+                            margin-bottom: 10px;
+
+                            > h1 {
+                                display: flex;
+                                font-size: 20px;
+                            }
+                            > button {
+                                display: flex;
+                                font-size: 14px;
+                            }
+                        }
+
+                        input {
+                            border: 0;
+                            font-size: 18px;
+                        }
+
+                        > .checkBox {
+                            display: flex;
+                            padding: 4px 10px;
+                            > input[type="checkbox"] {
+                                margin-right: 4px;
+                            }
+                        }
+
+                        > .textBox {
+                            display: flex;
+                            padding: 4px 10px 4px 20px;
+                            > h1 {
+                                font-size: 18px;
+                                margin-right: 4px;
+                            }
+                        }
+                    }
                 }
             }
         }
