@@ -34,7 +34,9 @@ const ListPage = () => {
 
   return (
     <MainLayout>
-      <div className="cntRow adBox">광고 박스</div>
+      <div className="cntRow adBox">
+      <img src="../../../images/gwanggo.gif" alt=""/>
+      </div>
       <div className='cntRow articleSearch'>
         <p className={`${mooimDTO.mooimstate === "doing" ? 'tabOn' : ''}`}
           onClick={(e) => { setMooimDTO(prev => ({ ...prev, mooimstate: 1 })) }}>진행중</p>

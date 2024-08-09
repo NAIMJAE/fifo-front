@@ -852,7 +852,6 @@
 .gatherList {
   width: 100%;
   height: auto;
-  border: 1px solid red;
 
   >a {
     display: flex;
@@ -1195,6 +1194,7 @@
   display: flex;
   height: 38px;
   padding: 0px 22px;
+  margin: 10px 0px;
   -webkit-box-pack: center;
   justify-content: center;
   -webkit-box-align: center;
