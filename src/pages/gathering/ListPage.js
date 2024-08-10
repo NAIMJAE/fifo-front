@@ -54,22 +54,27 @@ const ListPage = () => {
           </div>
         </>
       ) : (
-        <div className="cntColumn">
-          <span className="myMooimCate">프로젝트</span>
-          <div className="cntWrapRow mainGatherList">
-            <MyGatherBoxComponent mooimList={mooimList} mooimcate={1} />
+        mooimList && mooimList.length > 0 ? (
+          <div className="cntColumn">
+            <span className="myMooimCate">프로젝트</span>
+            <div className="cntWrapRow mainGatherList">
+              <MyGatherBoxComponent mooimList={mooimList} mooimcate={1} />
+            </div>
+            <span className="myMooimCate">스터디</span>
+            <div className="cntWrapRow mainGatherList">
+              <MyGatherBoxComponent mooimList={mooimList} mooimcate={2} />
+            </div>
+            <span className="myMooimCate">모임</span>
+            <div className="cntWrapRow mainGatherList">
+              <MyGatherBoxComponent mooimList={mooimList} mooimcate={3} />
+            </div>
           </div>
-          <span className="myMooimCate">스터디</span>
-          <div className="cntWrapRow mainGatherList">
-            <MyGatherBoxComponent mooimList={mooimList} mooimcate={2} />
+        ) : (
+          <div className="cntColumn">
+            <img src="../../images/sample/nodata.png" alt="" style={{ width: '100%' }} />
           </div>
-          <span className="myMooimCate">모임</span>
-          <div className="cntWrapRow mainGatherList">
-            <MyGatherBoxComponent mooimList={mooimList} mooimcate={3} />
-          </div>
-        </div>
+        )
       )}
-
     </MainLayout>
   );
 };
