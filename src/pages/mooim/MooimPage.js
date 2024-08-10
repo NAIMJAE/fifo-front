@@ -237,7 +237,7 @@ const MooimPage = () => {
           {mooimMenu.memberList && <MemberList mooim={mooim} />}
           {mooimMenu.chatting && <Chatting mooim={mooim} />}
           {mooimMenu.calendar && <MooimCalendar mooimno={mooimno} />}
-          {mooimMenu.kanban && <Kanban mooimno={mooimno} />}
+          {mooimMenu.kanban && <Kanban mooimno={mooimno} memberList={mooim.memberList} />}
 
         </div>
       </div>
