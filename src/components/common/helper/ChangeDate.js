@@ -1,3 +1,5 @@
+import { TZDate } from "@toast-ui/calendar";
+
 export function getCurrentDateTime() {
     const now = new Date();
 
@@ -19,19 +21,15 @@ export function convertToKoreanTime(utcDateString) {
     console.log("utcString : ", utcString);
 
     // UTC 시간을 Date 객체로 변환
-    const utcDate = new Date(utcDateString);
+    const utcDate = new Date(utcString.d);
     console.log("utcDate : ", utcDate);
 
-    // 유효한 날짜인지 확인
-    if (isNaN(utcDate.getTime())) {
-        console.error("Invalid date format:", utcString);
-        return utcString; // 유효하지 않은 경우 원본 문자열 반환
-    }
+
     // 한국 시간대 오프셋 (UTC+9 시간대)
     const koreaTimeOffset = 9 * 60; // 9시간을 분으로 변환
     const koreaTime = new Date(utcDate.getTime() + koreaTimeOffset * 60000);
 
     console.log("koreaTime : ", koreaTime);
 
-    return koreaTime.toISOString().replace('Z', '+09:00');
+    return new TZDate(koreaTime);
 }

@@ -256,13 +256,13 @@ const MooimCalendar = ({ mooimno }) => {
             break;
           case "U":
             /** 업데이트 안됨 */
-            console.log("소켓으로 받는 changes : ", data.changes);
+            console.log("소켓으로 전달 받는 changes : ", data.changes);
             // start와 end가 있을 때 한국 시간으로 변환
             if (data.changes.start) {
-              data.changes.start.d = new Date(data.changes.start.d).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
+              data.changes.start = convertToKoreanTime(data.changes.start);
             }
             if (data.changes.end) {
-              data.changes.end.d = new Date(data.changes.end.d).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
+              data.changes.end = convertToKoreanTime(data.changes.end);
             }
             console.log("시간 변환한 changes : ", data.changes);
             calendar.updateEvent(data.content.id, data.content.calendarId, data.changes);
@@ -299,7 +299,7 @@ const MooimCalendar = ({ mooimno }) => {
 
   /** 메세지 전송 함수 */
   const sendMessage = async (msgData, state, changes) => {
-    console.log("보내는 changes :", changes);
+    console.log("메세지 전송 changes :", changes);
     if (webSocket.current.readyState === WebSocket.OPEN) {
 
       const socketMsg = {
