@@ -1,53 +1,60 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import KanbanInfoModal from './modal/KanbanInfoModal';
+import { RootUrl } from '../../api/RootUrl';
+import { insertItemApi, selectKanbanApi } from '../../api/KanbanApi';
 
-const Kanban = () => {
+const Kanban = ({ mooimno, memberList }) => {
     const [items, setItems] = useState({
-        ready: [
-            {
-                id: "fifi0001",
-                group: '디자인',
-                title: '메인 페이지 디자인',
-                content: [
-                    { index: 0, type: 'check', cnt: '헤더 디자인', state: false },
-                    { index: 1, type: 'text', cnt: '네이게이션, 검색, 로고' },
-                    { index: 2, type: 'check', cnt: '푸터 디자인', state: false },
-                ],
-                members: [2, 5],
-                start: '2024-08-01',
-                end: '2024-08-07',
-                select: false,
-            },
-            {
-                id: "fifi0002",
-                group: '서버',
-                title: 'EC2 서버 구축',
-                content: [
-                    { index: 0, cnt: '서버 초기 설정', state: false },
-                    { index: 1, cnt: '서버 DB 설정', state: false },
-                ],
-                members: [2],
-                start: '2024-08-01',
-                end: '2024-08-09',
-                select: false,
-            },
-            {
-                id: "fifi0003",
-                group: '회원',
-                title: '회원 가입',
-                content: [
-                    { index: 0, cnt: '회원 정보 입력', state: false },
-                    { index: 1, cnt: '유효성 검사', state: false },
-                ],
-                members: [5],
-                start: '2024-08-01',
-                end: '2024-08-30',
-                select: false,
-            },
-        ],
+        ready: [],
         doing: [],
         complete: [],
     });
+
+    /** kanNo 저장 */
+    const [kanNo, setKanNo] = useState("");
+
+    /** kaban 업데이트 상태 관리 */
+    const [kanUpdate, setKanUpdate] = useState(false);
+
+    /** 페이지 로드시 데이터 조회 */
+    useEffect(() => {
+        const selectKanban = async () => {
+            try {
+                const response = await selectKanbanApi(mooimno);
+                setKanNo(response.kanno);
+                const data = JSON.parse(response.content);
+                setItems(data);
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        selectKanban();
+    },[]);
+
+    /** 칸반 상태 변경시 적용 */
+    useEffect(() => {
+        const total = items["ready"].length + items["doing"].length + items["complete"].length;
+        const progress = Math.floor(items["complete"].length * 100 / total);
+
+        const updatedItem = async () => {
+            if (kanUpdate) {
+                const data = {
+                    kanno: kanNo,
+                    mooimno: mooimno,
+                    content: JSON.stringify(items),
+                    progress: progress,
+                }
+                try {
+                    const response = await insertItemApi(data);
+                    setKanUpdate(false);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        }
+        updatedItem();
+    }, [items])
 
     // 드래그 중인 요소의 정보를 저장하는 상태
     const [dragging, setDragging] = useState(null);
@@ -83,12 +90,13 @@ const Kanban = () => {
             } else {
                 // 다른 컬럼으로 이동
                 const [removed] = fromList.splice(fromIndex, 1);
+                removed.state = toColumn;
                 toList.splice(toIndex !== undefined ? toIndex : toList.length, 0, removed);
             }
 
             return newItems;
         });
-
+        setKanUpdate(true);
         setDragging(null);
     };
 
@@ -135,6 +143,79 @@ const Kanban = () => {
         setSelectedItemId(id);
     }
 
+    /** 랜덤 아이디 생성 */
+    const makeRandomId = () => {
+        return Math.random().toString(36).substr(2, 9);
+    }
+
+    /** 새로운 item 생성 */
+    const [newItem, setNewItem] = useState({
+        board: '',
+        state: false,
+        title: '',
+        group: '',
+    });
+
+    const inputItemTitle = (e) => {
+        setNewItem({ ...newItem, title: e.target.value });
+    };
+
+    const inputItemGroup = (e) => {
+        setNewItem({ ...newItem, group: e.target.value });
+    };
+
+
+    const addNewItem = async (state) => {
+        const newItemData = {
+            id: makeRandomId(),
+            state: state,
+            group: newItem.group,
+            title: newItem.title,
+            content: [],
+            members: [],
+            select: false,
+        };
+
+        setItems((prevItems) => {
+            return {
+                ...prevItems,
+                [state]: [...prevItems[state], newItemData],
+            };
+        });
+
+        setKanUpdate(true);
+
+        setNewItem({
+            state: false,
+            title: '',
+            group: '',
+        });
+    }
+
+    /** 칸반 모달에서 내용 변경시 수정 사항 저장하는 함수 */
+    const modifyItem = (data) => {
+        setItems((prevItems) => {
+            const newItems = { ...prevItems };
+
+            const state = data.state;
+            const updated = newItems[state].map(item => {
+                // id가 같은 항목을 찾아서 덮어쓰기
+                if (item.id === data.id) {
+                    return {
+                        ...item,
+                        ...data
+                    };
+                }
+                return item;
+            });
+            newItems[state] = updated;
+    
+            return newItems;
+        });
+        setKanUpdate(true);
+    }
+
+
     return (
         <div className="kanbanPage">
             <div className="kanban">
@@ -157,15 +238,37 @@ const Kanban = () => {
                                 onDragOver={handleDragOver}
                                 onDrop={(e) => handleDrop('ready', index)}
                             >
-                                <label>
+                                <div>
                                     <h2>{item.group}</h2>
-                                    <img src="../../../../images/ppoppi.png" alt="profile" />
-                                </label>
+                                    <div>
+                                    {memberList.map((member, index) => (
+                                        <div key={index}>
+                                        {item.members.includes(member.usersDTO.userno) && 
+                                            <img key={index} src={`${RootUrl()}/uploads/user/${member.usersDTO.thumb}`} alt="profile" />
+                                        }
+                                        </div>
+                                    ))}
+                                        <div className='etc'>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                </div>
                                 <h3>{item.title}</h3>
                             </div>
                         ))}
                     </div>
-                    <div className="add">+ Add</div>
+                    <div className="add" onClick={() => setNewItem({ ...newItem, state: true, board:"ready" })}>+ Add</div>
+                    {newItem.state && newItem.board === "ready" &&
+                        <div className='addItem'>
+                            <input type="text" value={newItem.title} onChange={inputItemTitle} placeholder='Title'/>
+                            <div>
+                                <input type="text" value={newItem.group} onChange={inputItemGroup} placeholder='Group'/>
+                                <button onClick={() => addNewItem("ready")}>save</button>
+                            </div>
+                        </div>
+                    }
                 </div>
 
                 {/* DOING 컬럼 */}
@@ -182,19 +285,42 @@ const Kanban = () => {
                                 className={`item ${item.select ? 'selected' : ''}`}
                                 draggable
                                 onClick={() => selectedItem('doing', item.id)}
+                                onDoubleClick={() => itemModal(item)}
                                 onDragStart={(e) => handleDragStart(item, 'doing', e)}
                                 onDragOver={handleDragOver}
                                 onDrop={(e) => handleDrop('doing', index)}
                             >
-                                <label>
+                                <div>
                                     <h2>{item.group}</h2>
-                                    <img src="../../../../images/ppoppi.png" alt="profile" />
-                                </label>
+                                    <div>
+                                    {memberList.map((member, index) => (
+                                        <div key={index}>
+                                        {item.members.includes(member.usersDTO.userno) && 
+                                            <img key={index} src={`${RootUrl()}/uploads/user/${member.usersDTO.thumb}`} alt="profile" />
+                                        }
+                                        </div>
+                                    ))}
+                                        <div className='etc'>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                </div>
                                 <h3>{item.title}</h3>
                             </div>
                         ))}
                     </div>
-                    <div className="add">+ Add</div>
+                    <div className="add" onClick={() => setNewItem({ ...newItem, state: true, board:"doing" })}>+ Add</div>
+                    {newItem.state && newItem.board === "doing" &&
+                        <div className='addItem'>
+                            <input type="text" value={newItem.title} onChange={inputItemTitle} placeholder='Title'/>
+                            <div>
+                                <input type="text" value={newItem.group} onChange={inputItemGroup} placeholder='Group'/>
+                                <button onClick={() => addNewItem("doing")}>save</button>
+                            </div>
+                        </div>
+                    }
                 </div>
 
                 {/* COMPLETE 컬럼 */}
@@ -211,22 +337,53 @@ const Kanban = () => {
                                 className={`item ${item.select ? 'selected' : ''}`}
                                 draggable
                                 onClick={() => selectedItem('complete', item.id)}
+                                onDoubleClick={() => itemModal(item)}
                                 onDragStart={(e) => handleDragStart(item, 'complete', e)}
                                 onDragOver={handleDragOver}
                                 onDrop={(e) => handleDrop('complete', index)}
                             >
-                                <label>
+                                <div>
                                     <h2>{item.group}</h2>
-                                    <img src="../../../../images/ppoppi.png" alt="profile" />
-                                </label>
+                                    <div>
+                                    {memberList.map((member, index) => (
+                                        <div key={index}>
+                                        {item.members.includes(member.usersDTO.userno) && 
+                                            <img key={index} src={`${RootUrl()}/uploads/user/${member.usersDTO.thumb}`} alt="profile" />
+                                        }
+                                        </div>
+                                    ))}
+                                        <div className='etc'>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                </div>
                                 <h3>{item.title}</h3>
                             </div>
                         ))}
                     </div>
-                    <div className="add">+ Add</div>
+                    <div className="add" onClick={() => setNewItem({ ...newItem, state: true, board:"complete" })}>+ Add</div>
+                    {newItem.state && newItem.board === "complete" &&
+                        <div className='addItem'>
+                            <input type="text" value={newItem.title} onChange={inputItemTitle} placeholder='Title'/>
+                            <div>
+                                <input type="text" value={newItem.group} onChange={inputItemGroup} placeholder='Group'/>
+                                <button onClick={() => addNewItem("complete")}>save</button>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
-            {itemInfoModal && <KanbanInfoModal modalContent={modalContent} itemModal={itemModal}/>}
+            {itemInfoModal && 
+                <KanbanInfoModal 
+                    modalContent={modalContent} 
+                    setModalContent={setModalContent} 
+                    itemModal={itemModal} 
+                    makeRandomId={makeRandomId}
+                    memberList={memberList}
+                    modifyItem={modifyItem}
+                />}
         </div>
     );
 };
