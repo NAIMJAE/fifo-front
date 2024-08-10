@@ -135,8 +135,6 @@ export const updateMooimthumbApi = async (formData) => {
 /** 캘린더 조회 API */
 export const selectCalendarApi = async (mooimno) => {
     const response = await axios.get(`${rootURL}/calendar/${mooimno}`);
-    console.log("API 임");
-    console.log(response.data);
     return response.data;
 };
 

@@ -13,6 +13,7 @@ import Moment from "moment";
 import "moment/locale/ko";
 import { createCalendarEventApi, deleteCalendarEventApi, modifyCalendarEventApi, selectCalendarApi } from "../../api/gatheringApi";
 import { Host } from "../../api/RootUrl";
+import { convertToKoreanTime } from "../common/helper/ChangeDate";
 
 const MooimCalendar = ({ mooimno }) => {
 
@@ -59,7 +60,6 @@ const MooimCalendar = ({ mooimno }) => {
     calendar = new Calendar(container, options);
 
     calendarInstance.current = calendar;
-    console.log(calendarRef);
     calendar.setOptions({
       month: {
         isAlways6Weeks: false,
@@ -69,22 +69,18 @@ const MooimCalendar = ({ mooimno }) => {
     /** 일정에 랜덤 아이디 부여*/
     const randomDate = Moment(new Date()).format("YYMMDDHHmmSS");
     const eventId = randomDate + mooimno;
-    console.log(eventId);
 
     /** 일정 불러오기 */
     const fetchEvents = async () => {
       try {
         const events = await selectCalendarApi(mooimno);
-        
+
         events.forEach((event) => {
           const isReadOnly = event.isreadonly
           const isAllDay = event.isallday;
           const selectedCalendar = options.calendars.find(
             (cal) => cal.id === event.calendarId
           );
-
-          console.log("event : ", event);
-
           const newEvent = {
             id: event.id,
             calendarId: event.calendarid,
@@ -98,7 +94,6 @@ const MooimCalendar = ({ mooimno }) => {
             backgroundColor: event.bgcolor,
             color: event.color,
           };
-          console.log("newEvent : ",newEvent);
           calendar.createEvents([newEvent]);
         });
       } catch (err) {
@@ -140,7 +135,7 @@ const MooimCalendar = ({ mooimno }) => {
         bgcolor: backgroundColor,
         color: "#FFFFFF",
       };
-      calendar.createEvents([newEvent]);
+      // calendar.createEvents([newEvent]);
       calendar.setOptions({});
 
       createCalendarEventApi(newEvent);
@@ -150,6 +145,7 @@ const MooimCalendar = ({ mooimno }) => {
 
     /** 일정을 수정 */
     calendar.on("beforeUpdateEvent", ({ event, changes }) => {
+      
       calendar.updateEvent(event.id, event.calendarId, changes);
       const start =
         changes.start === undefined
@@ -176,9 +172,8 @@ const MooimCalendar = ({ mooimno }) => {
 
       try {
         modifyCalendarEventApi(updateData);
-
         /** 소켓 전송 */
-        sendMessage(updateData, "U", changes);
+        sendMessage(event, "U", changes);
 
       } catch (err) {
         console.log(err);
@@ -229,10 +224,7 @@ const MooimCalendar = ({ mooimno }) => {
     setCurrentMonth(calendar.getDate().getMonth() + 1);
     setCurrentYear(calendar.getDate().getFullYear());
 
-    console.log("ggggg")
-    console.log(calendar)
     return () => {
-      console.log("언마운트!!")
       // unmount
       if (calendar) {
         calendar.destroy();
@@ -254,24 +246,28 @@ const MooimCalendar = ({ mooimno }) => {
     // 메시지를 받았을 때 실행
     webSocket.current.onmessage = (message) => {
       const socketData = JSON.parse(message.data);
-      console.log("소켓으로 전달 받은 내용 : ", socketData);
 
       if (socketData.type === 'message') {
         const data = JSON.parse(socketData.payload);
 
-        console.log("socketData : ", socketData);
-
         switch (data.state) {
           case "C":
-            console.log("소켓으로 전달 생성");
-            calendar.createEvents(data.content);
+            calendar.createEvents([data.content]);
             break;
           case "U":
-            console.log("소켓으로 전달 업데이트 : ", data.content);
+            /** 업데이트 안됨 */
+            console.log("소켓으로 받는 changes : ", data.changes);
+            // start와 end가 있을 때 한국 시간으로 변환
+            if (data.changes.start) {
+              data.changes.start.d = new Date(data.changes.start.d).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
+            }
+            if (data.changes.end) {
+              data.changes.end.d = new Date(data.changes.end.d).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
+            }
+            console.log("시간 변환한 changes : ", data.changes);
             calendar.updateEvent(data.content.id, data.content.calendarId, data.changes);
             break;
           case "D":
-            console.log("소켓으로 전달 삭제");
             calendar.deleteEvent(data.content.id, data.content.calendarId);
             break;
 
@@ -279,7 +275,6 @@ const MooimCalendar = ({ mooimno }) => {
             break;
         }
       }
-
 
     };
 
@@ -300,12 +295,11 @@ const MooimCalendar = ({ mooimno }) => {
       }
     };
   }, []);
+ 
 
   /** 메세지 전송 함수 */
   const sendMessage = async (msgData, state, changes) => {
-    console.log("메세지 전송 함수 msgData :", msgData);
-    console.log("메세지 전송 함수 state :", state);
-    console.log("메세지 전송 함수 changes :", msgData);
+    console.log("보내는 changes :", changes);
     if (webSocket.current.readyState === WebSocket.OPEN) {
 
       const socketMsg = {
