@@ -3,7 +3,7 @@ import KanbanInfoModal from './modal/KanbanInfoModal';
 import { RootUrl } from '../../api/RootUrl';
 import { insertItemApi, selectKanbanApi } from '../../api/KanbanApi';
 
-const Kanban = ({ mooimno, memberList }) => {
+const Kanban = ({ mooimno, memberList, updateProgress }) => {
     const [items, setItems] = useState({
         ready: [],
         doing: [],
@@ -54,6 +54,7 @@ const Kanban = ({ mooimno, memberList }) => {
             }
         }
         updatedItem();
+        updateProgress(progress);
     }, [items])
 
     // 드래그 중인 요소의 정보를 저장하는 상태
