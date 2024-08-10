@@ -24,22 +24,51 @@ const MooimPage = () => {
   /** 모임 데이터 */
   const [mooim, setMooim] = useState([]);
 
-  /** 임시 데이터 */
-  const barData = 40;
-
   /** 모임 진행도 막대 */
   useEffect(() => {
     const bar = document.getElementById('bar');
+    const img = bar.querySelector('img');
+
     if (bar) {
-      bar.style.width = barData + '%';
+        // 막대 너비 설정
+        bar.style.width = mooim.progress + '%';
+
+        // transition이 시작될 때 이미지를 구르게 설정
+        const handleTransitionStart = () => {
+            img.style.animation = 'roll 0.5s linear infinite';
+        };
+
+        // transition이 끝날 때 이미지 구르기 중지
+        const handleTransitionEnd = () => {
+            img.style.animation = '';
+        };
+
+        bar.addEventListener('transitionstart', handleTransitionStart);
+        bar.addEventListener('transitionend', handleTransitionEnd);
+
+        // 클린업 함수에서 이벤트 리스너 제거
+        return () => {
+            bar.removeEventListener('transitionstart', handleTransitionStart);
+            bar.removeEventListener('transitionend', handleTransitionEnd);
+        };
     }
-  }, [barData]);
+}, [mooim]);
+
+  /** 모임 진행도 업데이트 */
+  const updateProgress = (data) => {
+    console.log(data);
+    setMooim((prevMooim) => ({
+      ...prevMooim,
+      progress: data,
+    }));
+  }
 
   /** 모임 불러오기 */
   useEffect(() => {
     const selectMooim = async () => {
       try {
         const response = await selectMooimApi(mooimno);
+        console.log(response)
         setMooim(response);
         setMooimIntro({
           state: false,
@@ -219,7 +248,7 @@ const MooimPage = () => {
           </div>
           <div className='mooimProgress'>
             <div>
-              <div id='bar'>40
+              <div id='bar'>{mooim.progress}
                 <img src="../../../../images/mooim/ppoppi_bar.png" alt="" />
               </div>
             </div>
@@ -237,7 +266,9 @@ const MooimPage = () => {
           {mooimMenu.memberList && <MemberList mooim={mooim} />}
           {mooimMenu.chatting && <Chatting mooim={mooim} />}
           {mooimMenu.calendar && <MooimCalendar mooimno={mooimno} />}
-          {mooimMenu.kanban && <Kanban mooimno={mooimno} memberList={mooim.memberList} />}
+          {mooimMenu.kanban && 
+            <Kanban mooimno={mooimno} memberList={mooim.memberList} updateProgress={updateProgress}
+            />}
 
         </div>
       </div>
