@@ -6,6 +6,10 @@ import EditorComponent from '../../components/common/toast/EditorComponent';
 import { gatheringWriteApi } from '../../api/gatheringApi';
 import SkillTags from '../../components/gathering/SkillTags';
 import { Button } from '@mui/material';
+import Chip from '@mui/material/Chip';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import HiddenInputFile from '../../components/gathering/HiddenInputFile';
 import { useNavigate } from 'react-router-dom';
@@ -40,7 +44,12 @@ const Write = () => {
         mooimperiod: "2주",  // 모임 기간
         gathstate: "1"  // 모집 상태
     });
-
+    /** positions 배열 생성 */
+    const positions = [
+        '백앤드',
+        '프론트앤드',
+        '디자이너',
+    ];
     /** 선택한 포지션 문자열 저장 */
     const [selectedPositions, setSelectedPositions] = useState([]);
 
@@ -73,19 +82,17 @@ const Write = () => {
     }
 
     /** 모집 포지션 정보 입력 (,로 구분) */
-    const handlePositionSelect = (e) => {
-        const position = e.target.value;
+    const handlePositionSelect = (event, newValue) => {
+        // 선택된 포지션 상태를 업데이트
+        setSelectedPositions(newValue);
 
-        // 이미 선택한 포지션이 아닐 경우만 실행 
-        if (!selectedPositions.includes(position)) {
-            const newPosition = gathering.gathrecruitfield ? `${gathering.gathrecruitfield}, ${position}` : position;
-            setGathering({
-                ...gathering,
-                gathrecruitfield: newPosition
-            });
-            setSelectedPositions([...selectedPositions, position]);
-        }
-    }
+        // 새로 선택된 포지션들을 ,로 구분하여 gathrecruitfield 업데이트
+        const newPosition = newValue.join(', ');
+        setGathering({
+            ...gathering,
+            gathrecruitfield: newPosition
+        });
+    };
 
     /** 모집 언어 정보 입력 (SkillTags에서 가져옴) */
     const handleLanguageChange = (languages) => {
@@ -232,11 +239,33 @@ const Write = () => {
                 </div>
                 <div className='cntColumn'>
                     <span>모집 포지션</span>
-                    <select name="position" onChange={handlePositionSelect}>
-                        <option value="백앤드" disabled={selectedPositions.includes('백앤드')}>백앤드</option>
-                        <option value="프론트앤드" disabled={selectedPositions.includes('프론트앤드')}>프론트앤드</option>
-                        <option value="디자이너" disabled={selectedPositions.includes('디자이너')}>디자이너</option>
-                    </select>
+                    <Stack spacing={3} sx={{ width: 500 }}>
+                        <Autocomplete
+                            multiple
+                            id="positions-outlined"
+                            options={positions.filter(position => !selectedPositions.includes(position))} // 이미 선택한 포지션은 자동완성에서 없앰
+                            getOptionLabel={(option) => option}
+                            value={selectedPositions}
+                            onChange={handlePositionSelect}
+                            filterSelectedOptions
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="모집 포지션"
+                                    placeholder="원하는 포지션을 선택하세요."
+                                />
+                            )}
+                            renderTags={(value, getTagProps) =>
+                                value.map((option, index) => (
+                                    <Chip
+                                        label={option}
+                                        {...getTagProps({ index })}
+                                        sx={{ backgroundColor: '#007bff', color: 'white' }} // 포지션 선택에 따른 스타일 지정
+                                    />
+                                ))
+                            }
+                        />
+                    </Stack>
                 </div>
             </div>
             <div className='cntRow gatheringData'>
