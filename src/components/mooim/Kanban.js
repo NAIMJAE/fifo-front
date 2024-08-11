@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import KanbanInfoModal from './modal/KanbanInfoModal';
-import { RootUrl } from '../../api/RootUrl';
+import { Host, RootUrl } from '../../api/RootUrl';
 import { insertItemApi, selectKanbanApi } from '../../api/KanbanApi';
 
 const Kanban = ({ mooimno, memberList, updateProgress }) => {
+    /** 칸반 데이터 관리 */
     const [items, setItems] = useState({
         ready: [],
         doing: [],
@@ -15,6 +16,49 @@ const Kanban = ({ mooimno, memberList, updateProgress }) => {
 
     /** kaban 업데이트 상태 관리 */
     const [kanUpdate, setKanUpdate] = useState(false);
+
+    /** 소켓 연결 상태 */
+    const webSocket = useRef(null);
+    /** 소켓방 번호 */
+    const roomId = "kanban" + mooimno;
+
+    /** 웹 소켓 연결 */
+  useEffect(() => {
+    // WebSocket 서버에 연결
+    webSocket.current = new WebSocket(`ws://${Host}:8080/fifo-back/kan/${roomId}`);
+
+    // 연결이 성립되었을 때 실행
+    webSocket.current.onopen = () => {
+        console.log('WebSocket connection established');
+    };
+
+    // 메시지를 받았을 때 실행
+    webSocket.current.onmessage = (message) => {
+        const socketData = JSON.parse(message.data);
+
+        console.log("소켓으로 받음 : ", socketData);
+        const data = JSON.parse(socketData.payload);
+        console.log("소켓으로 받음2 : ", data);
+        setItems(JSON.parse(data.content));
+    };
+
+    // 연결이 종료되었을 때 실행
+    webSocket.current.onclose = () => {
+        console.log('WebSocket connection closed');
+    };
+
+    // 오류가 발생했을 때 실행
+    webSocket.current.onerror = (error) => {
+        console.error('WebSocket error:', error);
+    };
+
+    // 컴포넌트 언마운트 시 WebSocket 닫기
+    return () => {
+        if (webSocket.current) {
+            webSocket.current.close();
+        }
+    };
+  }, []);
 
     /** 페이지 로드시 데이터 조회 */
     useEffect(() => {
@@ -47,6 +91,9 @@ const Kanban = ({ mooimno, memberList, updateProgress }) => {
                 }
                 try {
                     const response = await insertItemApi(data);
+                    if (response > 0) {
+                        webSocket.current.send(JSON.stringify(data));
+                    }
                     setKanUpdate(false);
                 } catch (error) {
                     console.log(error);
@@ -110,39 +157,8 @@ const Kanban = ({ mooimno, memberList, updateProgress }) => {
         setItemInfoModal(!itemInfoModal);
     }
 
-    // 아이템 선택시 테두리
+    /** 아이템 선택시 테두리 */
     const [selectedItemId, setSelectedItemId] = useState("");
-
-    const selectedItem = (toColumn, id) => {
-
-        setItems(prevItems => {
-            const newItems = { ...prevItems };
-
-            // 이전에 선택된 아이템의 select를 false로 변경
-            if (selectedItemId) {
-                Object.keys(newItems).forEach(column => {
-                    newItems[column] = newItems[column].map(item => {
-                        if (item.id === selectedItemId) {
-                            return { ...item, select: false };
-                        }
-                        return item;
-                    });
-                });
-            }
-
-            // 현재 선택된 아이템의 select를 true로 변경
-            newItems[toColumn] = newItems[toColumn].map(item => {
-                if (item.id === id) {
-                    return { ...item, select: true };
-                }
-                return item;
-            });
-
-            return newItems;
-        });
-
-        setSelectedItemId(id);
-    }
 
     /** 랜덤 아이디 생성 */
     const makeRandomId = () => {
@@ -157,15 +173,17 @@ const Kanban = ({ mooimno, memberList, updateProgress }) => {
         group: '',
     });
 
+    /** 아이템 제목 입력 */
     const inputItemTitle = (e) => {
         setNewItem({ ...newItem, title: e.target.value });
     };
 
+    /** 아이템 그룹 입력 */
     const inputItemGroup = (e) => {
         setNewItem({ ...newItem, group: e.target.value });
     };
 
-
+    /** 새로운 아이템 생성 */
     const addNewItem = async (state) => {
         const newItemData = {
             id: makeRandomId(),
@@ -174,7 +192,6 @@ const Kanban = ({ mooimno, memberList, updateProgress }) => {
             title: newItem.title,
             content: [],
             members: [],
-            select: false,
         };
 
         setItems((prevItems) => {
@@ -191,6 +208,34 @@ const Kanban = ({ mooimno, memberList, updateProgress }) => {
             title: '',
             group: '',
         });
+    }
+
+    /** 아이템 관리 */
+    const [itemWork, setItemWork] = useState("");
+
+    /** 아이템 관리 버튼 클릭 */
+    const clickEtc = (id) => {
+        if (itemWork !== id) {
+            setItemWork(id);
+        }else {
+            setItemWork("")
+        }
+    }
+
+    /** 아이템 삭제 */
+    const deleteItem = () => {
+        setItems((prevItems) => {
+            const newItems = { ...prevItems };
+    
+            ["ready", "doing", "complete"].forEach((state) => {
+                newItems[state] = newItems[state].filter(item => item.id !== itemWork);
+            });
+    
+            return newItems;
+        });
+    
+        setKanUpdate(true);
+        setItemWork("");
     }
 
     /** 칸반 모달에서 내용 변경시 수정 사항 저장하는 함수 */
@@ -225,15 +270,15 @@ const Kanban = ({ mooimno, memberList, updateProgress }) => {
                     <h1>READY</h1>
                     <div
                         className="itemBox"
-                        onDragOver={handleDragOver}  // 컬럼에서도 onDragOver 처리 필요
-                        onDrop={(e) => handleDrop('ready')}  // 컬럼에 onDrop 처리 필요
+                        onDragOver={handleDragOver}
+                        onDrop={(e) => handleDrop('ready')}
                     >
                         {items.ready.length > 0 && items.ready.map((item, index) => (
                             <div
                                 key={item.id}
-                                className={`item ${item.select ? 'selected' : ''}`}
+                                className={`item ${item.id === selectedItemId ? 'selected' : ''}`}
                                 draggable
-                                onClick={() => selectedItem('ready', item.id)}
+                                onClick={() => setSelectedItemId(item.id)}
                                 onDoubleClick={() => itemModal(item)}
                                 onDragStart={(e) => handleDragStart(item, 'ready', e)}
                                 onDragOver={handleDragOver}
@@ -249,24 +294,32 @@ const Kanban = ({ mooimno, memberList, updateProgress }) => {
                                         }
                                         </div>
                                     ))}
-                                        <div className='etc'>
+                                        <div className='etc' onClick={() => clickEtc(item.id)}>
                                             <span></span>
                                             <span></span>
                                             <span></span>
                                         </div>
                                     </div>
                                 </div>
+                                {itemWork === item.id && 
+                                    <label className='work'>
+                                        <h1 onClick={deleteItem}>삭제</h1>
+                                    </label>
+                                }
                                 <h3>{item.title}</h3>
                             </div>
                         ))}
                     </div>
-                    <div className="add" onClick={() => setNewItem({ ...newItem, state: true, board:"ready" })}>+ Add</div>
+
+                    {!newItem.state && <div className="add" onClick={() => setNewItem({ ...newItem, state: true, board:"ready" })}>+ Add</div>}
+                    {newItem.state && <div className="add" onClick={() => setNewItem({ ...newItem, state: false, board:"" })}>+ Add</div>}
+                    
                     {newItem.state && newItem.board === "ready" &&
                         <div className='addItem'>
                             <input type="text" value={newItem.title} onChange={inputItemTitle} placeholder='Title'/>
                             <div>
                                 <input type="text" value={newItem.group} onChange={inputItemGroup} placeholder='Group'/>
-                                <button onClick={() => addNewItem("ready")}>save</button>
+                                <button onClick={() => addNewItem("ready")}>생성</button>
                             </div>
                         </div>
                     }
@@ -277,15 +330,15 @@ const Kanban = ({ mooimno, memberList, updateProgress }) => {
                     <h1>DOING</h1>
                     <div
                         className="itemBox"
-                        onDragOver={handleDragOver}  // 컬럼에서도 onDragOver 처리 필요
-                        onDrop={(e) => handleDrop('doing')}  // 컬럼에 onDrop 처리 필요
+                        onDragOver={handleDragOver}
+                        onDrop={(e) => handleDrop('doing')}
                     >
                         {items.doing.length > 0 && items.doing.map((item, index) => (
                             <div
                                 key={item.id}
-                                className={`item ${item.select ? 'selected' : ''}`}
+                                className={`item ${item.id === selectedItemId ? 'selected' : ''}`}
                                 draggable
-                                onClick={() => selectedItem('doing', item.id)}
+                                onClick={() => setSelectedItemId(item.id)}
                                 onDoubleClick={() => itemModal(item)}
                                 onDragStart={(e) => handleDragStart(item, 'doing', e)}
                                 onDragOver={handleDragOver}
@@ -301,18 +354,25 @@ const Kanban = ({ mooimno, memberList, updateProgress }) => {
                                         }
                                         </div>
                                     ))}
-                                        <div className='etc'>
+                                        <div className='etc' onClick={() => clickEtc(item.id)}>
                                             <span></span>
                                             <span></span>
                                             <span></span>
                                         </div>
                                     </div>
                                 </div>
+                                {itemWork === item.id && 
+                                    <label className='work'>
+                                        <h1 onClick={deleteItem}>삭제</h1>
+                                    </label>
+                                }
                                 <h3>{item.title}</h3>
                             </div>
                         ))}
                     </div>
-                    <div className="add" onClick={() => setNewItem({ ...newItem, state: true, board:"doing" })}>+ Add</div>
+                    {!newItem.state && <div className="add" onClick={() => setNewItem({ ...newItem, state: true, board:"doing" })}>+ Add</div>}
+                    {newItem.state && <div className="add" onClick={() => setNewItem({ ...newItem, state: false, board:"" })}>+ Add</div>}
+                    
                     {newItem.state && newItem.board === "doing" &&
                         <div className='addItem'>
                             <input type="text" value={newItem.title} onChange={inputItemTitle} placeholder='Title'/>
@@ -329,15 +389,15 @@ const Kanban = ({ mooimno, memberList, updateProgress }) => {
                     <h1>COMPLETE</h1>
                     <div
                         className="itemBox"
-                        onDragOver={handleDragOver}  // 컬럼에서도 onDragOver 처리 필요
-                        onDrop={(e) => handleDrop('complete')}  // 컬럼에 onDrop 처리 필요
+                        onDragOver={handleDragOver}
+                        onDrop={(e) => handleDrop('complete')}
                     >
                         {items.complete.length > 0 && items.complete.map((item, index) => (
                             <div
                                 key={item.id}
-                                className={`item ${item.select ? 'selected' : ''}`}
+                                className={`item ${item.id === selectedItemId ? 'selected' : ''}`}
                                 draggable
-                                onClick={() => selectedItem('complete', item.id)}
+                                onClick={() => setSelectedItemId(item.id)}
                                 onDoubleClick={() => itemModal(item)}
                                 onDragStart={(e) => handleDragStart(item, 'complete', e)}
                                 onDragOver={handleDragOver}
@@ -353,18 +413,26 @@ const Kanban = ({ mooimno, memberList, updateProgress }) => {
                                         }
                                         </div>
                                     ))}
-                                        <div className='etc'>
+                                        <div className='etc' onClick={() => clickEtc(item.id)}>
                                             <span></span>
                                             <span></span>
                                             <span></span>
                                         </div>
                                     </div>
                                 </div>
+                                {itemWork === item.id && 
+                                    <label className='work'>
+                                        <h1 onClick={deleteItem}>삭제</h1>
+                                    </label>
+                                }
                                 <h3>{item.title}</h3>
                             </div>
                         ))}
                     </div>
-                    <div className="add" onClick={() => setNewItem({ ...newItem, state: true, board:"complete" })}>+ Add</div>
+
+                    {!newItem.state && <div className="add" onClick={() => setNewItem({ ...newItem, state: true, board:"complete" })}>+ Add</div>}
+                    {newItem.state && <div className="add" onClick={() => setNewItem({ ...newItem, state: false, board:"" })}>+ Add</div>}
+
                     {newItem.state && newItem.board === "complete" &&
                         <div className='addItem'>
                             <input type="text" value={newItem.title} onChange={inputItemTitle} placeholder='Title'/>
