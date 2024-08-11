@@ -654,6 +654,7 @@
                     scrollbar-width: none;
 
                     > .item {
+                        position: relative;
                         display: flex;
                         flex-direction: column;
                         justify-content: space-between;
@@ -702,6 +703,34 @@
                                 }
                             }
                         }
+                        > .work {
+                            display: flex;
+                            position: absolute;
+                            justify-content: center;
+                            width: 70px;
+                            top: 30px;
+                            right: 5px;
+                            padding: 6px;
+                            border: 1px solid #9f9f9f;
+                            border-radius: 6px;
+                            background-color: white;
+                            z-index: 1;
+                            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+
+                            > h1 {
+                                width: 100%;
+                                color: red;
+                                font-size: 12px;
+                                padding: 4px 0;
+                                border-radius: 6px;
+                                font-weight: bolder;
+                                text-align: center;
+                                cursor: pointer;
+                            }
+                            > h1:hover {
+                                background-color: #e2e2e2;
+                            }
+                        }
                         
                         > h3 {
                             display: flex;
@@ -728,29 +757,45 @@
                     padding: 10px;
                     flex-direction: column;
                     width: 348px;
-                    height: 100px;
-                    border: 1px solid #111;
+                    border: 1px solid #7b7b7b;
+                    border-radius: 10px;
+                    background-color: white;
                     box-sizing: border-box;
 
                     input {
                         display: flex;
                         font-size: 16px;
                         padding: 4px 10px;
+                        border: 1px solid #9f9f9f;
+                        border-radius: 4px;
+                        background-color: #f7f7f7;
                     }
 
                     > input {
-                        margin-bottom: 4px;
+                        margin-bottom: 6px;
                     }
 
                     > div {
                         display: flex;
                         > input {
-                            width: 250px;
+                            width: 270px;
                         }
                         > button {
-                            margin-left: 10px;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            width: 50px;
+                            margin-left: 6px;
                             padding: 0 4px;
+                            border: 1px solid #9f9f9f;
+                            border-radius: 4px;
+                            background-color: #ffffff;
                             cursor: pointer;
+                        }
+                        > button:hover {
+                            background-color: #4D96FF;
+                            border: 1px solid #4D96FF;
+                            color: white;
                         }
                     }
                 }
@@ -779,7 +824,8 @@
                 z-index: 200;
                 overflow: hidden;
                 padding: 10px;
-                
+                box-shadow: 0px 6px 5px rgba(0, 0, 0, 0.2);
+
                 > .infoHead {
                     display: flex;
                     flex-direction: column;
@@ -910,6 +956,7 @@
                             border-radius: 10px;
                             background-color: white;
                             padding: 10px;
+                            box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.2);
 
                             > .memberBox {
                                 display: flex;
@@ -1021,6 +1068,7 @@
                                 border: 1px solid #9f9f9f;
                                 border-radius: 6px;
                                 width: 500px;
+                                padding: 0 10px;
                             }
                             > button {
                                 display: flex;
