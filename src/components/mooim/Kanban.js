@@ -35,10 +35,7 @@ const Kanban = ({ mooimno, memberList, updateProgress }) => {
     // 메시지를 받았을 때 실행
     webSocket.current.onmessage = (message) => {
         const socketData = JSON.parse(message.data);
-
-        console.log("소켓으로 받음 : ", socketData);
         const data = JSON.parse(socketData.payload);
-        console.log("소켓으로 받음2 : ", data);
         setItems(JSON.parse(data.content));
     };
 
