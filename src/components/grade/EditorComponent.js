@@ -41,9 +41,10 @@ public class Main {
         props.socketObj.current.onopen = () => {
             console.log("aa");
             const sendMessage = JSON.stringify({
-                questionNo: props.questionInfo.questionNo,
+                questionNo: props.questionInfo.questionno,
                 userno: props.userno,
                 language: props.language.toLowerCase(),
+                level: props.questionInfo.level,
                 code: code
             })
             props.socketObj.current.send(sendMessage)
