@@ -3,26 +3,34 @@
     margin: 0;
     padding: 0;
     font: normal 14px 'Noto Sans KR', sans-serif;
-    
+
 }
-ul, ol {
+
+ul,
+ol {
     list-style: none;
 }
+
 a {
     text-decoration: none;
     color: #111;
 }
-input,textarea {
+
+input,
+textarea {
     outline: none;
     box-sizing: border-box;
 }
+
 div {
     box-sizing: border-box;
 }
+
 #container {
     width: 100%;
     height: auto;
 }
+
 header {
     position: fixed;
     display: flex;
@@ -32,12 +40,14 @@ header {
     background-color: white;
     border-bottom: 1px solid #cecece;
 }
+
 main {
     display: flex;
     width: 100%;
     height: auto;
     box-sizing: border-box;
 }
+
 #contentArea {
     position: relative;
     display: flex;
@@ -47,6 +57,7 @@ main {
     margin: 0 auto;
     margin-top: 100px;
 }
+
 footer {
     display: flex;
     width: 100%;
@@ -61,11 +72,13 @@ footer {
 .cntRow {
     display: flex;
 }
+
 /* 태그 내부 콘텐츠 세로 배치*/
 .cntColumn {
     display: flex;
     flex-direction: column;
 }
+
 /* 태그 내부 콘텐츠 가로 배치 + 자동 줄바꿈 */
 .cntWrapRow {
     display: flex;
@@ -77,6 +90,7 @@ footer {
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
+
     button {
         display: flex;
         font-size: 16px;
@@ -90,26 +104,31 @@ footer {
         cursor: pointer;
         box-sizing: border-box;
     }
+
     button:hover {
         color: #4169e1;
         border-bottom: 2px solid #4169e1;
     }
+
     .btnOn {
         color: #4169e1;
         border-bottom: 2px solid #4169e1;
     }
 }
+
 /*** 빵가루 (Breadcrumb) ***/
 .Breadcrumb {
     position: relative;
     display: flex;
     margin: 10px 20px 0 20px;
+
     span {
         display: flex;
         width: 100%;
         height: 10px;
         border-bottom: 1px solid #9f9f9f;
     }
+
     p {
         position: absolute;
         right: 20px;
@@ -124,6 +143,7 @@ footer {
     width: 100%;
     height: 200px;
 }
+
 .searhBox {
     display: flex;
     width: 100%;
@@ -131,7 +151,7 @@ footer {
     border: 1px solid yellow;
     padding: 15px;
     justify-content: space-between;
-    
+
     select {
         width: 200px;
         height: 30px;
@@ -157,7 +177,7 @@ footer {
     width: 100%;
     height: auto;
 
-     > .gathCard {
+    >.gathCard {
         display: flex;
         flex-direction: column;
         align-content: center;
@@ -165,15 +185,16 @@ footer {
         margin: 15px 14.5px;
         padding: 0 15px;
         background-color: white;
-        border: 1px solid blue;
+        border: 2px solid #4169e1;
+        box-shadow: 0 4px 8px rgba(112, 144, 252, 0.308);
+        transition: box-shadow 0.3s ease;
         border-radius: 10px;
         box-sizing: border-box;
 
-        > div > span {
+        >div>span {
             font-size: 16px;
             padding: 4px;
             margin: 10px 0;
-            border: 1px solid red;
             border-radius: 4px;
         }
 
@@ -181,19 +202,22 @@ footer {
             h3 {
                 font-size: 16px;
             }
+
             h4 {
                 font-weight: bolder;
                 font-size: 16px;
                 padding: 4px 0;
             }
+
             h5 {
                 color: #7b7b7b;
             }
-            > div {
+
+            >div {
                 padding: 10px 0;
+
                 span {
                     width: 25%;
-                    border: 1px solid red;
                     border-radius: 4px;
                     margin-right: 8px;
                     text-align: center;
@@ -208,6 +232,7 @@ footer {
             .imgBox {
                 margin: 10px 0;
                 width: 30%;
+
                 img {
                     width: 100%;
                 }
@@ -215,25 +240,43 @@ footer {
         }
 
     }
-    .myGatherLink {
+
+    .myMooimInfo {
+        margin-left: 10px;
         display: flex;
         justify-content: space-around;
         width: 100%;
         padding: 10px 0;
 
-        .gathLink {
-            width: 25%;
-            border: 1px solid blueviolet;
-            border-radius: 4px;
-            padding: 4px 8px;
-            text-decoration: none;
-            color: black;
+        >.mooimInfo {
+            width: auto;
+            font-size: 17px;
             font-weight: bold;
-            transition: background-color 0.3s;
+            color: #7b7b7b;
+            text-align: left;
 
-            &:hover {
-                background-color: lightblue;
-            }
+        }
+
+        >.mooimProgress {
+            margin-top: 10px;
+            position: relative;
+            width: 90%;
+            height: 20px;
+            padding: 0;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progressBar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease-in-out;
+            color: white;
+            font-weight: bold;
         }
     }
 
@@ -259,12 +302,12 @@ footer {
 .toastui-editor-tooltip {
     background-color: #caccd1;
 
-    > .arrow {
+    >.arrow {
         background-color: #caccd1;
 
     }
 
-    > .text {
+    >.text {
         color: #3a3a3c;
     }
 }
