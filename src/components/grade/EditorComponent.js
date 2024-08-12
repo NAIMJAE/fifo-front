@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import MonacoEditor from 'react-monaco-editor';
+import { RootUrl } from '../../api/RootUrl';
+
+const rootURL = RootUrl();
 
 const EditorComponent = (props) => {
 
@@ -37,7 +40,7 @@ public class Main {
 
     const handleExecute = async () => {
 
-        props.socketObj.current = new WebSocket('ws://localhost:8080/fifo-back/question');
+        props.socketObj.current = new WebSocket(`ws://${rootURL}/question`);
         props.socketObj.current.onopen = () => {
             console.log("aa");
             const sendMessage = JSON.stringify({
@@ -49,22 +52,7 @@ public class Main {
             })
             props.socketObj.current.send(sendMessage)
         }
-
-        /*
-        const response = await fetch('http://localhost:8080/fifo-back/question/execute', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                questionNo: props.questionInfo.questionNo,
-                language: questionInfo.language.toLowerCase(),
-                code: code
-            })
-        });
-        const result = await response.json();
-        console.log(result)
-        */
         props.navigator("record")
-
     };
 
     return (

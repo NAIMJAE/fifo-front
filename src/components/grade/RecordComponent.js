@@ -1,6 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import '../../styles/grade.scss'
+import { RootUrl } from '../../api/RootUrl';
+
+const rootURL = RootUrl();
 
 const RecordComponent = (props) => {
 
@@ -36,7 +39,7 @@ const RecordComponent = (props) => {
             setIsSolved(true)
         }
 
-        axios.get(`http://localhost:8080/fifo-back/solve/${props.questionInfo.questionno}/${props.loginSlice.userno}`)
+        axios.get(`${rootURL}/solve/${props.questionInfo.questionno}/${props.loginSlice.userno}`)
             .then((res) => {
                 console.log(res.data)
                 setSolveList(res.data)

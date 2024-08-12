@@ -5,6 +5,9 @@ import EditorComponent from '../../components/grade/EditorComponent'
 import axios from 'axios'
 import RecordComponent from '../../components/grade/RecordComponent';
 import { useSelector } from 'react-redux';
+import { RootUrl } from '../../api/RootUrl'
+
+const rootURL = RootUrl();
 
 const QuestionViewPage = () => {
 
@@ -17,7 +20,7 @@ const QuestionViewPage = () => {
     const socketObj = useRef(null);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/fifo-back/question/${questionNo.current}`)
+        axios.get(`${rootURL}/question/${questionNo.current}`)
             .then((res) => {
                 console.log(res.data)
                 setQuestionInfo(res.data)

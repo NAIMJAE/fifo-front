@@ -3,6 +3,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { globalPath } from '../../globalPaths'
 import SkillIcon from '../gathering/SkillIcon'
+import { RootUrl } from '../../api/RootUrl'
+
+const rootURL = RootUrl();
 
 const LanguageButtonComponent = () => {
 
@@ -11,7 +14,7 @@ const LanguageButtonComponent = () => {
   const [type2, setType2] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:8080/fifo-back' + '/language/list')
+    axios.get(`${rootURL}/language/list`)
       .then((res) => {
         console.log(res.data);
         const keys = Object.keys(res.data);

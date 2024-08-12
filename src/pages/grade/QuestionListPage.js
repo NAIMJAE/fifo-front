@@ -5,6 +5,8 @@ import '../../components/grade/LanguageButtonComponent'
 import QuestionContentsComponent from '../../components/grade/QuestionContentsComponent'
 import axios from 'axios'
 import PageingComponent from '../../components/common/paging/PageingComponent'
+import { RootUrl } from '../../api/RootUrl'
+const rootURL = RootUrl();
 
 const QuestionListPage = () => {
 
@@ -13,7 +15,7 @@ const QuestionListPage = () => {
 
     /** 선택 언어 문제 리스트 조회 */
     useEffect(() => {
-        axios.get(`http://localhost:8080/fifo-back/question/list/${language.current}`)
+        axios.get(`${rootURL}/question/list/${language.current}`)
             .then((res) => {
                 console.log(res.data)
                 setQuestionList(res.data)
