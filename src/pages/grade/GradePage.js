@@ -1,25 +1,38 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import MainLayout from '../../layout/MainLayout'
 import Breadcrumb from '../../components/common/main/Breadcrumb'
 import { BarChart } from '@toast-ui/react-chart';
 import '@toast-ui/chart/dist/toastui-chart.min.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { RootUrl } from '../../api/RootUrl';
+import axios from 'axios';
+import Moment from 'moment';
+import { useSelector } from 'react-redux';
 
 
 
 const GradePage = () => {
 
+    const navigate = useNavigate();
+    const rootURL = RootUrl();
+    const loginSlice = useSelector((state) => state.authSlice) || {};
+
+    const [solvedQuestions, setSolvedQuestions] = useState([]);
+    const [userSkills, setUserSkills] = useState([]);
+
+
+
     /** 차트 데이터 */
-    const data = {
-        categories: ['Java', 'React', 'C+', 'Python', 'Spring'],
+    const [data, setData] = useState({
+        categories: [],
         series: [
             {
                 name: 'exp',
-                data: [100, 400, 300, 500, 600],
+                data: [],
                 colorByCategories: true
             },
         ]
-    };
+    });
 
     /** 차트 옵션 */
     const options = {
@@ -29,6 +42,24 @@ const GradePage = () => {
         },
         exportMenu: {
             visible: false // 설정 버튼을 숨김
+        },
+        xAxis: {
+            label: {
+                formatter: (value) => {
+                    const labelValue = [1000, 3000, 6000, 10000, 15000];
+                    let result = '';
+                    labelValue.map((label, index) => {
+                        if (label == value) {
+                            result = (index + 1) + 'Lv';
+                        }
+                    })
+                    return result;
+                }
+            },
+            scale: {
+                max: 15000,
+                stepSize: 1000,
+            }
         },
         // 막대 색상
         series: {
@@ -44,6 +75,48 @@ const GradePage = () => {
             }
         }
     };
+
+    useEffect(() => {
+
+        const selectUserGradeInfo = async () => {
+            await axios.get(`${rootURL}/grade/${loginSlice.userno}`)
+                .then((res) => {
+                    console.log(res.data)
+                    setSolvedQuestions(res.data.solvedQuestions)
+                    setUserSkills(res.data.userSkills)
+                }).catch((e) => {
+                    console.log(e);
+                })
+        }
+
+        selectUserGradeInfo();
+    }, [])
+
+    useEffect(() => {
+        let categories = []
+        let datas = []
+
+        userSkills.map((skill) => {
+            categories.push(skill.languagename)
+            datas.push(skill.experience)
+        })
+
+        setData({
+            categories: categories,
+            series: [
+                {
+                    name: 'exp',
+                    data: datas,
+                    colorByCategories: true
+                },
+            ]
+        })
+
+    }, [userSkills])
+
+    const languageListNavHandler = () => {
+        navigate('/grade/language')
+    }
 
 
     // 차트는 레벨 상위 5개 언어 정도??
@@ -65,7 +138,7 @@ const GradePage = () => {
 
                         <h3>홍길동</h3>
 
-                        <button>문제 풀기</button>
+                        <button onClick={languageListNavHandler}>문제 풀기</button>
                     </div>
 
                     <div className='gradeCnt'>
@@ -85,27 +158,15 @@ const GradePage = () => {
                                     <td>난이도</td>
                                     <td>경험치</td>
                                 </tr>
-                                <tr>
-                                    <td>24.07.01</td>
-                                    <td>Java</td>
-                                    <td><Link>A+B=?</Link></td>
-                                    <td>Lv.1</td>
-                                    <td>+10xp</td>
-                                </tr>
-                                <tr>
-                                    <td>24.07.02</td>
-                                    <td>Java</td>
-                                    <td><Link>포켓몬마스터 이다솜</Link></td>
-                                    <td>Lv.2</td>
-                                    <td>+20xp</td>
-                                </tr>
-                                <tr>
-                                    <td>24.07.04</td>
-                                    <td>Java</td>
-                                    <td><Link>터렛</Link></td>
-                                    <td>Lv.3</td>
-                                    <td>+30xp</td>
-                                </tr>
+                                {solvedQuestions.map((question) => (
+                                    <tr>
+                                        <td>{Moment(question.solveddate).format('YYYY.MM.DD') }</td>
+                                        <td>{question.languagename}</td>
+                                        <td><Link to={'/grade/question/view?no='+question.questionno}>{question.title}</Link></td>
+                                        <td>Lv.{question.level}</td>
+                                        <td>+{question.level * 100}xp</td>
+                                    </tr>
+                                ))}
                             </table>
                         </div>
                     </div>

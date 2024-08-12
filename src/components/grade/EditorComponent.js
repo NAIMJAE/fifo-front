@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import MonacoEditor from 'react-monaco-editor';
-import { RootUrl } from '../../api/RootUrl';
+import { Host, RootUrl } from '../../api/RootUrl';
 
 const rootURL = RootUrl();
 
@@ -40,7 +40,7 @@ public class Main {
 
     const handleExecute = async () => {
 
-        props.socketObj.current = new WebSocket(`ws://${rootURL}/question`);
+        props.socketObj.current = new WebSocket(`ws://${Host}:8080/fifo-back/question`);
         props.socketObj.current.onopen = () => {
             console.log("aa");
             const sendMessage = JSON.stringify({

@@ -116,7 +116,7 @@ const Header = () => {
           <Link to="/gathering/list">내모임</Link>
           <Link to="/">모임찾기</Link>
           <Link to="/article/list">게시판</Link>
-          <Link to="/grade/language">등급평가</Link>
+          <Link to="/grade">등급평가</Link>
         </div>
       </div>
       <LoginModal
