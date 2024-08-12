@@ -1,0 +1,43 @@
+.Document {
+  display: flex;
+  .side {
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+    width: 145px;
+    padding: 7px;
+    border: 1px solid rgb(247, 247, 245);
+    background-color: rgb(247, 247, 245);
+    overflow: scroll;
+
+    .title {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 15px;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 10px;
+      font-weight: bold;
+      height: 30px;
+      width: 100%;
+      border: 1px solid rgb(247, 247, 245);
+      color: black;
+      background-color: rgb(247, 247, 245);
+    }
+    > section {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 5px;
+      margin-bottom: 5px;
+      border-radius: 3px;
+    }
+    section:hover {
+      background-color: rgb(196, 196, 192);
+    }
+    section:focus {
+      background-color: rgb(222, 107, 119);
+    }
+  }
+}
