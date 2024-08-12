@@ -4,7 +4,7 @@
     display: flex;
     flex-direction: column;
     margin-left: 20px;
-    width: 145px;
+    width: 155px;
     padding: 7px;
     border: 1px solid rgb(247, 247, 245);
     background-color: rgb(247, 247, 245);
@@ -25,19 +25,37 @@
       color: black;
       background-color: rgb(247, 247, 245);
     }
-    > section {
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      padding: 5px;
-      margin-bottom: 5px;
-      border-radius: 3px;
-    }
-    section:hover {
-      background-color: rgb(196, 196, 192);
-    }
-    section:focus {
-      background-color: rgb(222, 107, 119);
+    > div {
+      .icon {
+        font-size: 24px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      section {
+        width: 100%;
+        display: flex;
+        padding: 5px;
+        border-radius: 3px;
+      }
+      section:hover {
+        background-color: rgb(196, 196, 192);
+      }
+      section:focus {
+        background-color: rgb(222, 107, 119);
+      }
+      > button {
+        cursor: pointer;
+        padding: 4px;
+        position: relative;
+        left: 72px;
+        border-radius: 3px;
+        border: 1px solid rgb(98, 98, 96);
+        background-color: rgb(98, 98, 96);
+        //font-weight: bolder;
+        color: #fff;
+      }
     }
   }
 }

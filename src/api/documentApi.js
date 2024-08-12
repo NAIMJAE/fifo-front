@@ -34,6 +34,19 @@ export const getDocumentSection = async (mooimno) => {
   } catch (err) {
     console.log(err);
   }
+};
 
-  //**db에서 선택한 문서 가져오기 */
+/**문서 내용 저장*/
+export const saveDocument = async () => {};
+
+/**문서 삭제 */
+export const deleteDocument = async (docno) => {
+  try {
+    const response = await axios.delete(
+      `${RootUrl()}/document/delete?docno=${docno}`
+    );
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
 };

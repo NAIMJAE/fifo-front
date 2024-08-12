@@ -50,8 +50,7 @@ const MyProfile = () => {
     gender: "",
     rdate: "",
     thumb: "",
-    languagename: [],
-    levels: [],
+    skillList: [],
   });
 
   /**유저 지역 정보 */
@@ -82,6 +81,7 @@ const MyProfile = () => {
     axios
       .get(`${url}/profile/select?userno=${userno}`)
       .then((response) => {
+        console.log(response.data);
         setInformation(response.data);
       })
       .catch((err) => {
@@ -89,6 +89,24 @@ const MyProfile = () => {
       });
   }, [skillTriger]);
 
+  /**스킬 삭제하기 */
+  const deleteSkill = async (e) => {
+    if (window.confirm("삭제하시겠습니까?")) {
+      try {
+        const response = await axios.delete(
+          `${RootUrl()}/profile/deleteSkill?sno=${e}`
+        );
+        console.log(response.data);
+        if (response.data === 1) {
+          SetSkillTriger(!skillTriger);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      return;
+    }
+  };
   /** input 입력 활성화 상태 관리 useState */
   const [inputModify, setInputModify] = useState({
     name: false,
@@ -724,31 +742,26 @@ const MyProfile = () => {
               <div className="inputSkill">
                 {inputModify.skill ? (
                   <div className="skillIconList">
-                    {skillList
-                      .filter(
-                        (selected) =>
-                          !information.languagename.includes(selected)
-                      )
-                      .map((skill, index) => (
-                        <div
-                          className={
-                            skillSelect.find(
-                              (lan) => lan.id === index && lan.state
-                            )
-                              ? "skillIconsClick"
-                              : "skillIcons"
-                          }
-                          key={index}
-                          onClick={(e) => iconClick(e, index, skill)}
-                        >
-                          <SkillIcon
-                            className="skillIcon"
-                            skill={skill}
-                            classType={"bigSkillImg"}
-                          />
-                          <span className="skillName">{skill}</span>
-                        </div>
-                      ))}
+                    {skillList.map((skill, index) => (
+                      <div
+                        className={
+                          skillSelect.find(
+                            (lan) => lan.id === index && lan.state
+                          )
+                            ? "skillIconsClick"
+                            : "skillIcons"
+                        }
+                        key={index}
+                        onClick={(e) => iconClick(e, index, skill)}
+                      >
+                        <SkillIcon
+                          className="skillIcon"
+                          skill={skill}
+                          classType={"bigSkillImg"}
+                        />
+                        <span className="skillName">{skill}</span>
+                      </div>
+                    ))}
                     <span>
                       <button className="btn add-btn" onClick={clickAdd}>
                         추가
@@ -776,12 +789,15 @@ const MyProfile = () => {
               </div>
 
               <div className="skillList">
-                {information.languagename &&
-                  information.languagename.map((skill, index) => (
-                    <div>
-                      <SkillIcon skill={skill} classType={"bigSkillImg"} />
-                      <p>{skill}</p>
-                      <p>Level {information.levels[index]}</p>
+                {information.skillList &&
+                  information.skillList.map((skill, index) => (
+                    <div key={index} onClick={() => deleteSkill(skill.sno)}>
+                      <SkillIcon
+                        skill={skill.languagename}
+                        classType={"bigSkillImg"}
+                      />
+                      <p>{skill.languagename}</p>
+                      <p>Level {skill.level}</p>
                     </div>
                   ))}
               </div>
