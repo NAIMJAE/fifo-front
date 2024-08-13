@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import MainLayout from '../../layout/MainLayout';
 import { RootUrl } from '../../api/RootUrl';
 import { changeImages } from '../../components/common/toast/ImageProcessing';
@@ -28,6 +28,10 @@ const Write = () => {
     const navigate = useNavigate();
     const [modalOpen, setModalOpen] = useState(false);
 
+    useEffect(() => {
+        // 스크롤을 맨 위로 이동
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, []);
     /** 모임 Data */
     const [gathering, setGathering] = useState({
         gathcate: 0,  // 카테고리
@@ -35,7 +39,7 @@ const Write = () => {
         gathtitle: "",  // 제목
         gathdetail: "",  // 게시글 내용 (content)
         gathmode: "",  // 모임 방식
-        gathnowmember: 0,  // 모집된 인원 (초기값 0)
+        gathnowmember: 1,  // 모집된 인원 (초기값 1)
         gathtotalmember: 2,  // 모집 총 인원
         gathrecruitfield: "",  // 모집 분야
         gathlanguage: "",  // 모집 언어

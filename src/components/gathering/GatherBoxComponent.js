@@ -29,14 +29,14 @@ const GatherBoxComponent = ({ gathList }) => {
         gathList.map((gathering, index) => (
           <Link to={`/gathering/view?gathno=${gathering.gathno}`} key={index}>
             <div>
-              <span>{getCategoryName(gathering.gathcate)}</span>
+              <span className={'gathCate' + gathering.gathcate}>{getCategoryName(gathering.gathcate)}</span>
             </div>
 
             <div className='imgBox'>
               {gathering.thumb && gathering.thumb.trim() ? (
                 <img src={`${RootUrl()}/uploads/gathering/thumb/${gathering.thumb}`} alt="thumb" />
               ) : (
-                <img src="../../images/sample/ppoppi_angry.png" alt="sample" />
+                <img src="../../images/sample/ppoppi.png" alt="sample" />
               )}
             </div>
 
