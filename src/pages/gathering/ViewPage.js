@@ -285,9 +285,11 @@ const ViewPage = () => {
                     )}
                 </div>
 
+                {loginSlice.userno === gatheringView.userno &&
                 <div className='gathStart'>
                     <button onClick={handleStartModal}><FontAwesomeIcon icon={faPlus} size='1x'/>모임 시작하기</button>
                 </div>
+}
 
                 <div className='alertBox'>
                     <Alert className='alert' severity="info">참여를 신청하면, 내 언어 레벨과 매너 스택 등의 정보가 모임 호스트에게 전달됩니다.</Alert>

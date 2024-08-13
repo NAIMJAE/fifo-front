@@ -43,7 +43,9 @@ const GathStartModal = ({ modalData, handleStartModal }) => {
 
             try {
                 const response = await startMooimApi(data);
-                navigate(`/mooim?mooimno=${response}`);
+                setTimeout(() => {
+                    navigate(`/mooim?mooimno=${response}`);
+                }, 2000);
             } catch (error) {
                 console.log(error);
             }

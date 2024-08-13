@@ -71,7 +71,7 @@ const MainPage = () => {
         <div className="content sideHide">
           <div className="cntColumn sideHide2">
             <div className="cntRow adBox">
-              <img src="../../../images/gwanggo.gif" alt=""/>
+              <img src="../../../images/gwanggo.gif" alt="" />
             </div>
 
             {loading ? (
