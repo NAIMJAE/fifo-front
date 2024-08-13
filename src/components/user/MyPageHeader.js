@@ -7,8 +7,7 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import MailIcon from "@mui/icons-material/Mail";
-import NotificationsIcon from "@mui/icons-material/Notifications";
+import { RootUrl } from "../../api/RootUrl";
 import Menu from "@mui/material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
@@ -18,7 +17,7 @@ import { Link } from "react-router-dom";
 import { Badge } from "@mui/material";
 import { useSelector } from "react-redux";
 
-const settings = ["프로필", "프로젝트", "게시글", "로그아웃"];
+const settings = ["프로필", "로그아웃", "회원탈퇴"];
 
 function ResponsiveAppBar({ setPageState }) {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -43,7 +42,7 @@ function ResponsiveAppBar({ setPageState }) {
       case "프로젝트":
         setPageState("MyProject");
         break;
-      case "게시글":
+      case "회원탈퇴":
         setPageState("MyArticle");
         break;
     }
@@ -101,21 +100,13 @@ function ResponsiveAppBar({ setPageState }) {
               }}
             ></Menu>
           </Box>
-          <div style={{ margin: "0px 15px 0px 0px" }}>
-            <IconButton size="large" color="inherit">
-              <Badge badgeContent={4} color="error">
-                <MailIcon />
-              </Badge>
-            </IconButton>
-            <IconButton size="large" color="inherit">
-              <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-          </div>
+          <div style={{ margin: "0px 15px 0px 0px" }}></div>
           <Box sx={{ flexGrow: 0 }}>
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar alt="profile" src="#" />
+              <Avatar
+                alt="profile"
+                src={`${RootUrl()}/uploads/user/ppoppi.png`}
+              />
             </IconButton>
             <Menu
               sx={{ mt: "45px" }}
