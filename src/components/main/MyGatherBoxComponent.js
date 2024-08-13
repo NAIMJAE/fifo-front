@@ -27,7 +27,7 @@ const MyGatherBoxComponent = ({ mooimList, mooimcate }) => {
                   {mooim.thumb && mooim.thumb.trim() ? (
                     <img src={`${RootUrl()}/uploads/mooim/${mooim.mooimno}/thumb/${mooim.thumb}`} alt="thumb" />
                   ) : (
-                    <img src="../../images/sample/ppoppi_angry.png" alt="sample" />
+                    <img src="../../images/sample/ppoppi.png" alt="sample" />
                   )}
                 </div>
                 <div className='myMooimInfo cntColumn'>

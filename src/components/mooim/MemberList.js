@@ -19,7 +19,7 @@ const MemberList = ({ mooim }) => {
                 ))}
             </div>
             </div>
-            {mooim.userno === member.userno ? (<span className='badge'>팀장</span>) : null}
+            {mooim.userno === member.userno ? (<span className='badge teamLeader'>팀장</span>) : null}
         </div>
         ))}
     </div>
