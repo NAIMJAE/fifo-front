@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../../../styles/header.scss";
 import "../../../styles/user/login.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { globalPath } from "../../../globalPaths";
 import { useDispatch, useSelector } from "react-redux";
@@ -62,13 +62,15 @@ const Header = () => {
       });
   };
 
+  const navigate = useNavigate();
+
   /**로그아웃 버튼 클릭 */
   const handlerLogout = (e) => {
     e.preventDefault();
 
     dispatch(logout());
 
-    removeCookie("auth", { path: "/" });
+    navigate(`/`);
 
     window.location.reload();
 
