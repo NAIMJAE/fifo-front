@@ -26,8 +26,6 @@ const CommentListComponent = ({ gathno, comState, setComState, loginSlice }) => 
         const selectComment = async () => {
             try {
                 const response = await gathCommentsSelectApi(comPageable);
-                console.log("댓글 불러오기")
-                console.log(response)
                 if (response === 0) {
                     
                 }else {
@@ -68,7 +66,6 @@ const CommentListComponent = ({ gathno, comState, setComState, loginSlice }) => 
 
     /** 댓글 수정 */
     const writeModifyComment = (e, commentno) => {
-        console.log(e.target.value)
         setCommentStates(prevStates =>
             prevStates.map(comment =>
                 comment.id === commentno ? { ...comment, content: e.target.value } : comment
@@ -98,31 +95,32 @@ const CommentListComponent = ({ gathno, comState, setComState, loginSlice }) => 
         const commentDiv = e.target.closest(`div[id='${commentno}']`);
         const textarea = commentDiv.querySelector('textarea');
 
-        const data = {
-            commentno: commentno,
-            content: textarea.value,
-        }
-
-        console.log("댓글수정 : ",data)
-
-        try {
-            const response = await gathCommentModifyApi(data);
-            if (response > 0) {
-                alert("댓글이 수정되었습니다.");
+        if (textarea.value !== "") {
+            const data = {
+                commentno: commentno,
+                content: textarea.value,
             }
-        } catch (error) {
-            console.log(error);
+            try {
+                const response = await gathCommentModifyApi(data);
+                if (response > 0) {
+                    alert("댓글이 수정되었습니다.");
+                }
+            } catch (error) {
+                console.log(error);
+            }
+    
+            textarea.readOnly = true;
+            textarea.style.border = "none";
+            textarea.style.borderBottom = "1px solid #7b7b7b";
+    
+            setCommentStates(prevStates =>
+                prevStates.map(comment =>
+                    comment.id === commentno ? { ...comment, isEditing: !comment.isEditing } : comment
+                )
+            );
+        }else {
+            alert("댓글을 입력해주세요.");
         }
-
-        textarea.readOnly = true;
-        textarea.style.border = "none";
-        textarea.style.borderBottom = "1px solid #7b7b7b";
-
-        setCommentStates(prevStates =>
-            prevStates.map(comment =>
-                comment.id === commentno ? { ...comment, isEditing: !comment.isEditing } : comment
-            )
-        );
     }
 
     /** 댓글 삭제 */

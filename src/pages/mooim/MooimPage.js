@@ -198,9 +198,17 @@ const MooimPage = () => {
     });
   };
 
+  /** 모임 끝내기 */
+  const completeMooim = () => {
+    let result = window.confirm("모임을 끝내시겠습니까?");
+    if (result) {
+      alert("로직 추가하셈");
+    }
+  }
+
   return (
     <MainLayout>
-      <Breadcrumb crumb={"모임? / 모임인덱스?"} />
+      <Breadcrumb crumb={"모임 / 메인"} />
       <div className="mooimIndex">
         <div className="Info">
           <div className="mooimInfo">
@@ -212,7 +220,7 @@ const MooimPage = () => {
                 alt="thumb"
               />
             ) : (
-              <img src="../../images/sample/ppoppi_angry.png" alt="sample" />
+              <img src="../../images/sample/ppoppi.png" alt="sample" />
             )}
             <FontAwesomeIcon
               icon={faPencil}
@@ -286,6 +294,7 @@ const MooimPage = () => {
               <div>
                 <h3>{mooim.mooimstart} ~ </h3>
               </div>
+              <button onClick={completeMooim}>모임 끝내기</button>
             </div>
           </div>
           <div className="mooimProgress">

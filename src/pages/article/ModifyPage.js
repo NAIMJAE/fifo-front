@@ -39,6 +39,7 @@ const ModifyPage = () => {
 
     /** 수정할 게시글 조회 */
     useEffect(() => {
+        console.log("1111 : ", pno)
         if (pno === '') {
             alert("게시글을 찾을 수 없습니다.");
             return;
@@ -195,7 +196,7 @@ const ModifyPage = () => {
         </div>
 
         <div className='cntRow writeBtn'>
-            <button>취소</button>
+            <button onClick={() => navigate(`/article/view?pno=${pno}`)}>취소</button>
             <button className='blue' onClick={handleSubmit}>수정</button>
         </div>
 
