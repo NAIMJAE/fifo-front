@@ -32,7 +32,6 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
         const selectComment = async () => {
             try {
                 const response = await selectCommentApi(comPageable);
-                console.log(response)
                 if (response === 0) {
                     
                 }else {
@@ -88,7 +87,6 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
 
     /** 댓글 수정 */
     const writeModifyComment = (e, cno) => {
-        console.log(e.target.value)
         setCommentStates(prevStates =>
             prevStates.map(comment =>
                 comment.id === cno ? { ...comment, content: e.target.value } : comment
@@ -118,31 +116,32 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
         const commentDiv = e.target.closest(`div[id='${cno}']`);
         const textarea = commentDiv.querySelector('textarea');
 
-        const data = {
-            cno: cno,
-            content: textarea.value,
-        }
-
-        console.log("댓글수정 : ",data)
-
-        try {
-            const response = await commentModifyApi(data);
-            if (response > 0) {
-                alert("댓글이 수정되었습니다.");
+        if (textarea.value !== "") {
+            const data = {
+                cno: cno,
+                content: textarea.value,
             }
-        } catch (error) {
-            console.log(error);
+            try {
+                const response = await commentModifyApi(data);
+                if (response > 0) {
+                    alert("댓글이 수정되었습니다.");
+                }
+            } catch (error) {
+                console.log(error);
+            }
+    
+            textarea.readOnly = true;
+            textarea.style.border = "none";
+            textarea.style.borderBottom = "1px solid #7b7b7b";
+    
+            setCommentStates(prevStates =>
+                prevStates.map(comment =>
+                    comment.id === cno ? { ...comment, isEditing: !comment.isEditing } : comment
+                )
+            );
+        }else {
+            alert("댓글을 입력해주세요.");
         }
-
-        textarea.readOnly = true;
-        textarea.style.border = "none";
-        textarea.style.borderBottom = "1px solid #7b7b7b";
-
-        setCommentStates(prevStates =>
-            prevStates.map(comment =>
-                comment.id === cno ? { ...comment, isEditing: !comment.isEditing } : comment
-            )
-        );
     }
 
     /** 댓글 삭제 */
@@ -236,7 +235,6 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
     
     /** 답글 수정 */
     const writeModifyReply = (e, cno) => {
-        console.log(e.target.value)
         setReplyModiStates(prevStates =>
             prevStates.map(comment =>
                 comment.id === cno ? { ...comment, content: e.target.value } : comment
@@ -281,29 +279,33 @@ const CommentListComponent = ({ pno, comState, setComState, saveReply, loginSlic
         const commentDiv = e.target.closest(`div[id='${cno}']`);
         const textarea = commentDiv.querySelector('textarea');
 
-        const data = {
-            cno: cno,
-            content: textarea.value,
-        }
-
-        try {
-            const response = await commentModifyApi(data);
-            if (response > 0) {
-                alert("댓글이 수정되었습니다.");
+        if (textarea.value !== "") {
+            const data = {
+                cno: cno,
+                content: textarea.value,
             }
-        } catch (error) {
-            console.log(error);
+    
+            try {
+                const response = await commentModifyApi(data);
+                if (response > 0) {
+                    alert("답글이 수정되었습니다.");
+                }
+            } catch (error) {
+                console.log(error);
+            }
+    
+            textarea.readOnly = true;
+            textarea.style.border = "none";
+            textarea.style.borderBottom = "1px solid #7b7b7b";
+    
+            setReplyModiStates(prevStates =>
+                prevStates.map(comment =>
+                    comment.id === cno ? { ...comment, isEditing: !comment.isEditing } : comment
+                )
+            );
+        }else {
+            alert("답글을 입력해주세요.");
         }
-
-        textarea.readOnly = true;
-        textarea.style.border = "none";
-        textarea.style.borderBottom = "1px solid #7b7b7b";
-
-        setReplyModiStates(prevStates =>
-            prevStates.map(comment =>
-                comment.id === cno ? { ...comment, isEditing: !comment.isEditing } : comment
-            )
-        );
     }
 
     // 대댓 디자인 

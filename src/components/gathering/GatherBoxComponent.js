@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { RootUrl } from '../../api/RootUrl';
 import Chip from '@mui/material/Chip';
 import { getSkillColor } from '../../utils/skillUtils';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPeopleCarryBox, faUserGraduate, faUsers } from '@fortawesome/free-solid-svg-icons';
 
 const GatherBoxComponent = ({ gathList }) => {
   const mockSkills = [
@@ -28,8 +30,11 @@ const GatherBoxComponent = ({ gathList }) => {
       {gathList && gathList.length > 0 ? (
         gathList.map((gathering, index) => (
           <Link to={`/gathering/view?gathno=${gathering.gathno}`} key={index}>
-            <div>
+            <div className='cateBox'>
               <span className={'gathCate' + gathering.gathcate}>{getCategoryName(gathering.gathcate)}</span>
+              {gathering.gathcate === 1 && <FontAwesomeIcon icon={faPeopleCarryBox} size='2xl'/>}
+              {gathering.gathcate === 2 && <FontAwesomeIcon icon={faUserGraduate} size='2xl'/>}
+              {gathering.gathcate === 3 && <FontAwesomeIcon icon={faUsers} size='2xl'/>}
             </div>
 
             <div className='imgBox'>

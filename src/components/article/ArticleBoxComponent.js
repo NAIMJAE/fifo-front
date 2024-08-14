@@ -1,4 +1,4 @@
-import { faCommentDots, faEye, faHeart, faThumbsUp } from '@fortawesome/free-regular-svg-icons'
+import { faCommentDots, faEye, faHeart } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import { Link } from 'react-router-dom'

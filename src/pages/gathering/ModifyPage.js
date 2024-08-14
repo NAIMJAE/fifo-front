@@ -193,7 +193,7 @@ const ModifyPage = () => {
                 <EditorComponent editorRef={editorRef} />
             </div>
             <div className='cntRow writeBtn'>
-                <button>취소</button>
+                <button onClick={() => navigate(`/gathering/view?gathno=${gathno}`)}>취소</button>
                 <button className='blue' onClick={handleSubmit}>수정</button>
             </div>
 
