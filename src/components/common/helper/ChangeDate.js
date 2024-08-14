@@ -27,7 +27,7 @@ export function convertToKoreanTime(utcDateString) {
 
     // 한국 시간대 오프셋 (UTC+9 시간대)
     const koreaTimeOffset = 9 * 60; // 9시간을 분으로 변환
-    const koreaTime = new Date(utcDate.getTime() + koreaTimeOffset * 60000);
+    const koreaTime = new Date(utcDate.getTime());
 
     console.log("koreaTime : ", koreaTime);
 

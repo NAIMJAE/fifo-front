@@ -115,11 +115,11 @@ const MooimCalendar = ({ mooimno }) => {
       const endFormatted = Moment(event.end.toDate()).format("YYYY-MM-DDTHH:mm:ss.SSS");
 
       const backgroundColor = selectedCalendar ? selectedCalendar.backgroundColor : "#000000";
-      console.log("생성 : ", event);
+      console.log("생성 eventId : ", eventId);
 
       const newEvent = {
         mooimno: mooimno,
-        id: eventId,
+        id: eventId + Math.floor(1000 + Math.random() * 9000),
         uid: authSlice.uid,
         calendarId: event.calendarId, // Toast calendar용
         calendarid: event.calendarId, // PostgreSQL DB용 (대문자 안됨)
@@ -256,6 +256,7 @@ const MooimCalendar = ({ mooimno }) => {
             break;
           case "U":
             /** 업데이트 안됨 */
+            console.log("소켓으로 전달 받는 data : ", data);
             console.log("소켓으로 전달 받는 changes : ", data.changes);
             // start와 end가 있을 때 한국 시간으로 변환
             if (data.changes.start) {
