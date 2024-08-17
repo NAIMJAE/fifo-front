@@ -3,7 +3,7 @@ import "../../../styles/header.scss";
 import "../../../styles/user/login.scss";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { globalPath } from "../../../globalPaths";
+import { RootUrl } from "../../../api/RootUrl";
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "../../../slices/authSlice";
 import LoginModal from "../../user/LoginModal";
@@ -43,7 +43,7 @@ const Header = () => {
   /**로그인 버튼 클릭 */
   const handlerLogin = (e) => {
     e.preventDefault();
-    const url = globalPath.path;
+    const url = RootUrl();
     axios
       .post(`${url}/user/login`, user, { withCredentials: true })
       .then((resp) => {
@@ -56,9 +56,8 @@ const Header = () => {
         alert("로그인에 성공하셨습니다");
       })
       .catch((err) => {
-        console.log(err);
-        // 서버에서 반환된 오류 메시지 확인
-        alert("아이디 또는 비밀번호를 다시 확인해주세요.");
+        console.error(err.response.data);
+        alert(err.response.data); // 서버에서 반환된 오류 메시지 출력
       });
   };
 

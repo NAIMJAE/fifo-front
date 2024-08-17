@@ -39,11 +39,11 @@ function ResponsiveAppBar({ setPageState }) {
       case "프로필":
         setPageState("MyProfile");
         break;
-      case "프로젝트":
-        setPageState("MyProject");
+      case "로그아웃":
+        setPageState("Logout");
         break;
       case "회원탈퇴":
-        setPageState("MyArticle");
+        setPageState("DeleteAcc");
         break;
     }
 
