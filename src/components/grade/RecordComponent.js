@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import '../../styles/grade.scss'
 import { RootUrl } from '../../api/RootUrl';
+import moment from 'moment';
 
 const rootURL = RootUrl();
 
@@ -51,17 +52,17 @@ const RecordComponent = (props) => {
 
         if (solveState > 1) {
             const state = solveState / 100
-            if (state == 2) {
+            if (state === 2) {
                 console.log("틀린거")
                 props.socketObj.current.close();
                 props.socketObj.current = null;
                 setStateComment("틀렸습니다.")
-            } else if (state == 3) {
+            } else if (state === 3) {
                 console.log("문제에 이상")
             }
         }
 
-        if (solveState == 1) {
+        if (solveState === 1) {
             props.socketObj.current.close();
             props.socketObj.current = null;
             setStateComment("정답입니다.")
@@ -98,24 +99,25 @@ const RecordComponent = (props) => {
                     <th>재작성</th>
                 </tr>
                 {solveList.map((solve, index) => {
+                    const solvedDate = moment(solve.solveddate)
                     return (
                         <tr key={index}>
                             <td>{solve.solveid}</td>
                             <td>{props.loginSlice.nick}</td>
                             <td>{solve.questionno}</td>
                             <td>{solveResult(solve.solved)}</td>
-                            <td>{solve.solveddate}</td>
+                            <td>{solvedDate.format('YYYY-MM-DD')}</td>
                             <td><p onClick={rewriteCodeHandler}>수정하기<input type='hidden' value={solve.code}/></p></td>
                         </tr>
                     )
                 })}
                 {isSolved && saveInfo &&<tr>
                     <td>{saveInfo.solveid}</td>
-                    <td>닉출력</td>
+                    <td>{props.loginSlice.nick}</td>
                     <td>{saveInfo.questionno}</td>
-                    <td>{0 < solveState && solveState < 1 ? <progress max={100} value={solveState * 100} /> : <p>{stateComment}</p>}</td>
-                    <td>{saveInfo.solveddate}</td>
-                    <td>안정함</td>
+                    <td>{0 < solveState && solveState < 1 ? <><progress max={100} value={solveState * 100} /><span>{Math.round(solveState * 100)}%</span></> : <p>{stateComment}</p>}</td>
+                    <td>{saveInfo.solveddate ? (moment(saveInfo.solveddate).format('YYYY-MM-DD')) : 'No Date'}</td>
+                    <td><p onClick={rewriteCodeHandler}>수정하기<input type='hidden' value={saveInfo.code}/></p></td>
                 </tr>}
             </table>
 

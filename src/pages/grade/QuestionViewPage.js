@@ -6,6 +6,7 @@ import axios from 'axios'
 import RecordComponent from '../../components/grade/RecordComponent';
 import { useSelector } from 'react-redux';
 import { RootUrl } from '../../api/RootUrl'
+import OtherRecordComponent from '../../components/grade/OtherRecordComponent'
 
 const rootURL = RootUrl();
 
@@ -26,11 +27,11 @@ const QuestionViewPage = () => {
                 setQuestionInfo(res.data)
                 setLanguage(res.data.languagename)
             })
-            console.log(loginSlice)
+        console.log(loginSlice)
     }, [])
 
     useEffect(() => {
-        
+
     }, [navigator])
 
     const navHandle = (e) => {
@@ -68,7 +69,7 @@ const QuestionViewPage = () => {
                         </li>
                         <li
                             className={navigator === 'another' ? 'clicked' : null}
-                            id={'info'}
+                            id={'another'}
                             onClick={navHandle}
                         >
                             다른풀이보기
@@ -104,6 +105,13 @@ const QuestionViewPage = () => {
                         language={language}
                         questionInfo={questionInfo}
                         socketObj={socketObj}
+                        navigator={setNavigator}
+                        loginSlice={loginSlice}
+                        setQuestionInfo={setQuestionInfo}
+                    />}
+                {navigator === 'another' &&
+                    <OtherRecordComponent
+                        questionInfo={questionInfo}
                         navigator={setNavigator}
                         loginSlice={loginSlice}
                         setQuestionInfo={setQuestionInfo}
