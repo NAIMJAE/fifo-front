@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import MonacoEditor from 'react-monaco-editor';
+import MonacoEditor, { useMonaco } from '@monaco-editor/react';
 import { Host, RootUrl } from '../../api/RootUrl';
 
 const rootURL = RootUrl();
@@ -27,7 +27,7 @@ public class Main {
         console.log(props.language.toLowerCase())
         console.log(props.userno)
         const checkCode = props.questionInfo.hasOwnProperty('code');
-        if(checkCode){
+        if (checkCode) {
             setCode(props.questionInfo.code)
             const resetInfo = {
                 ...props.questionInfo
@@ -57,22 +57,25 @@ public class Main {
 
     return (
         <>
-            <MonacoEditor
-                height="600"
-                language={props.language.toLowerCase()}
-                theme="vs"
-                options={{
-                    fontSize: 20,
-                    minimap: { enabled: false },
-                    scrollbar: {
-                        vertical: 'auto',
-                        horizontal: 'auto'
-                    }
-                }}
-                value={code}
-                onChange={(newValue) => setCode(newValue)}
-            />
-            <button onClick={handleExecute}>Execute</button>
+            <div className='editor'>
+                <MonacoEditor
+                    height="100%"
+                    language={props.language.toLowerCase()}
+                    theme="vs"
+                    options={{
+                        fontSize: 18,
+                        minimap: { enabled: false },
+                        scrollbar: {
+                            vertical: 'auto',
+                            horizontal: 'auto'
+                        }
+                    }}
+                    value={code}
+                    onChange={(newValue) => setCode(newValue)}
+                />
+
+            </div>
+            <button className='hvLgBtn maR10' onClick={handleExecute}>Execute</button>
         </>
     )
 }
