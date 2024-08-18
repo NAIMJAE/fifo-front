@@ -23,17 +23,19 @@ const QuestionListPage = () => {
     }, [])
 
     /** 게시글 검색을 위한 useState */
-    const [pageable , setPageable] = useState({
-        cateNo : 1,
-        sort : "",
-        type : "",
-        keyword : "",
-        pg : 1,
+    const [pageable, setPageable] = useState({
+        cateNo: 1,
+        sort: "",
+        type: "",
+        keyword: "",
+        pg: 1,
     })
 
     /** 검색 type, keyword */
     const [searchType, setSearchType] = useState("");
     const [searchKeyword, setSearchKeyword] = useState("");
+
+    const [isSearchLevel, setIsSearchLevel] = useState(false);
 
     /** 검색 버튼 클릭 */
     const searchHandler = () => {
@@ -46,9 +48,16 @@ const QuestionListPage = () => {
 
     // pg변경 함수 (페이징 버튼 클릭시)
     const changePage = (newPg) => {
-        setPageable(prev => ({...prev, pg: newPg}));
+        setPageable(prev => ({ ...prev, pg: newPg }));
     }
 
+    useEffect(() => {
+        if (searchType === "level") {
+            setIsSearchLevel(true);
+        }else{
+            setIsSearchLevel(false);
+        }
+    }, [searchType])
 
     return (
         <MainLayout>
@@ -64,13 +73,21 @@ const QuestionListPage = () => {
                             <option value="title">제목</option>
                             <option value="level">레벨</option>
                         </select>
+                        {!isSearchLevel ? <input className='searchKey' type="text" placeholder='검색어를 입력하세요'
+                            onChange={(e) => setSearchKeyword(e.target.value)} /> :
+                            <select className='searchKey' onChange={(e) => setSearchKeyword(e.target.value)}>
+                                <option value={"Lv1"}>Lv1</option>
+                                <option value={"Lv2"}>Lv2</option>
+                                <option value={"Lv3"}>Lv3</option>
+                                <option value={"Lv4"}>Lv4</option>
+                                <option value={"Lv5"}>Lv5</option>
+                            </select>
+                        }
 
-                        <input type="text" placeholder='검색어를 입력하세요'
-                            onChange={(e) => setSearchKeyword(e.target.value)}/>
                         <button onClick={searchHandler}>검색</button>
                     </label>
                 </div>
-                
+
                 <div id='question'>
                     <div className='header'>
                         <div>번호</div>
@@ -87,7 +104,7 @@ const QuestionListPage = () => {
 
                 <div id='pageable'>
                     {/** 나중에 숫자 지우고 props 전달하면 됨 */}
-                    <PageingComponent changePage={changePage}/>
+                    <PageingComponent changePage={changePage} />
                     1 2 3 4
                 </div>
 

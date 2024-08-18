@@ -6,20 +6,13 @@ const rootURL = RootUrl();
 
 const EditorComponent = (props) => {
 
+    const [isWriter, setIsWriter] = useState(true);
     const [code, setCode] = useState(`
-import java.util.Scanner;
 
 public class Main {
 	public static void main(String[] args) {
 		
-		Scanner sc = new Scanner(System.in);
-		
-		int a = sc.nextInt();
-		int b = sc.nextInt();
-		
-		System.out.println(a+b);
 	}
-
 }
 `);
 
@@ -27,6 +20,8 @@ public class Main {
         console.log(props.language.toLowerCase())
         console.log(props.userno)
         const checkCode = props.questionInfo.hasOwnProperty('code');
+        const checkWriter = props.questionInfo.hasOwnProperty('writer');
+
         if (checkCode) {
             setCode(props.questionInfo.code)
             const resetInfo = {
@@ -36,6 +31,20 @@ public class Main {
             console.log(resetInfo)
             props.setQuestionInfo(resetInfo)
         }
+
+        if (checkWriter) {
+            console.log(props.questionInfo)
+            if(props.userno != props.questionInfo.writer){
+                setIsWriter(false)
+            }
+            const resetInfo = {
+                ...props.questionInfo
+            }
+            delete resetInfo['writer']
+            console.log(resetInfo)
+            props.setQuestionInfo(resetInfo)
+        }
+
     }, [props])
 
     const handleExecute = async () => {
@@ -75,7 +84,7 @@ public class Main {
                 />
 
             </div>
-            <button className='hvLgBtn maR10' onClick={handleExecute}>Execute</button>
+            {isWriter && <button className='hvLgBtn maR10' onClick={handleExecute}>제출하기</button>}
         </>
     )
 }
