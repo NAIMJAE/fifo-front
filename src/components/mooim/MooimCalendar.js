@@ -24,6 +24,12 @@ const MooimCalendar = ({ mooimno }) => {
   const [error, setError] = useState("");
   const authSlice = useSelector((state) => state.authSlice);
   const userno = authSlice.userno;
+  const backColor = {
+    "1": "#ff4040",  // 업무
+    "2": "#4040ff",  // 미팅
+    "3": "#40ff40",  // 회의
+    "4": "#FF9900"   // 미정
+  };
 
   let calendar;
   /** 소켓 연결 상태 */
@@ -145,7 +151,12 @@ const MooimCalendar = ({ mooimno }) => {
 
     /** 일정을 수정 */
     calendar.on("beforeUpdateEvent", ({ event, changes }) => {
-      
+      // 색상 업데이트
+      if (changes.calendarId) {
+        changes.backgroundColor = backColor[changes.calendarId];
+        changes.borderColor = backColor[changes.calendarId];
+        changes.color = "#FFFFFF";
+      }
       calendar.updateEvent(event.id, event.calendarId, changes);
       const start =
         changes.start === undefined
@@ -167,6 +178,7 @@ const MooimCalendar = ({ mooimno }) => {
         state: changes.state,
         isAllDay: changes.isAllday,
         isReadOnly: changes.isReadOnly,
+        bgcolor: backColor[changes.calendarId],
       };
       console.log(updateData);
 
@@ -255,7 +267,6 @@ const MooimCalendar = ({ mooimno }) => {
             calendar.createEvents([data.content]);
             break;
           case "U":
-            /** 업데이트 안됨 */
             console.log("소켓으로 전달 받는 data : ", data);
             console.log("소켓으로 전달 받는 changes : ", data.changes);
             // start와 end가 있을 때 한국 시간으로 변환
@@ -266,6 +277,12 @@ const MooimCalendar = ({ mooimno }) => {
               data.changes.end = convertToKoreanTime(data.changes.end);
             }
             console.log("시간 변환한 changes : ", data.changes);
+            // 색상 업데이트
+            if (data.changes.calendarId) {
+              data.changes.backgroundColor = backColor[data.changes.calendarId];
+              data.changes.borderColor = backColor[data.changes.calendarId];
+              data.changes.color = "#FFFFFF";
+            }
             calendar.updateEvent(data.content.id, data.content.calendarId, data.changes);
             break;
           case "D":
@@ -296,7 +313,7 @@ const MooimCalendar = ({ mooimno }) => {
       }
     };
   }, []);
- 
+
 
   /** 메세지 전송 함수 */
   const sendMessage = async (msgData, state, changes) => {
