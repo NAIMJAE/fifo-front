@@ -45,6 +45,10 @@ const List = () => {
             type: searchType,
             keyword: searchKeyword
         }));
+        if (pageable.type === "" || pageable.keyword === "") {
+            alert("검색어를 입력해주세요.");
+            return;
+        }
     }
 
     // pg변경 함수 (페이징 버튼 클릭시)
@@ -54,7 +58,6 @@ const List = () => {
 
     /** 태그 클릭시 검색 */
     const searchByTag = (tag) => {
-        console.log("g2")
         setSearchType("tag");
         setSearchKeyword(tag);
         setPageable(prev => ({

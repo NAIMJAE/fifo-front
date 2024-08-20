@@ -17,6 +17,10 @@ const RecruitModal = ({ recruitList, handleModal, lender, setLender }) => {
                     alert(nick+"님의 신청이 수락되었습니다.");
                     setLender(!lender);
                     handleModal();
+                }else {
+                    alert("모임 참여 인원을 초과했습니다.");
+                    setLender(!lender);
+                    handleModal();
                 }
             } catch (error) {
                 console.log(error);

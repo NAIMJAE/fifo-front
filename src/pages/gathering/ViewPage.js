@@ -119,6 +119,7 @@ const ViewPage = () => {
             if (response > 0) {
                 setComState(!comState);
                 alert("댓글이 작성되었습니다.");
+                setComNum(comNum + 1);
             }
         } catch (error) {
             console.log(error);
@@ -263,33 +264,42 @@ const ViewPage = () => {
                         </div>
                     ) : (
                         <div className='cntRow'>
-                            {loginSlice.userno !== undefined && !recruitTF &&
-                                <button className="hvMdBtn maR10" onClick={() => setAppState(true)}>참여신청</button>
-                            }
-                            {loginSlice.userno !== undefined && recruitTF &&
+                            {gatheringView.gathstate === "모집종료" ? (
+                                <span>모집 종료된 게시글입니다.</span>
+                            ) : (
                                 <>
-                                {recruitText === "수락 대기" && 
+                                {loginSlice.userno !== undefined &&
+                                <>
+                                    {!recruitTF && <button className="hvMdBtn maR10" onClick={() => setAppState(true)}>참여신청</button>}
+                                    
+                                    {recruitTF && 
                                     <>
-                                        <p>{recruitText} 중 입니다.</p>
-                                        <button className="hvMdBtn maR10" onClick={cancelRecruit}>신청취소</button>
+                                        {recruitText === "수락 대기" && 
+                                            <>
+                                                <p>{recruitText} 중 입니다.</p>
+                                                <button className="hvMdBtn maR10" onClick={cancelRecruit}>신청취소</button>
+                                            </>
+                                        }
+                                        {recruitText === "신청 거절" && <p>{recruitText}되었습니다.</p>}
+                                        {recruitText === "신청 수락" && <p>{recruitText}되었습니다.</p>}
                                     </>
-                                }
-                                {recruitText === "신청 거절" && <p>{recruitText}되었습니다.</p>}
-                                {recruitText === "신청 수락" && <p>{recruitText}되었습니다.</p>}
+                                    }
                                 </>
-                            }
-                            {loginSlice.userno === undefined &&
-                                <span>로그인 하시면 참가 신청 가능</span>
-                            }
+                                }
+                                {loginSlice.userno === undefined &&
+                                    <span>로그인 하시면 참가 신청 가능</span>
+                                }
+                                </>
+                            )}
                         </div>
                     )}
                 </div>
 
-                {loginSlice.userno === gatheringView.userno &&
+                {loginSlice.userno === gatheringView.userno && gatheringView.gathnowmember === gatheringView.gathtotalmember &&
                 <div className='gathStart'>
                     <button onClick={handleStartModal}><FontAwesomeIcon icon={faPlus} size='1x'/>모임 시작하기</button>
                 </div>
-}
+                }
 
                 <div className='alertBox'>
                     <Alert className='alert' severity="info">참여를 신청하면, 내 언어 레벨과 매너 스택 등의 정보가 모임 호스트에게 전달됩니다.</Alert>

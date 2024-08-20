@@ -91,6 +91,7 @@ const ViewPage = () => {
             if (response > 0) {
                 setComState(!comState);
                 alert("댓글이 작성되었습니다.");
+                setComNum(comNum + 1);
             }
         } catch (error) {
             console.log(error);
@@ -110,6 +111,7 @@ const ViewPage = () => {
             if (response > 0) {
                 setComState(!comState);
                 alert("답글이 작성되었습니다.");
+                setComNum(comNum + 1);
             }
         } catch (error) {
             console.log(error);
