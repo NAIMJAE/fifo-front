@@ -139,7 +139,7 @@ const ModifyPage = () => {
                 formData.append('images', resultData.imageList[i]);
             }
         }
-
+        console.log([...formData]); // formData 객체의 내용을 확인
         // 서버 전송
         try {
             const response = await articleModifyApi(formData);

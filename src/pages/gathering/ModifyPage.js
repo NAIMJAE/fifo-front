@@ -40,10 +40,8 @@ const ModifyPage = () => {
             return;
         }
         const selectArticle = async () => {
-            console.log("gathno", gathno)
             try {
                 const response = await gatheringViewApi(gathno);
-                console.log("response a sasasas : ", response)
                 setGatheringView(response);
                 editorRef.current.getInstance().setMarkdown(response.gathdetail);
             } catch (error) {
@@ -73,12 +71,8 @@ const ModifyPage = () => {
         // 게시글 내용 꺼내오기
         let contents = editorRef.current.getInstance().getHTML();
 
-
         // 게시글 내용 속 이미지 변환 (changeImages 컴포넌트화 시킴)
         const resultData = await changeImages(contents);
-
-        console.log("333333");
-        console.log(resultData);
 
         if (resultData !== null) {
             // null 체크 안하면 에러
@@ -97,10 +91,6 @@ const ModifyPage = () => {
             if(gatheringData[key] !== null && key !== "recruitList") {
                 formData.append(key, gatheringData[key]);
             }
-            if(key === "recruitList" && gatheringData[key].length > 0) {
-                formData.append(key, gatheringData[key]);
-            }
-
         });
 
         // 썸네일 이미지 추가
@@ -109,13 +99,13 @@ const ModifyPage = () => {
         }
         // 게시글 이미지 추가
         if (resultData !== null) {
-            console.log("444");
             for (let i = 0; i < resultData.imageList.length; i++) {
                 formData.append('images', resultData.imageList[i]);
             }
         }
-        console.log(formData);
-        console.log(formData.images);
+        console.log("333333");
+        console.log([...formData]); // formData 객체의 내용을 확인
+
 
         // 서버 전송
         try {
