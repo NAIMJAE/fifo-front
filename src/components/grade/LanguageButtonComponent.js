@@ -37,7 +37,7 @@ const LanguageButtonComponent = () => {
                 {languages.current[language].map((languageName) => {
                   return (
                     <Link
-                      to={"/grade/question?language="+languageName.languagename}
+                      to={"/grade/question?language=" + languageName.languagename}
                       key={languageName.languagename}
                       className={'languageIcon'}
                     >
