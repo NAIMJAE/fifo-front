@@ -3,76 +3,82 @@
     display: flex;
     flex-direction: column;
 
-    > .Info {
+    >.Info {
         display: flex;
         flex-direction: column;
         margin: 0 20px;
         border-bottom: 3px solid #f6f5f5;
 
-        > .mooimInfo {
+        >.mooimInfo {
             position: relative;
             display: flex;
             padding: 20px 0;
 
             /* 모임 프사 변경 버튼 */
-            > svg {
+            >svg {
                 position: absolute;
                 left: 200px;
                 top: 30px;
                 cursor: pointer;
             }
 
-            > img {
+            >img {
                 display: flex;
                 width: 200px;
                 height: 200px;
                 margin: 0 20px;
             }
-            > div {
+
+            >div {
                 display: flex;
                 flex-direction: column;
                 margin-left: 20px;
 
-                > h1 {
+                >h1 {
                     font-size: 22px;
                     font-weight: bolder;
                     margin-bottom: 10px;
-                    > span {
+
+                    >span {
                         font-size: 20px;
                         margin-left: 10px;
                     }
                 }
 
-                > label {
+                >label {
                     display: flex;
                     align-items: center;
                     margin-bottom: 20px;
-                    > input {
+
+                    >input {
                         font-size: 20px;
                         color: #7b7b7b;
                         border: 1px solid white;
                     }
-                    > svg {
+
+                    >svg {
                         margin-left: 10px;
                         cursor: pointer;
                     }
                 }
 
-                > div {
+                >div {
                     display: flex;
 
-                    > h2 {
+                    >h2 {
                         font-size: 20px;
                         margin-right: 10px;
                         margin-bottom: 10px;
                     }
-                    > h3 {
+
+                    >h3 {
                         font-size: 20px;
                         margin-right: 20px;
                         margin-bottom: 10px;
                     }
                 }
-                > button {
+
+                >button {
                     display: flex;
                     justify-content: center;
                     align-items: center;
@@ -87,18 +93,18 @@
             }
         }
 
-        > .mooimProgress {
+        >.mooimProgress {
             display: flex;
             padding: 10px 0 20px;
 
-            > div {
+            >div {
                 display: flex;
                 width: 100%;
                 height: 40px;
                 background-color: #d4dcf3;
                 border-radius: 10px;
 
-                > #bar {
+                >#bar {
                     position: relative;
                     display: flex;
                     background-color: #597add;
@@ -110,7 +116,7 @@
                     padding: 10px;
                     transition: width 0.5s ease-in-out;
 
-                    > img {
+                    >img {
                         position: absolute;
                         display: flex;
                         right: -35px;
@@ -124,14 +130,17 @@
                         align-items: center;
                     }
                 }
-                > #bar::after {
+
+                >#bar::after {
                     content: '%';
                     margin-left: 5px;
                 }
+
                 @keyframes roll {
                     0% {
                         transform: rotate(0deg);
                     }
+
                     100% {
                         transform: rotate(360deg);
                     }
@@ -140,14 +149,14 @@
         }
     }
 
-    > .function {
+    >.function {
         display: flex;
         justify-content: space-between;
         margin: 0 20px;
         padding: 20px 0;
         border-bottom: 3px solid #f6f5f5;
 
-        > button {
+        >button {
             display: flex;
             width: 200px;
             height: 60px;
@@ -161,7 +170,7 @@
             cursor: pointer;
         }
 
-        > button:hover {
+        >button:hover {
             background-color: #4169e1;
             color: white;
         }
@@ -170,24 +179,25 @@
 
 .components {
 
-    > .memberList {
+    >.memberList {
         display: flex;
         flex-wrap: wrap;
-        
+
         padding: 20px 0;
         border-bottom: 3px solid #f6f5f5;
 
-        > .member {
+        >.member {
             position: relative;
             display: flex;
             width: 360px;
             margin: 0 20px 10px 20px;
             padding: 10px;
             border: 1px solid #7b7b7b;
-            box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);;
+            box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
+            ;
             border-radius: 20px;
 
-            > img {
+            >img {
                 display: flex;
                 width: 80px;
                 height: 80px;
@@ -196,24 +206,25 @@
                 align-self: center;
             }
 
-            > div {
+            >div {
                 display: flex;
                 flex-direction: column;
                 margin-left: 10px;
 
-                > h1 {
+                >h1 {
                     font-size: 16px;
                     font-weight: bolder;
                     margin-bottom: 6px;
                 }
 
-                > .skill {
+                >.skill {
                     display: flex;
                     flex-wrap: wrap;
                     max-height: 90px;
                     overflow: scroll;
                     scrollbar-width: none;
-                    > div {
+
+                    >div {
                         display: flex;
                         padding: 4px;
                         border: 1px solid #111;
@@ -221,15 +232,15 @@
                         align-items: center;
                         margin: 0 10px 6px 0;
 
-                        > span {
+                        >span {
                             font-size: 16px;
                             margin-left: 4px;
                         }
                     }
                 }
             }
-            
-            > .badge {
+
+            >.badge {
                 position: absolute;
                 top: 6px;
                 right: 10px;
@@ -240,47 +251,48 @@
         }
     }
 
-    > .chatting {
+    >.chatting {
         display: flex;
         justify-content: center;
         margin: 0 20px;
         padding: 20px 0;
 
-        > .chatRoom {
+        >.chatRoom {
             display: flex;
             width: 1150px;
             height: 660px;
             border: 1px solid #9f9f9f;
             overflow: hidden;
 
-            > .chatSide {
+            >.chatSide {
                 display: flex;
                 flex-direction: column;
                 width: 250px;
                 background-color: #56aaff;
                 padding: 10px 0;
 
-                > .chatMember {
+                >.chatMember {
                     position: relative;
                     display: flex;
                     align-items: center;
                     padding: 6px 14px;
                     margin-bottom: 10px;
 
-                    > img {
+                    >img {
                         width: 50px;
                         height: 50px;
                         border: 1px solid #9f9f9f;
                         border-radius: 50%;
                     }
 
-                    > h1 {
+                    >h1 {
                         font-size: 18px;
                         font-weight: bolder;
                         color: #FFFFFF;
                         margin: 0px 4px 0px 10px;
                     }
-                    > span {
+
+                    >span {
                         position: absolute;
                         left: 12px;
                         width: 48px;
@@ -288,68 +300,75 @@
                         border-radius: 50%;
                     }
                 }
-                > .chatMember:hover {
+
+                >.chatMember:hover {
                     background-color: #308eee;
                 }
             }
 
-            > .chatCnt {
+            >.chatCnt {
                 display: flex;
                 flex-direction: column;
                 width: 900px;
 
-                > .chatMsg {
+                >.chatMsg {
                     display: flex;
                     flex-direction: column;
                     height: 540px;
                     overflow-y: auto;
 
-                    > .msg {
+                    >.msg {
                         display: flex;
                         margin-top: 10px;
                         padding: 6px 10px;
 
-                        > img {
+                        >img {
                             display: flex;
                             width: 50px;
                             height: 50px;
                             border-radius: 50%;
                             margin-right: 10px;
                         }
-                        > div {
+
+                        >div {
                             display: flex;
                             flex-direction: column;
 
-                            > h1 {
+                            >h1 {
                                 display: flex;
                                 font-size: 16px;
                                 font-weight: bolder;
                                 align-items: center;
                                 margin-bottom: 4px;
-                                > span {
+
+                                >span {
                                     font-size: 12px;
                                     color: #7b7b7b;
                                     margin-left: 10px;
                                 }
                             }
-                            > h2 {
+
+                            >h2 {
                                 display: flex;
                                 font-size: 16px;
                                 white-space: pre-line;
                             }
-                            > img {
+
+                            >img {
                                 max-width: 300px;
                                 max-height: 300px;
                                 width: auto;
                                 height: auto;
                                 object-fit: contain;
                             }
-                            > .normalImg {
+
+                            >.normalImg {
                                 border-radius: 10px;
                                 border: 1px solid #d3d3d3;
                                 cursor: zoom-in;
                             }
-                            > .file {
+
+                            >.file {
                                 display: flex;
                                 border: 1px solid #9f9f9f;
                                 border-radius: 10px;
@@ -358,7 +377,7 @@
                                 align-items: center;
                                 cursor: pointer;
 
-                                > span {
+                                >span {
                                     display: flex;
                                     background-color: #7b7b7b;
                                     border-radius: 10px;
@@ -366,69 +385,80 @@
                                     padding: 10px;
                                     margin-right: 10px;
                                 }
-                                > h1 {
+
+                                >h1 {
                                     font-size: 16px;
                                     font-weight: bolder;
                                 }
                             }
-                            > .file:hover {
-                                box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);;
+
+                            >.file:hover {
+                                box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
+                                ;
                                 border: 1px solid #7b7b7b;
                             }
                         }
                     }
-                    > .msg:hover {
+
+                    >.msg:hover {
                         background-color: #ededed;
                     }
-                    > .myMsg {
+
+                    >.myMsg {
                         display: flex;
                         flex-direction: row-reverse;
                         margin-top: 10px;
                         padding: 6px 10px;
 
-                        > img {
+                        >img {
                             display: flex;
                             width: 50px;
                             height: 50px;
                             border-radius: 50%;
                             margin: 0 10px;
                         }
-                        > div {
+
+                        >div {
                             display: flex;
                             flex-direction: column;
 
-                            > h1 {
+                            >h1 {
                                 display: flex;
                                 flex-direction: row-reverse;
                                 font-size: 16px;
                                 font-weight: bolder;
                                 align-items: center;
                                 margin-bottom: 4px;
-                                > span {
+
+                                >span {
                                     font-size: 12px;
                                     color: #7b7b7b;
                                     margin: 0 10px;
                                 }
                             }
-                            > h2 {
+
+                            >h2 {
                                 display: flex;
                                 flex-direction: row-reverse;
                                 font-size: 16px;
                                 white-space: pre-wrap;
                             }
-                            > img {
+
+                            >img {
                                 max-width: 300px;
                                 max-height: 300px;
                                 width: auto;
                                 height: auto;
                                 object-fit: contain;
                             }
-                            > .normalImg {
+
+                            >.normalImg {
                                 border-radius: 10px;
                                 border: 1px solid #d3d3d3;
                                 cursor: zoom-in;
                             }
-                            > .file {
+
+                            >.file {
                                 display: flex;
                                 border: 1px solid #9f9f9f;
                                 border-radius: 10px;
@@ -437,7 +467,7 @@
                                 align-items: center;
                                 cursor: pointer;
 
-                                > span {
+                                >span {
                                     display: flex;
                                     background-color: #7b7b7b;
                                     border-radius: 10px;
@@ -445,49 +475,54 @@
                                     padding: 10px;
                                     margin-right: 10px;
                                 }
-                                > h1 {
+
+                                >h1 {
                                     font-size: 16px;
                                     font-weight: bolder;
                                 }
                             }
-                            > .file:hover {
-                                box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);;
+
+                            >.file:hover {
+                                box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
+                                ;
                                 border: 1px solid #7b7b7b;
                             }
                         }
                     }
-                    > .myMsg:hover {
+
+                    >.myMsg:hover {
                         background-color: #ededed;
                     }
                 }
 
-                > .chatInput {
+                >.chatInput {
                     display: flex;
                     position: relative;
                     justify-content: center;
                     height: 120px;
                     align-items: center;
 
-                    > .inputBox {
+                    >.inputBox {
                         display: flex;
                         flex-direction: column;
                         width: 880px;
-                        border: 1px solid #bbbabb ;
+                        border: 1px solid #bbbabb;
                         border-radius: 10px;
                         overflow: hidden;
 
-                        > .chatTool {
+                        >.chatTool {
                             display: flex;
                             padding: 6px 10px;
                             background-color: #f8f8f8;
                             border-bottom: 1px solid #bbbabb;
-                            > svg {
+
+                            >svg {
                                 cursor: pointer;
                                 margin-right: 10px;
                             }
                         }
 
-                        > textarea {
+                        >textarea {
                             display: flex;
                             padding: 10px;
                             font-size: 16px;
@@ -496,7 +531,8 @@
                             resize: none;
                         }
                     }
-                    > .EmojiModal {
+
+                    >.EmojiModal {
                         position: absolute;
                         display: flex;
                         flex-direction: column;
@@ -508,14 +544,16 @@
                         border: 1px solid #bbbabb;
                         border-radius: 10px;
                         overflow: hidden;
-                        > .EmojiHead {
+
+                        >.EmojiHead {
                             display: flex;
                             padding: 0 10px;
                             height: 40px;
                             background-color: #f8f8f8;
                             border-bottom: 1px solid #bbbabb;
                             align-items: center;
-                            > button {
+
+                            >button {
                                 display: flex;
                                 justify-content: center;
                                 align-items: center;
@@ -527,14 +565,15 @@
                                 background-color: transparent;
                                 cursor: pointer;
                             }
-                            > .button-active {
+
+                            >.button-active {
                                 border-bottom: 2px solid #308eee;
                             }
-                            
-                            > .button-inactive {
-                            }
+
+                            >.button-inactive {}
                         }
-                        > .EmojiBody {
+
+                        >.EmojiBody {
                             display: flex;
                             flex-wrap: wrap;
                             height: 260px;
@@ -542,7 +581,8 @@
                             overflow-y: scroll;
                             overflow-x: hidden;
                             align-content: flex-start;
-                            > span {
+
+                            >span {
                                 display: flex;
                                 justify-content: center;
                                 align-items: center;
@@ -551,13 +591,15 @@
                                 font-size: 17px;
                                 cursor: pointer;
                             }
-                            > span:hover {
+
+                            >span:hover {
                                 border-radius: 6px;
                                 background-color: #308eee;
                             }
                         }
                     }
-                    > .GifModal {
+
+                    >.GifModal {
                         position: absolute;
                         display: flex;
                         flex-wrap: wrap;
@@ -572,29 +614,31 @@
                         overflow: hidden;
                         align-content: flex-start;
 
-                        > img {
+                        >img {
                             width: 110px;
                             height: 110px;
                             margin: 3px;
                             border: 2px solid white;
                             cursor: pointer;
                         }
-                        > img:hover {
+
+                        >img:hover {
                             border: 2px solid #4169e1;
                         }
                     }
                 }
             }
         }
-        > .ImageModalBox {
+
+        >.ImageModalBox {
             position: absolute;
             width: 100%;
             height: 100%;
             top: 0;
             left: 0;
             z-index: 20;
-    
-            > .ImageModal {
+
+            >.ImageModal {
                 position: fixed;
                 top: 50%;
                 left: 50%;
@@ -603,7 +647,7 @@
                 width: 1200px;
                 height: 700px;
                 background-color: rgba(128, 128, 128, 0.5);
-                backdrop-filter: blur(10px); 
+                backdrop-filter: blur(10px);
                 box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
                 padding: 8px;
                 border-radius: 10px;
@@ -611,8 +655,8 @@
                 justify-content: center;
                 align-items: center;
                 overflow: hidden;
-    
-                > img {
+
+                >img {
                     max-width: 1100px;
                     max-height: 600px;
                     width: auto;
@@ -620,7 +664,8 @@
                     object-fit: contain;
                     transition: transform 0.3s ease;
                 }
-                > .SliderContainer {
+
+                >.SliderContainer {
                     position: absolute;
                     bottom: 20px;
                     left: 50%;
@@ -629,26 +674,27 @@
                     padding: 10px;
                     border-radius: 5px;
                 }
-                
-                > .SliderContainer input[type="range"] {
+
+                >.SliderContainer input[type="range"] {
                     width: 200px;
                 }
             }
         }
     }
-    > .kanbanPage {
+
+    >.kanbanPage {
         display: flex;
         justify-content: center;
         margin: 0 20px;
         padding: 20px 0;
 
-        > .kanban {
+        >.kanban {
             display: flex;
             justify-content: space-between;
             width: 1150px;
             height: 660px;
 
-            > .board {
+            >.board {
                 position: relative;
                 display: flex;
                 flex-direction: column;
@@ -659,19 +705,20 @@
                 border: 1px solid #b8b8b8;
                 border-radius: 10px;
 
-                > h1 {
+                >h1 {
                     font-size: 20px;
                     font-weight: bolder;
                     padding-bottom: 10px;
                 }
-                > .itemBox {
+
+                >.itemBox {
                     display: flex;
                     height: 570px;
                     flex-direction: column;
                     overflow: scroll;
                     scrollbar-width: none;
 
-                    > .item {
+                    >.item {
                         position: relative;
                         display: flex;
                         flex-direction: column;
@@ -679,28 +726,30 @@
                         height: 80px;
                         padding: 10px;
                         margin-bottom: 10px;
-    
+
                         background-color: white;
                         border: 1px solid #b8b8b8;
                         border-radius: 10px;
                         cursor: grab;
 
-                        > div {
+                        >div {
                             display: flex;
                             justify-content: space-between;
                             align-items: center;
-                            
-                            > h2 {
+
+                            >h2 {
                                 display: flex;
                                 font-size: 16px;
                             }
-                            > div {
+
+                            >div {
                                 display: flex;
 
-                                > div {
+                                >div {
                                     display: flex;
                                     align-items: center;
-                                    > img {
+
+                                    >img {
                                         display: flex;
                                         width: 25px;
                                         height: 25px;
@@ -708,10 +757,12 @@
                                         border-radius: 50%;
                                     }
                                 }
-                                > .etc {
+
+                                >.etc {
                                     margin-left: 10px;
                                     cursor: pointer;
-                                    > span {
+
+                                    >span {
                                         width: 5px;
                                         height: 5px;
                                         border-radius: 50%;
@@ -721,7 +772,8 @@
                                 }
                             }
                         }
-                        > .work {
+
+                        >.work {
                             display: flex;
                             position: absolute;
                             justify-content: center;
@@ -735,7 +787,7 @@
                             z-index: 1;
                             box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
 
-                            > h1 {
+                            >h1 {
                                 width: 100%;
                                 color: red;
                                 font-size: 12px;
@@ -745,22 +797,24 @@
                                 text-align: center;
                                 cursor: pointer;
                             }
-                            > h1:hover {
+
+                            >h1:hover {
                                 background-color: #e2e2e2;
                             }
                         }
-                        
-                        > h3 {
+
+                        >h3 {
                             display: flex;
                             font-size: 18px;
                         }
                     }
-                    > .selected {
+
+                    >.selected {
                         border: 1px solid #4169e1;
                     }
                 }
 
-                > .add {
+                >.add {
                     display: flex;
                     font-size: 16px;
                     font-weight: bolder;
@@ -768,7 +822,7 @@
                     cursor: pointer;
                 }
 
-                > .addItem {
+                >.addItem {
                     position: absolute;
                     bottom: 40px;
                     display: flex;
@@ -789,16 +843,18 @@
                         background-color: #f7f7f7;
                     }
 
-                    > input {
+                    >input {
                         margin-bottom: 6px;
                     }
 
-                    > div {
+                    >div {
                         display: flex;
-                        > input {
+
+                        >input {
                             width: 270px;
                         }
-                        > button {
+
+                        >button {
                             display: flex;
                             justify-content: center;
                             align-items: center;
@@ -810,7 +866,8 @@
                             background-color: #ffffff;
                             cursor: pointer;
                         }
-                        > button:hover {
+
+                        >button:hover {
                             background-color: #4D96FF;
                             border: 1px solid #4D96FF;
                             color: white;
@@ -819,15 +876,16 @@
                 }
             }
         }
-        > .KanbanInfoModalBox {
+
+        >.KanbanInfoModalBox {
             position: absolute;
             width: 100%;
             height: 100%;
             top: 0;
             left: 0;
             z-index: 20;
-    
-            > .KanbanInfoModal {
+
+            >.KanbanInfoModal {
                 position: fixed;
                 top: 50%;
                 left: 50%;
@@ -844,22 +902,25 @@
                 padding: 10px;
                 box-shadow: 0px 6px 5px rgba(0, 0, 0, 0.2);
 
-                > .infoHead {
+                >.infoHead {
                     display: flex;
                     flex-direction: column;
                     border-bottom: 1px solid #7b7b7b;
 
-                    > .infoTitle {
+                    >.infoTitle {
                         display: flex;
                         align-items: center;
-                        > h1 {
+
+                        >h1 {
                             display: flex;
                             font-size: 20px;
                         }
-                        > div {
+
+                        >div {
                             display: flex;
                             flex-direction: column;
-                            > input {
+
+                            >input {
                                 display: flex;
                                 width: 500px;
                                 padding: 4px 10px;
@@ -867,11 +928,13 @@
                                 border: 1px solid #9f9f9f;
                                 border-radius: 6px;
                             }
-                            > input:nth-child(1) {
+
+                            >input:nth-child(1) {
                                 margin-bottom: 4px;
                             }
                         }
-                        > button {
+
+                        >button {
                             display: flex;
                             justify-content: center;
                             align-items: center;
@@ -885,45 +948,49 @@
                             background-color: #ffffff;
                             cursor: pointer;
                         }
-                        > button:hover {
+
+                        >button:hover {
                             background-color: #4D96FF;
                             border: 1px solid #4D96FF;
                             color: white;
                         }
                     }
 
-                    > .infoState {
+                    >.infoState {
                         position: relative;
                         display: flex;
                         align-items: center;
                         margin-top: 10px;
                         padding-bottom: 10px;
 
-                        > span {
+                        >span {
                             font-size: 16px;
                             border-radius: 10px;
                             padding: 4px 10px;
                             font-weight: bolder;
                             color: white;
                         }
-                        > .ready {
+
+                        >.ready {
                             background-color: #82CD47;
                             border: 1px solid #82CD47;
                         }
-                        > .doing {
+
+                        >.doing {
                             background-color: #4169e1;
                             border: 1px solid #4169e1;
                         }
-                        > .complete {
+
+                        >.complete {
                             background-color: #FF204E;
                             border: 1px solid #FF204E;
                         }
 
-                        > div {
+                        >div {
                             display: flex;
                             margin-left: 10px;
 
-                            > .member {
+                            >.member {
                                 display: flex;
                                 font-size: 18px;
                                 border: 1px solid #7b7b7b;
@@ -931,19 +998,22 @@
                                 padding: 2px 10px;
                                 margin-right: 10px;
                                 align-items: center;
-                                > img {
+
+                                >img {
                                     width: 25px;
                                     height: 25px;
                                     border-radius: 50%;
                                     border: 1px solid #9f9f9f;
                                 }
-                                > h2 {
+
+                                >h2 {
                                     font-size: 16px;
                                     margin-left: 4px;
                                 }
                             }
                         }
-                        > button {
+
+                        >button {
                             display: flex;
                             justify-content: center;
                             align-items: center;
@@ -957,12 +1027,14 @@
                             background-color: #ffffff;
                             cursor: pointer;
                         }
-                        > button:hover {
+
+                        >button:hover {
                             background-color: #4D96FF;
                             border: 1px solid #4D96FF;
                             color: white;
                         }
-                        > .MemberAddModalBox {
+
+                        >.MemberAddModalBox {
                             position: absolute;
                             display: flex;
                             flex-direction: column;
@@ -976,31 +1048,36 @@
                             padding: 10px;
                             box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.2);
 
-                            > .memberBox {
+                            >.memberBox {
                                 display: flex;
                                 flex-direction: column;
-                                > .member {
+
+                                >.member {
                                     display: flex;
                                     font-size: 14px;
                                     border-radius: 10px;
                                     padding: 2px 10px;
                                     align-items: center;
-                                    > input {
+
+                                    >input {
                                         display: flex;
                                         margin-right: 6px;
                                     }
-                                    > img {
+
+                                    >img {
                                         width: 20px;
                                         height: 20px;
                                         border-radius: 50%;
                                         border: 1px solid #9f9f9f;
                                     }
-                                    > h2 {
+
+                                    >h2 {
                                         font-size: 14px;
                                         margin-left: 4px;
                                     }
                                 }
-                                > .member:hover {
+
+                                >.member:hover {
                                     background-color: #d4d4d4;
                                 }
                             }
@@ -1008,7 +1085,7 @@
                     }
                 }
 
-                > .infoBody {
+                >.infoBody {
                     display: flex;
                     height: 100%;
                     border: 1px solid #7b7b7b;
@@ -1016,14 +1093,14 @@
                     margin-top: 20px;
                     overflow: hidden;
 
-                    > .bodyCnt {
+                    >.bodyCnt {
                         display: flex;
                         width: 100%;
                         flex-direction: column;
                         overflow: scroll;
                         scrollbar-width: none;
 
-                        > .cntHead {
+                        >.cntHead {
                             display: flex;
                             justify-content: space-between;
                             background-color: #ededed;
@@ -1032,13 +1109,15 @@
                             padding: 4px 10px;
                             margin-bottom: 10px;
 
-                            > h1 {
+                            >h1 {
                                 display: flex;
                                 font-size: 20px;
                             }
-                            > div {
+
+                            >div {
                                 display: flex;
-                                > button {
+
+                                >button {
                                     display: flex;
                                     justify-content: center;
                                     align-items: center;
@@ -1052,7 +1131,8 @@
                                     background-color: #ffffff;
                                     cursor: pointer;
                                 }
-                                > button:hover {
+
+                                >button:hover {
                                     background-color: #4D96FF;
                                     border: 1px solid #4D96FF;
                                     color: white;
@@ -1066,29 +1146,33 @@
                             padding: 4px;
                         }
 
-                        > .checkBox {
+                        >.checkBox {
                             display: flex;
                             padding: 4px 10px;
-                            > input[type="checkbox"] {
+
+                            >input[type="checkbox"] {
                                 margin-right: 4px;
                                 width: 20px;
                             }
                         }
 
-                        > .editCheckBox {
+                        >.editCheckBox {
                             display: flex;
                             padding: 4px 10px;
-                            > input[type="checkbox"] {
+
+                            >input[type="checkbox"] {
                                 margin-right: 4px;
                                 width: 20px;
                             }
-                            > input[type="text"] {
+
+                            >input[type="text"] {
                                 border: 1px solid #9f9f9f;
                                 border-radius: 6px;
                                 width: 500px;
                                 padding: 0 10px;
                             }
-                            > button {
+
+                            >button {
                                 display: flex;
                                 justify-content: center;
                                 align-items: center;
@@ -1101,7 +1185,8 @@
                                 border-radius: 6px;
                                 cursor: pointer;
                             }
-                            > button:hover {
+
+                            >button:hover {
                                 background-color: #c70a42;
                             }
                         }
@@ -1111,17 +1196,24 @@
         }
     }
 }
-    .calendarContent{
-        .toastui-calendar-popup-container {
-            z-index: 220;
-        }
-        > .dateSpan {
-            font-size: 22px;
-            font-weight: 600;
-            margin: 20px;
-        }
-        .controllBtn {
-            margin: 10px;
-        }
+
+.calendarContent {
+    .toastui-calendar-popup-container {
+        z-index: 220;
     }
 
+    >.dateSpan {
+        font-size: 22px;
+        font-weight: 600;
+        margin: 20px;
+    }
+
+    .controllBtn {
+        margin: 10px;
+    }
+
+}
+
+.toastui-calendar-detail-container {
+    width: 320px !important;
+}
