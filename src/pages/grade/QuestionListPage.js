@@ -44,6 +44,7 @@ const QuestionListPage = () => {
             type: searchType,
             keyword: searchKeyword
         }));
+
     }
 
     // pg변경 함수 (페이징 버튼 클릭시)
@@ -54,7 +55,7 @@ const QuestionListPage = () => {
     useEffect(() => {
         if (searchType === "level") {
             setIsSearchLevel(true);
-        }else{
+        } else {
             setIsSearchLevel(false);
         }
     }, [searchType])
@@ -76,11 +77,11 @@ const QuestionListPage = () => {
                         {!isSearchLevel ? <input className='searchKey' type="text" placeholder='검색어를 입력하세요'
                             onChange={(e) => setSearchKeyword(e.target.value)} /> :
                             <select className='searchKey' onChange={(e) => setSearchKeyword(e.target.value)}>
-                                <option value={"Lv1"}>Lv1</option>
-                                <option value={"Lv2"}>Lv2</option>
-                                <option value={"Lv3"}>Lv3</option>
-                                <option value={"Lv4"}>Lv4</option>
-                                <option value={"Lv5"}>Lv5</option>
+                                <option value={"1"}>Lv1</option>
+                                <option value={"2"}>Lv2</option>
+                                <option value={"3"}>Lv3</option>
+                                <option value={"4"}>Lv4</option>
+                                <option value={"5"}>Lv5</option>
                             </select>
                         }
 
