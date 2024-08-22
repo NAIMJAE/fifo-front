@@ -7,5 +7,5 @@ export const RootUrl = () => {
 
 export const FrontUrl = () => {
   return "http://localhost:3000";
-  //return 'http://15.165.24.202:3000';
+  //return 'http://3.39.72.175:3000';
 };
