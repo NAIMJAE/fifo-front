@@ -40,14 +40,16 @@ const List = () => {
 
     /** 검색 버튼 클릭 */
     const searchHandler = () => {
-        setPageable(prev => ({
-            ...prev,
-            type: searchType,
-            keyword: searchKeyword
-        }));
-        if (pageable.type === "" || pageable.keyword === "") {
+        
+        if (searchType === "" || searchKeyword === "") {
             alert("검색어를 입력해주세요.");
             return;
+        }else {
+            setPageable(prev => ({
+                ...prev,
+                type: searchType,
+                keyword: searchKeyword
+            }));
         }
     }
 
