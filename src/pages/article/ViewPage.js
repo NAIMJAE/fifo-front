@@ -68,7 +68,7 @@ const ViewPage = () => {
     /** 게시글 좋아요 */
     const increaseHeart = async () => {
         const data = {
-            userNo: 1,
+            userNo: loginSlice.userno,
             pno: articleView.pno,
         }
         try {

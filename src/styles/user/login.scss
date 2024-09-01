@@ -55,67 +55,66 @@
   }
   .loginForm {
     margin: 10px 20px;
-    input {
+    display: flex;
+    flex-direction: column;
+    > div {
       position: relative;
-      width: 79%;
-      height: 33px;
-      padding: 5px;
-      border-radius: 5px;
-      border: 1px solid rgb(221, 221, 221);
-      color: rgb(51, 51, 51);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
 
-      margin: 0px 0px 5px 0px;
+      > span {
+        display: flex;
+        width: 60px;
+        justify-content: center;
+      }
+      > input {
+        width: 80%;
+        height: 35px;
+        padding: 5px;
+        border-radius: 5px;
+        border: 1px solid rgb(221, 221, 221);
+        color: rgb(51, 51, 51);
+        margin-bottom: 5px;
+      }
+      > .eyeIcon {
+        position: absolute;
+        bottom: 10px;
+        right: 5px;
+        cursor: pointer;
+      }
     }
-    .idSpan {
-      margin: 0px 20px 0px 0px;
-    }
-    .passSpan {
-      margin: 0px 6px 0px 0px;
-    }
-    .eyeIcon {
-      position: absolute;
-      bottom: 35%;
-      right: 13%;
-      transform: translateY(-50%);
-
+    button {
+      border: 0;
+      background-color: transparent;
+      padding: 6px;
+      text-align: center;
       cursor: pointer;
     }
-  }
-  .btnFind {
-    cursor: pointer;
-    width: 324px;
-    padding: 8px;
-    margin: 5px 0px 5px 10px;
-    border: none;
-    border-top: 1px solid #000000;
-    border-bottom: 1px solid #000000;
-    background-color: #ffffff;
-    color: #000;
-  }
-  .id {
-    margin-right: 5px;
-  }
-  .pass {
-  }
-  .btnLogin {
-    position: relative;
-    cursor: pointer;
-    left: 257px;
-    margin-top: 5px;
-    padding: 8px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    text-align: center;
-    color: #fff;
-    background-color: #4169e1;
-  }
-  .btnLogin:hover {
-    background-color: #3c60cd;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  }
-  .btnLogin:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+    > .btnLogin {
+      border-radius: 10px;
+      margin: 10px 0;
+      font-size: 20px;
+      font-weight: bolder;
+      color: #fff;
+      background-color: #4169e1;
+    }
+    > .btnLogin:hover {
+      background-color: #395bc3;
+    }
+    > div {
+      display: flex;
+      justify-content: space-between;
+
+      > .btnFind {
+        width: 120px;
+        border-bottom: 1px solid #9f9f9f;
+        font-size: 14px;
+        color: #7b7b7b;
+      }
+      > .btnFind:hover {
+        font-weight: bolder;
+      }
+    }
   }
 }

@@ -86,8 +86,8 @@
                     padding: 6px;
                     border: 1px solid #9f9f9f;
                     background-color: #f2f2f2;
-                    border-radius: 10px;
-                    font-size: 18px;
+                    border-radius: 6px;
+                    font-size: 16px;
                     cursor: pointer;
                 }
             }
@@ -171,6 +171,11 @@
         }
 
         >button:hover {
+            background-color: #4169e1;
+            color: white;
+        }
+
+        > .click {
             background-color: #4169e1;
             color: white;
         }
