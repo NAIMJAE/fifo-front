@@ -10,7 +10,7 @@ const Footer = () => {
                 <ul>
                   <li></li>
                   <li>Copyright FIFO. All rights reserved.</li>
-                  <li>고객센터 1234-1234 (평일 09:00~19:00, 주말·공휴일 휴무)</li>
+                  <li>Version 1.0.1-beta</li>
                 </ul>
             </div>
             <div id='footerTerms'>
