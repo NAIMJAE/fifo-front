@@ -307,24 +307,22 @@ const MooimPage = () => {
           </div>
         </div>
         <div className="function">
-          <button
-            className="memberList"
-            onClick={() => changeMenu("memberList")}
-          >
-            정보
-          </button>
-          <button className="chatting" onClick={() => changeMenu("chatting")}>
-            채팅
-          </button>
-          <button className="calendar" onClick={() => changeMenu("calendar")}>
-            캘린더
-          </button>
-          <button className="kanban" onClick={() => changeMenu("kanban")}>
-            칸반
-          </button>
-          <button className="document" onClick={() => changeMenu("document")}>
-            문서
-          </button>
+
+          <button className={`memberList ${mooimMenu.memberList ? "click" : ""}`}
+            onClick={() => changeMenu("memberList")} >정보</button>
+            
+          <button className={`chatting ${mooimMenu.chatting ? "click" : ""}`}
+            onClick={() => changeMenu("chatting")} >채팅</button>
+
+          <button className={`calendar ${mooimMenu.calendar ? "click" : ""}`}
+            onClick={() => changeMenu("calendar")} >캘린더</button>
+
+          <button className={`kanban ${mooimMenu.kanban ? "click" : ""}`}
+            onClick={() => changeMenu("kanban")} >칸반</button>
+
+          <button className={`document ${mooimMenu.document ? "click" : ""}`}
+            onClick={() => changeMenu("document")} >문서</button>
+            
         </div>
 
         <div className="components">

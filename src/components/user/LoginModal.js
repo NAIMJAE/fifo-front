@@ -55,49 +55,54 @@ const LoginComponent = ({
             <p>FIFO에서 모임을 만들어 프로젝트에 참여해보세요 </p>
           </div>
           <form className="loginForm">
-            <span className="idSpan">아이디</span>
-            <input
-              type="text"
-              placeholder="이메일을 입력하세요."
-              name="email"
-              value={user.email}
-              onChange={changeHandler}
-            ></input>{" "}
-            <br />
-            <span className="passSpan">비밀번호</span>
-            <input
-              type={showPassword ? "text" : "password"}
-              name="pass"
-              value={user.pass}
-              placeholder="비밀번호를 입력하세요."
-              onChange={changeHandler}
-            ></input>
-            {showPassword ? (
-              <RemoveRedEyeIcon
-                className="eyeIcon"
-                onClick={handlerPasswordVisble}
-              />
-            ) : (
-              <VisibilityOffIcon
-                className="eyeIcon"
-                onClick={handlerPasswordVisble}
-              />
-            )}
+            <div>
+              <span className="idSpan">아이디</span>
+              <input
+                type="text"
+                placeholder="이메일을 입력하세요."
+                name="email"
+                value={user.email}
+                onChange={changeHandler}
+              ></input>
+            </div>
+            <div>
+              <span className="passSpan">비밀번호</span>
+              <input
+                type={showPassword ? "text" : "password"}
+                name="pass"
+                value={user.pass}
+                placeholder="비밀번호를 입력하세요."
+                onChange={changeHandler}
+              ></input>
+              {showPassword ? (
+                <RemoveRedEyeIcon
+                  className="eyeIcon"
+                  onClick={handlerPasswordVisble}
+                />
+              ) : (
+                <VisibilityOffIcon
+                  className="eyeIcon"
+                  onClick={handlerPasswordVisble}
+                />
+              )}
+            </div>
+            
             <button className="btnLogin" onClick={handlerLogin}>
               로그인
             </button>
+            <div>
+              <button name="findId" className="btnFind id" onClick={handlerFind}>
+              아이디 찾기
+              </button>
+              <button
+                name="findPass"
+                className="btnFind pass"
+                onClick={handlerFind}
+              >
+                비밀번호 변경
+              </button>
+            </div>
           </form>
-
-          <button name="findId" className="btnFind id" onClick={handlerFind}>
-            아이디 찾기
-          </button>
-          <button
-            name="findPass"
-            className="btnFind pass"
-            onClick={handlerFind}
-          >
-            비밀번호 변경
-          </button>
         </Box>
       </Modal>
       {findIdModalOpen && (
