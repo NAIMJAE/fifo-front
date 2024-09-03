@@ -11,20 +11,18 @@ const rootURL = RootUrl();
 const QuestionListPage = () => {
 
     const language = useRef(new URLSearchParams(window.location.search).get("language"));
-    const [questionList, setQuestionList] = useState([]);
+    const [questionList, setQuestionList] = useState();
 
     /** 선택 언어 문제 리스트 조회 */
     useEffect(() => {
         axios.get(`${rootURL}/question/list/${language.current}`)
             .then((res) => {
-                console.log(res.data)
                 setQuestionList(res.data)
             })
     }, [])
 
     /** 게시글 검색을 위한 useState */
     const [pageable, setPageable] = useState({
-        cateNo: 1,
         sort: "",
         type: "",
         keyword: "",
@@ -34,17 +32,23 @@ const QuestionListPage = () => {
     /** 검색 type, keyword */
     const [searchType, setSearchType] = useState("");
     const [searchKeyword, setSearchKeyword] = useState("");
-
     const [isSearchLevel, setIsSearchLevel] = useState(false);
+    const [searchResult, setSearchResult] = useState();
 
     /** 검색 버튼 클릭 */
     const searchHandler = () => {
-        setPageable(prev => ({
+
+        if(searchType == ""){
+            alert("검색 옵션을 선택하세요")
+        }else if(searchKeyword == ""){
+            alert("검색어를 입력하세요")
+        }else{
+            setPageable(prev => ({
             ...prev,
             type: searchType,
             keyword: searchKeyword
         }));
-
+        }
     }
 
     // pg변경 함수 (페이징 버튼 클릭시)
@@ -53,10 +57,21 @@ const QuestionListPage = () => {
     }
 
     useEffect(() => {
+        if(searchKeyword !== ""){
+            axios.post(`${rootURL}/question/list/search`,pageable)
+        .then((res)=>{
+            setQuestionList(res.data);
+        })
+        }
+    }, [pageable])
+
+    useEffect(() => {
         if (searchType === "level") {
             setIsSearchLevel(true);
+            setSearchKeyword("1");
         } else {
             setIsSearchLevel(false);
+            setSearchKeyword("");
         }
     }, [searchType])
 
@@ -96,17 +111,15 @@ const QuestionListPage = () => {
                         <div>레벨</div>
                         <div>비고</div>
                     </div>
-                    {questionList.map((question, index) => {
+                    {questionList != null ? questionList.dtoList.map((question, index) => {
                         return (
                             <QuestionContentsComponent key={index} question={question} />
                         )
-                    })}
+                    }) : null}
                 </div>
 
                 <div id='pageable'>
-                    {/** 나중에 숫자 지우고 props 전달하면 됨 */}
-                    <PageingComponent changePage={changePage} />
-                    1 2 3 4
+                    <PageingComponent cntList={questionList} changePage={changePage} />
                 </div>
 
             </div>
