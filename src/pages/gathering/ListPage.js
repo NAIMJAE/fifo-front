@@ -35,7 +35,7 @@ const ListPage = () => {
   return (
     <MainLayout>
       <div className="cntRow adBox">
-      <img src="../../../images/gwanggo.gif" alt=""/>
+      {/* <img src="../../../images/fifob.png" alt=""/> */}
       </div>
       <div className='cntRow articleSearch'>
         <p className={`${mooimDTO.mooimstate === "doing" ? 'tabOn' : ''}`}
